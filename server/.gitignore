@@ -1,4 +1,5 @@
-/node_modules
+# Node.js modules
+node_modules/
 
 .env
 
