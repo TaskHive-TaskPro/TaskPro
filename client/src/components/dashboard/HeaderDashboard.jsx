@@ -1,22 +1,32 @@
 import React, { useState } from "react";
+import Styles from "./dashboard.module.css";
 
-const FiltersModal = ({ onClose, onChangeBackground }) => {
-  const colors = ["#111", "#4B0082", "#F5F5F5"];
+const FiltersModal = ({ onClose, onSelectPriority }) => {
+  const priorities = ["none", "low", "medium", "high"];
   return (
-    <div className="modal-overlay">
-      <div className="modal-content">
-        <h3 className="modal-title">Select Background</h3>
-        <div className="color-options">
-          {colors.map((color) => (
+    <div className={Styles.modalOverlay}>
+      <div className={Styles.modalContent}>
+        <h3 className={Styles.modalTitle}>Select Priority</h3>
+        <div className={Styles.colorOptions}>
+          {priorities.map((p) => (
             <button
-              key={color}
-              className="color-btn"
-              style={{ backgroundColor: color }}
-              onClick={() => onChangeBackground(color)}
-            />
+              key={p}
+              className={`${Styles.colorBtn} ${
+                p === "low"
+                  ? Styles.priorityLow
+                  : p === "medium"
+                  ? Styles.priorityMedium
+                  : p === "high"
+                  ? Styles.priorityHigh
+                  : Styles.priorityNone
+              }`}
+              onClick={() => onSelectPriority(p)}
+            >
+              {p === "none" ? "Without" : p.charAt(0).toUpperCase() + p.slice(1)}
+            </button>
           ))}
         </div>
-        <button onClick={onClose} className="btn-close-modal">
+        <button onClick={onClose} className={Styles.btnCloseModal}>
           Close
         </button>
       </div>
@@ -24,14 +34,17 @@ const FiltersModal = ({ onClose, onChangeBackground }) => {
   );
 };
 
-const HeaderDashboard = ({ title, onChangeBackground }) => {
+const HeaderDashboard = ({ title, onSelectPriority }) => {
   const [showFilters, setShowFilters] = useState(false);
 
   return (
     <>
-      <header className="header-dashboard">
-        <h1 className="header-title">{title}</h1>
-        <button className="btn-filters" onClick={() => setShowFilters(true)}>
+      <header className={Styles.headerDashboard}>
+        <h1 className={Styles.headerTitle}>{title}</h1>
+        <button
+          className={Styles.btnFilters}
+          onClick={() => setShowFilters(true)}
+        >
           Filters
         </button>
       </header>
@@ -39,7 +52,7 @@ const HeaderDashboard = ({ title, onChangeBackground }) => {
       {showFilters && (
         <FiltersModal
           onClose={() => setShowFilters(false)}
-          onChangeBackground={onChangeBackground}
+          onSelectPriority={onSelectPriority}
         />
       )}
     </>

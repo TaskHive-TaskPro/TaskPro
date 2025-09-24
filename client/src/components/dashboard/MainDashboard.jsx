@@ -1,5 +1,7 @@
 import React, { useState } from "react";
 import Column from "./Column";
+import Styles from "./dashboard.module.css";
+import HeaderDashboard from "./HeaderDashboard";
 
 const MainDashboard = () => {
   const [columns, setColumns] = useState([
@@ -10,9 +12,10 @@ const MainDashboard = () => {
         {
           id: "c1",
           title: "The Watch Spot Design",
-          description: "Complete visually stunning and eye-catching design..."
-        }
-      ]
+          description: "Complete visually stunning and eye-catching design...",
+          priority: "none",
+        },
+      ],
     },
     {
       id: "2",
@@ -21,11 +24,14 @@ const MainDashboard = () => {
         {
           id: "c2",
           title: "Content Creation",
-          description: "Write and design marketing content..."
-        }
-      ]
-    }
+          description: "Write and design marketing content...",
+          priority: "none",
+        },
+      ],
+    },
   ]);
+
+  const [selectedPriority, setSelectedPriority] = useState("none");
 
   const addColumn = () => {
     const title = prompt("Enter column title:");
@@ -43,17 +49,28 @@ const MainDashboard = () => {
   };
 
   return (
-    <main className="main-dashboard">
-      <div className="columns-wrapper">
-        {columns.map((col) => (
-          <Column key={col.id} column={col} onAddCard={addCard} />
-        ))}
+    <div className={Styles.screensPage}>
+      <HeaderDashboard
+        title="Project Office"
+        onSelectPriority={(p) => setSelectedPriority(p)}
+      />
+      <main className={Styles.mainDashboard}>
+        <div className={Styles.columnsWrapper}>
+          {columns.map((col) => (
+            <Column
+              key={col.id}
+              column={col}
+              onAddCard={addCard}
+              selectedPriority={selectedPriority}
+            />
+          ))}
 
-        <div className="column-add-btn" onClick={addColumn}>
-          + Add another column
+          <div className={Styles.columnAddBtn} onClick={addColumn}>
+            + Add another column
+          </div>
         </div>
-      </div>
-    </main>
+      </main>
+    </div>
   );
 };
 
