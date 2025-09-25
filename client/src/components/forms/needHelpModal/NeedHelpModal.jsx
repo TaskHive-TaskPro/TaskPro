@@ -20,8 +20,8 @@ import {
 } from './NeedHelpModal.styled';
 
 const validationSchema = Yup.object().shape({
-  email: Yup.string().email('Invalid email').required('Email is required'),
-  message: Yup.string().min(7).max(230).required('Comment is required'),
+  email: Yup.string().trim().email('Invalid email').required('Email is required'), 
+  message: Yup.string().trim().min(7).max(230).required('Comment is required'),
 });
 
 const initialValues = { email: '', message: '' };
@@ -36,7 +36,8 @@ const NeedHelpModal = ({ closeModal }) => {
 
     if (!messageTrim) {
       toast.error('Sorry, but you need to describe your problem!');
-      return;
+      setSubmitting(false); 
+     return;
     }
 
     const credentials = { email, message: messageTrim };
@@ -71,7 +72,7 @@ const NeedHelpModal = ({ closeModal }) => {
         onSubmit={handleSubmit}
       >
         {formik => (
-          <ModalForm>
+          <ModalForm onSubmit={formik.handleSubmit}>
             <FormWrapper>
               <Container>   
                 <TitleInput

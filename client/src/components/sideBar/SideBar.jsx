@@ -55,7 +55,7 @@ const SideBar = ({ active, onClick }) => {
   const { data = [] } = useGetBoardsQuery();
 
   const location = useLocation();
-  const { boardName } = useParams();
+  const { boardId } = useParams();
 
   const [addBoard, result] = useAddBoardMutation();
   const [updateBoard] = useUpdateBoardMutation();
@@ -66,8 +66,8 @@ const SideBar = ({ active, onClick }) => {
   const openModal = () => setIsModalOpen(true);
   const closeModal = () => setIsModalOpen(false);
 
-  const openEditModalHandler = (boardName, boardIcon) => {
-    setActiveBoardTitle(boardName);
+  const openEditModalHandler = (boardTitle, boardIcon) => { 
+    setActiveBoardTitle(boardTitle);
     setActiveBoardIcon(boardIcon);
     setOpenEditModal(true);
   };
@@ -84,7 +84,7 @@ const SideBar = ({ active, onClick }) => {
   }, [newBoard, navigate, result.data]);
 
   const handleSubmit = async (data, formTitle) => {
-    const boardId = boardName;
+    const currentBoardId = boardId;
 
     if (formTitle === 'New board') {
       addBoard({ data });
@@ -94,7 +94,7 @@ const SideBar = ({ active, onClick }) => {
     }
 
     if (formTitle === 'Edit board') {
-      updateBoard({ boardId, data });
+      updateBoard({ boardId: currentBoardId, data });
       closeEditModal();
       return;
     }
@@ -102,7 +102,7 @@ const SideBar = ({ active, onClick }) => {
 
   const deleteBoardHanlder = boardId => {
     deleteBoard({ boardId });
-    navigate('/home');
+    navigate('/');
   };
 
   const theme = useTheme();
