@@ -22,7 +22,9 @@ const FiltersModal = ({ onClose, onSelectPriority }) => {
               }`}
               onClick={() => onSelectPriority(p)}
             >
-              {p === "none" ? "Without" : p.charAt(0).toUpperCase() + p.slice(1)}
+              {p === "none"
+                ? "Without"
+                : p.charAt(0).toUpperCase() + p.slice(1)}
             </button>
           ))}
         </div>
