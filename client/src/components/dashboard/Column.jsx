@@ -1,5 +1,7 @@
 import React, { useState } from "react";
 import Styles from "./dashboard.module.css";
+import Card from "../cards/Card"; // Card bileşenini import et
+import EditCardModal from "../cards/EditCardModal"; // Düzenleme modalı
 
 // AddCardModal
 const AddCardModal = ({ onAdd, onClose, selectedPriority }) => {
@@ -58,6 +60,7 @@ const AddCardModal = ({ onAdd, onClose, selectedPriority }) => {
 
 const Column = ({ column, onAddCard, selectedPriority }) => {
   const [showModal, setShowModal] = useState(false);
+  const [editCard, setEditCard] = useState(null); // Düzenlenecek kart
 
   return (
     <div className={Styles.columnContainer}>
@@ -65,21 +68,12 @@ const Column = ({ column, onAddCard, selectedPriority }) => {
 
       <div className={Styles.cardList}>
         {column.cards.map((card) => (
-          <div key={card.id} className={Styles.cardItem}>
-            <span
-              className={`${Styles.priorityDot} ${
-                card.priority === "low"
-                  ? Styles.priorityLow
-                  : card.priority === "medium"
-                  ? Styles.priorityMedium
-                  : card.priority === "high"
-                  ? Styles.priorityHigh
-                  : Styles.priorityNone
-              }`}
-            ></span>
-            <h3 className={Styles.cardTitle}>{card.title}</h3>
-            <p className={Styles.cardDesc}>{card.description}</p>
-          </div>
+          <Card
+            key={card.id}
+            card={card}
+            onEdit={(c) => setEditCard(c)} // Düzenleme modalını aç
+            onDelete={(id) => onDeleteCard && onDeleteCard(column.id, id)} // Silme fonksiyonu, opsiyonel
+          />
         ))}
       </div>
 
@@ -92,6 +86,17 @@ const Column = ({ column, onAddCard, selectedPriority }) => {
           onAdd={(card) => onAddCard(column.id, card)}
           onClose={() => setShowModal(false)}
           selectedPriority={selectedPriority}
+        />
+      )}
+
+      {editCard && (
+        <EditCardModal
+          card={editCard}
+          onUpdate={(updated) => {
+            onUpdateCard(column.id, updated);
+            setEditCard(null);
+          }}
+          onClose={() => setEditCard(null)}
         />
       )}
     </div>
