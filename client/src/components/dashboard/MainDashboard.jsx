@@ -47,6 +47,33 @@ const MainDashboard = () => {
       )
     );
   };
+  // Kartı güncelleme
+const updateCard = (columnId, updatedCard) => {
+  setColumns(
+    columns.map((col) =>
+      col.id === columnId
+        ? {
+            ...col,
+            cards: col.cards.map((card) =>
+              card.id === updatedCard.id ? updatedCard : card
+            ),
+          }
+        : col
+    )
+  );
+};
+
+// Kartı silme
+const deleteCard = (columnId, cardId) => {
+  setColumns(
+    columns.map((col) =>
+      col.id === columnId
+        ? { ...col, cards: col.cards.filter((card) => card.id !== cardId) }
+        : col
+    )
+  );
+};
+
 
   return (
     <div className={Styles.screensPage}>
@@ -61,6 +88,8 @@ const MainDashboard = () => {
               key={col.id}
               column={col}
               onAddCard={addCard}
+               onUpdateCard={updateCard}    
+               onDeleteCard={deleteCard} 
               selectedPriority={selectedPriority}
             />
           ))}

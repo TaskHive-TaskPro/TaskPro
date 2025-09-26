@@ -58,7 +58,7 @@ const AddCardModal = ({ onAdd, onClose, selectedPriority }) => {
   );
 };
 
-const Column = ({ column, onAddCard, selectedPriority }) => {
+const Column = ({ column, onAddCard,onUpdateCard,onDeleteCard, selectedPriority }) => {
   const [showModal, setShowModal] = useState(false);
   const [editCard, setEditCard] = useState(null); // Düzenlenecek kart
 
