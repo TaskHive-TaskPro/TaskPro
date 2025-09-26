@@ -84,6 +84,62 @@ const MainDashboard = () => {
       )
     );
   };
+  // Kartı güncelleme
+const updateCard = (columnId, updatedCard) => {
+  setColumns(
+    columns.map((col) =>
+      col.id === columnId
+        ? {
+            ...col,
+            cards: col.cards.map((card) =>
+              card.id === updatedCard.id ? updatedCard : card
+            ),
+          }
+        : col
+    )
+  );
+};
+
+// Kartı silme
+const deleteCard = (columnId, cardId) => {
+  setColumns(
+    columns.map((col) =>
+      col.id === columnId
+        ? { ...col, cards: col.cards.filter((card) => card.id !== cardId) }
+        : col
+    )
+  );
+};
+const moveCard = (columnId, cardId) => {
+  setColumns((prevColumns) => {
+    const currentIndex = prevColumns.findIndex((col) => col.id === columnId);
+
+    // Eğer zaten son kolondaysa -> hiçbir şey yapma
+    if (currentIndex === prevColumns.length - 1) {
+      return prevColumns;
+    }
+
+    // Taşınacak kartı bul
+    const currentCol = prevColumns[currentIndex];
+    const card = currentCol.cards.find((c) => c.id === cardId);
+    if (!card) return prevColumns;
+
+    // 1) Kartı bulunduğu kolondan çıkar
+    const newColumns = prevColumns.map((col, i) =>
+      col.id === columnId
+        ? { ...col, cards: col.cards.filter((c) => c.id !== cardId) }
+        : col
+    );
+
+    // 2) Kartı bir sonraki kolona ekle
+    newColumns[currentIndex + 1] = {
+      ...newColumns[currentIndex + 1],
+      cards: [...newColumns[currentIndex + 1].cards, card],
+    };
+
+    return newColumns;
+  });
+};
 
   return (
     <div className={Styles.screensPage}>
@@ -111,6 +167,9 @@ const MainDashboard = () => {
               key={col.id}
               column={col}
               onAddCard={addCard}
+               onUpdateCard={updateCard}
+               onDeleteCard={deleteCard}
+               onMoveCard={moveCard}
               selectedPriority={selectedPriority}
             />
           ))}
