@@ -73,26 +73,26 @@ const deleteCard = (columnId, cardId) => {
     )
   );
 };
-
 const moveCard = (columnId, cardId) => {
   setColumns(prevColumns => {
     const newColumns = [...prevColumns];
     const currentIndex = newColumns.findIndex(col => col.id === columnId);
+    if (currentIndex === -1) return prevColumns;
+
     const currentColumn = newColumns[currentIndex];
     const card = currentColumn.cards.find(c => c.id === cardId);
-
     if (!card) return prevColumns;
 
-    // Kartı bir sonraki kolona taşı
+    // Sadece yan kolon varsa taşı
     if (currentIndex < newColumns.length - 1) {
-      // Kartı çıkart
       currentColumn.cards = currentColumn.cards.filter(c => c.id !== cardId);
-      // Kartı bir sonraki kolona ekle
       newColumns[currentIndex + 1].cards.push(card);
     }
+
     return newColumns;
   });
 };
+
 
   return (
     <div className={Styles.screensPage}>
