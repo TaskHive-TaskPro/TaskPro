@@ -1,54 +1,47 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Styles from "./dashboard.module.css";
 
-const FiltersModal = ({ onClose, onSelectPriority }) => {
-  const priorities = ["none", "low", "medium", "high"];
-  return (
-    <div className={Styles.modalOverlay}>
-      <div className={Styles.modalContent}>
-        <h3 className={Styles.modalTitle}>Select Priority</h3>
-        <div className={Styles.colorOptions}>
-          {priorities.map((p) => (
-            <button
-              key={p}
-              className={`${Styles.colorBtn} ${
-                p === "low"
-                  ? Styles.priorityLow
-                  : p === "medium"
-                  ? Styles.priorityMedium
-                  : p === "high"
-                  ? Styles.priorityHigh
-                  : Styles.priorityNone
-              }`}
-              onClick={() => onSelectPriority(p)}
-            >
-              {p === "none"
-                ? "Without"
-                : p.charAt(0).toUpperCase() + p.slice(1)}
-            </button>
-          ))}
-        </div>
-        <button onClick={onClose} className={Styles.btnCloseModal}>
-          Close
-        </button>
-      </div>
-    </div>
-  );
-};
-
-const HeaderDashboard = ({ title, onSelectPriority }) => {
+// ---------------- Header ----------------
+const HeaderDashboard = ({ title, user, onSelectPriority }) => {
+  const themes = ["dark", "light", "turquoise"];
+  const [currentTheme, setCurrentTheme] = useState("dark");
   const [showFilters, setShowFilters] = useState(false);
+
+  // Body class güncelle
+  useEffect(() => {
+    document.body.classList.remove(...themes.map((t) => `theme-${t}`));
+    document.body.classList.add(`theme-${currentTheme}`);
+  }, [currentTheme]);
+
+  const handleChangeTheme = () => {
+    const currentIndex = themes.indexOf(currentTheme);
+    const nextTheme = themes[(currentIndex + 1) % themes.length];
+    setCurrentTheme(nextTheme);
+  };
 
   return (
     <>
       <header className={Styles.headerDashboard}>
         <h1 className={Styles.headerTitle}>{title}</h1>
-        <button
-          className={Styles.btnFilters}
-          onClick={() => setShowFilters(true)}
-        >
-          Filters
-        </button>
+
+        <div className={Styles.headerRight}>
+          {/* Tema butonu */}
+          <button className={Styles.btnTheme} onClick={handleChangeTheme}>
+            Theme: {currentTheme}
+          </button>
+
+          {/* Kullanıcı bilgisi */}
+          {user && (
+            <div className={Styles.userInfo}>
+              <img
+                src={user.avatar}
+                alt={user.name}
+                className={Styles.userAvatar}
+              />
+              <span className={Styles.userName}>{user.name}</span>
+            </div>
+          )}
+        </div>
       </header>
 
       {showFilters && (
