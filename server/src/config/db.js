@@ -1,11 +1,18 @@
-import mongoose from "mongoose";
 
-export const connectDB = async () => {
-  try {
-    await mongoose.connect(process.env.MONGO_URI);
-    console.log("MongoDB connected");
-  } catch (error) {
-    console.error("MongoDB connection error:", error.message);
-    process.exit(1);
-  }
+const mongoose = require('mongoose');
+const dotenv = require('dotenv');
+dotenv.config();
+
+const connectDB = async () => {
+    try {
+        const MONGO_URI = `mongodb+srv://${process.env.MONGODB_USER}:${process.env.MONGODB_PASSWORD}@${process.env.MONGODB_URL}/${process.env.MONGODB_DB}?retryWrites=true&w=majority`;
+        const conn = await mongoose.connect(MONGO_URI);
+        console.log(`MongoDB Bağlantısı Başarılı: ${conn.connection.host}`);
+    } catch (error) {
+        console.error(`Hata: ${error.message}`);
+        process.exit(1);
+    }
 };
+
+module.exports = connectDB;
+
