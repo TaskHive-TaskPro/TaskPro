@@ -1,4 +1,5 @@
 
+
 import React, { createContext, useState, useEffect } from 'react';
 
 
@@ -142,10 +143,12 @@ export const AuthProvider = ({ children }) => {
 
       setUser(updatedUser);
     }
+
   };
 
   const value = {
     user,
+
     token,
     isLoading,
     login,
@@ -160,3 +163,5 @@ export const AuthProvider = ({ children }) => {
     </AuthContext.Provider>
   );
 };
+
+

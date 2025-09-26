@@ -1,45 +1,53 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import Styles from "./dashboard.module.css";
 
-const FiltersModal = ({ onClose, onChangeBackground }) => {
-  const colors = ["#111", "#4B0082", "#F5F5F5"];
-  return (
-    <div className="modal-overlay">
-      <div className="modal-content">
-        <h3 className="modal-title">Select Background</h3>
-        <div className="color-options">
-          {colors.map((color) => (
-            <button
-              key={color}
-              className="color-btn"
-              style={{ backgroundColor: color }}
-              onClick={() => onChangeBackground(color)}
-            />
-          ))}
-        </div>
-        <button onClick={onClose} className="btn-close-modal">
-          Close
-        </button>
-      </div>
-    </div>
-  );
-};
-
-const HeaderDashboard = ({ title, onChangeBackground }) => {
+// ---------------- Header ----------------
+const HeaderDashboard = ({ title, user, onSelectPriority }) => {
+  const themes = ["dark", "light", "turquoise"];
+  const [currentTheme, setCurrentTheme] = useState("dark");
   const [showFilters, setShowFilters] = useState(false);
+
+  // Body class güncelle
+  useEffect(() => {
+    document.body.classList.remove(...themes.map((t) => `theme-${t}`));
+    document.body.classList.add(`theme-${currentTheme}`);
+  }, [currentTheme]);
+
+  const handleChangeTheme = () => {
+    const currentIndex = themes.indexOf(currentTheme);
+    const nextTheme = themes[(currentIndex + 1) % themes.length];
+    setCurrentTheme(nextTheme);
+  };
 
   return (
     <>
-      <header className="header-dashboard">
-        <h1 className="header-title">{title}</h1>
-        <button className="btn-filters" onClick={() => setShowFilters(true)}>
-          Filters
-        </button>
+      <header className={Styles.headerDashboard}>
+        <h1 className={Styles.headerTitle}>{title}</h1>
+
+        <div className={Styles.headerRight}>
+          {/* Tema butonu */}
+          <button className={Styles.btnTheme} onClick={handleChangeTheme}>
+            Theme: {currentTheme}
+          </button>
+
+          {/* Kullanıcı bilgisi */}
+          {user && (
+            <div className={Styles.userInfo}>
+              <img
+                src={user.avatar}
+                alt={user.name}
+                className={Styles.userAvatar}
+              />
+              <span className={Styles.userName}>{user.name}</span>
+            </div>
+          )}
+        </div>
       </header>
 
       {showFilters && (
         <FiltersModal
           onClose={() => setShowFilters(false)}
-          onChangeBackground={onChangeBackground}
+          onSelectPriority={onSelectPriority}
         />
       )}
     </>

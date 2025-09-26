@@ -1,41 +1,55 @@
 import React, { useState } from "react";
+import Styles from "./dashboard.module.css";
+import Card from "../cards/Card"; // Card bileşenini import et
+import EditCardModal from "../cards/EditCardModal"; // Düzenleme modalı
 
 // AddCardModal
-const AddCardModal = ({ onAdd, onClose }) => {
+const AddCardModal = ({ onAdd, onClose, selectedPriority }) => {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
+  const [priority, setPriority] = useState(selectedPriority || "none");
 
   const handleSubmit = (e) => {
     e.preventDefault();
     if (title && description) {
-      onAdd({ id: Date.now().toString(), title, description });
+      onAdd({ id: Date.now().toString(), title, description, priority });
       onClose();
     }
   };
 
   return (
-    <div className="modal-overlay">
-      <form className="modal-content" onSubmit={handleSubmit}>
-        <h3 className="modal-title">Add Card</h3>
+    <div className={Styles.modalOverlay}>
+      <form className={Styles.modalContent} onSubmit={handleSubmit}>
+        <h3 className={Styles.modalTitle}>Add Card</h3>
         <input
-          className="modal-input"
+          className={Styles.modalInput}
           placeholder="Title"
           value={title}
           onChange={(e) => setTitle(e.target.value)}
           required
         />
         <textarea
-          className="modal-textarea"
+          className={Styles.modalTextarea}
           placeholder="Description"
           value={description}
           onChange={(e) => setDescription(e.target.value)}
           required
         />
-        <div className="modal-actions">
-          <button type="button" onClick={onClose} className="btn-cancel">
+        <select
+          className={Styles.modalInput}
+          value={priority}
+          onChange={(e) => setPriority(e.target.value)}
+        >
+          <option value="none">Without priority</option>
+          <option value="low">Low</option>
+          <option value="medium">Medium</option>
+          <option value="high">High</option>
+        </select>
+        <div className={Styles.modalActions}>
+          <button type="button" onClick={onClose} className={Styles.btnCancel}>
             Cancel
           </button>
-          <button type="submit" className="btn-add">
+          <button type="submit" className={Styles.btnAdd}>
             Add
           </button>
         </div>
@@ -44,23 +58,32 @@ const AddCardModal = ({ onAdd, onClose }) => {
   );
 };
 
-const Column = ({ column, onAddCard }) => {
+const Column = ({ column, onAddCard,onUpdateCard,onDeleteCard,onMoveCard, selectedPriority }) => {
   const [showModal, setShowModal] = useState(false);
+  const [editCard, setEditCard] = useState(null); // Düzenlenecek kart
 
   return (
-    <div className="column-container">
-      <h2 className="column-title">{column.title}</h2>
+    <div className={Styles.columnContainer}>
+      <h2 className={Styles.columnTitle}>{column.title}</h2>
 
-      <div className="card-list">
+      <div className={Styles.cardList}>
         {column.cards.map((card) => (
-          <div key={card.id} className="card-item">
-            <h3 className="card-title">{card.title}</h3>
-            <p className="card-desc">{card.description}</p>
-          </div>
+          <Card
+            key={card.id}
+            card={card}
+
+            onEdit={(c) => setEditCard(c)} // Düzenleme modalını aç
+            onDelete={(id) => onDeleteCard && onDeleteCard(column.id, id)} // Silme fonksiyonu, opsiyonel
+
+            onMove={() => onMoveCard && onMoveCard(column.id, card.id)} // Taşıma fonksiyonu, opsiyonel
+
+
+
+          />
         ))}
       </div>
 
-      <button className="btn-add-card" onClick={() => setShowModal(true)}>
+      <button className={Styles.btnAddCard} onClick={() => setShowModal(true)}>
         + Add another card
       </button>
 
@@ -68,6 +91,18 @@ const Column = ({ column, onAddCard }) => {
         <AddCardModal
           onAdd={(card) => onAddCard(column.id, card)}
           onClose={() => setShowModal(false)}
+          selectedPriority={selectedPriority}
+        />
+      )}
+
+      {editCard && (
+        <EditCardModal
+          card={editCard}
+          onUpdate={(updated) => {
+            onUpdateCard(column.id, updated);
+            setEditCard(null);
+          }}
+          onClose={() => setEditCard(null)}
         />
       )}
     </div>
