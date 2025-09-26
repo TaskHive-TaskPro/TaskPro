@@ -71,8 +71,8 @@ const Column = ({ column, onAddCard, selectedPriority }) => {
           <Card
             key={card.id}
             card={card}
-            onEdit={(c) => setEditCard(c)} // Düzenleme modalını aç
-            onDelete={(id) => onDeleteCard && onDeleteCard(column.id, id)} // Silme fonksiyonu, opsiyonel
+            onEdit={(c) => setEditCard(c)}
+            onDelete={(id) => onDeleteCard && onDeleteCard(column.id, id)}
           />
         ))}
       </div>
