@@ -5,7 +5,7 @@ import ArrowIcon from "../../assets/icons/arrow.svg";
 import EditIcon from "../../assets/icons/pencil-01.svg";
 import TrashIcon from "../../assets/icons/trash-04.svg";
 
-const Card = ({ card, onEdit, onDelete }) => {
+const Card = ({ card, onEdit, onDelete, onMove }) => {
   const { title, description, priority, deadline } = card;
 
   const today = new Date().toISOString().split("T")[0];
@@ -21,9 +21,9 @@ const Card = ({ card, onEdit, onDelete }) => {
               <img src={BellIcon} alt="Deadline Today" />
             </button>
           )}
-          <button className={styles["icon-btn"]}>
-            <img src={ArrowIcon} alt="Move" />
-          </button>
+          <button className={styles["icon-btn"]} onClick={onMove}>
+  <img src={ArrowIcon} alt="Move" />
+</button>
           <button
             className={styles["icon-btn"]}
             onClick={() => onEdit(card)}

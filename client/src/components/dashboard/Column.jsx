@@ -58,7 +58,7 @@ const AddCardModal = ({ onAdd, onClose, selectedPriority }) => {
   );
 };
 
-const Column = ({ column, onAddCard,onUpdateCard,onDeleteCard, selectedPriority }) => {
+const Column = ({ column, onAddCard,onUpdateCard,onDeleteCard,onMoveCard, selectedPriority }) => {
   const [showModal, setShowModal] = useState(false);
   const [editCard, setEditCard] = useState(null); // Düzenlenecek kart
 
@@ -73,6 +73,7 @@ const Column = ({ column, onAddCard,onUpdateCard,onDeleteCard, selectedPriority 
             card={card}
             onEdit={(c) => setEditCard(c)} // Düzenleme modalını aç
             onDelete={(id) => onDeleteCard && onDeleteCard(column.id, id)} // Silme fonksiyonu, opsiyonel
+            onMove={() => onMoveCard && onMoveCard(column.id, card.id)} // Taşıma fonksiyonu, opsiyonel
           />
         ))}
       </div>
