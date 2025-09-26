@@ -71,10 +71,12 @@ const Column = ({ column, onAddCard,onUpdateCard,onDeleteCard,onMoveCard, select
           <Card
             key={card.id}
             card={card}
+
             onEdit={(c) => setEditCard(c)} // Düzenleme modalını aç
             onDelete={(id) => onDeleteCard && onDeleteCard(column.id, id)} // Silme fonksiyonu, opsiyonel
 
             onMove={() => onMoveCard && onMoveCard(column.id, card.id)} // Taşıma fonksiyonu, opsiyonel
+
 
 
           />
