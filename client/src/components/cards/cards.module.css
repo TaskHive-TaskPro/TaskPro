@@ -1,13 +1,26 @@
 .card {
-  background-color:rgba(18, 18, 18, 1);
+  background-color: rgba(18, 18, 18, 1);
   color: #ffffff;
   border-radius: 12px;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.4);
-  padding: 16px;
+  padding: 0; /* paddingi cardContent’e taşıyoruz */
   margin-bottom: 12px;
+  display: flex;
+  flex-direction: row; /* solda şerit için row */
+  overflow: hidden;
+}
+
+.priorityStripe {
+  width: 6px; /* şerit kalınlığı */
+  background-color: grey; /* default renk */
+}
+
+.cardContent {
+  flex: 1;
   display: flex;
   flex-direction: column;
   gap: 8px;
+  padding: 16px; /* eski card paddingi buraya taşındı */
 }
 
 .card-header {
@@ -83,4 +96,10 @@
 
 .deadline {
   color: #bbb;
+}
+/* Card footer içindeki priority ve deadline'ı yan yana göstermek için */
+.priority-deadline {
+  display: flex;
+  align-items: center;
+  gap: 8px;
 }
