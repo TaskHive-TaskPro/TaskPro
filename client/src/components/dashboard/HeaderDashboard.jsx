@@ -1,5 +1,7 @@
+// HeaderDashboard.jsx
 import React, { useState, useEffect } from "react";
 import Styles from "./dashboard.module.css";
+import themes from "./dashboardCss/theme.css";
 
 // ---------------- Header ----------------
 const HeaderDashboard = ({ title, user, onSelectPriority }) => {
@@ -9,7 +11,9 @@ const HeaderDashboard = ({ title, user, onSelectPriority }) => {
 
   // Body class güncelle
   useEffect(() => {
-    document.body.classList.remove(...themes.map((t) => `theme-${t}`));
+    // Önce tüm tema classlarını temizle
+    themes.forEach((t) => document.body.classList.remove(`theme-${t}`));
+    // Yeni temayı ekle
     document.body.classList.add(`theme-${currentTheme}`);
   }, [currentTheme]);
 
@@ -22,12 +26,11 @@ const HeaderDashboard = ({ title, user, onSelectPriority }) => {
   return (
     <>
       <header className={Styles.headerDashboard}>
-        <h1 className={Styles.headerTitle}>{title}</h1>
-
         <div className={Styles.headerRight}>
           {/* Tema butonu */}
           <button className={Styles.btnTheme} onClick={handleChangeTheme}>
-            Theme: {currentTheme}
+            Theme:{" "}
+            {currentTheme.charAt(0).toUpperCase() + currentTheme.slice(1)}
           </button>
 
           {/* Kullanıcı bilgisi */}

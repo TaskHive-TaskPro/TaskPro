@@ -9,11 +9,10 @@
 
 /* Priority colors */
 .priorityDot {
-  width: 12px;
-  height: 12px;
+  width: 20px;
+  height: 20px;
   border-radius: 50%;
   display: inline-block;
-  margin-right: 8px;
 }
 
 .priorityNone {
@@ -38,13 +37,14 @@
   justify-content: space-between;
   align-items: center;
   padding: 16px;
-  border-bottom: 1px solid #444;
   background-color: #000;
 }
 
-.headerTitle {
-  font-size: 1.25rem;
-  font-weight: 600;
+.headerRight {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 12px;
 }
 
 /* MainDashboard */
@@ -116,6 +116,10 @@
   padding: 8px 12px;
 }
 
+.btnCloseModal {
+  margin-top: 12px;
+}
+
 .btnAddCard {
   color: #4ade80;
   background: none;
@@ -139,27 +143,28 @@
   background-color: #444;
 }
 
-/* Filters Button (MainDashboard sağ üst) */
+/* Filters Button*/
 .filtersWrapper {
   display: flex;
-  justify-content: flex-end;
-  padding: 16px;
-  border-bottom: 1px solid #444;
-  background-color: #000; /* header ile uyumlu */
+  justify-content: space-between;
+  padding: 16px 16px 0 16px;
+  background-color: #111;
 }
 
-.btnFiltersMain {
+.btnFilters {
   padding: 8px 16px;
   border-radius: 8px;
-  background-color: #222;
+  background-color: transparent;
   color: white;
   cursor: pointer;
   border: none;
+  display: flex;
+  align-items: center;
   transition: 0.2s;
 }
 
-.btnFiltersMain:hover {
-  background-color: #444;
+.btnFilters:hover {
+  color: green;
 }
 
 /* Modals */
@@ -188,14 +193,24 @@
 }
 
 .modalInput,
-.modalTextarea {
+.modalTextarea,
+.modalSelect {
   margin-bottom: 8px;
-  padding: 8px;
+  padding: 8px 12px;
   border-radius: 6px;
   border: 1px solid #444;
   background-color: #111;
   color: white;
   width: 100%;
+  box-sizing: border-box;
+  height: 40px; 
+  font-size: 14px;
+}
+
+.modalTextarea {
+  min-height: 80px;
+  height: auto;
+  resize: vertical;
 }
 
 .modalActions {
@@ -224,57 +239,35 @@
   background-color: #555;
 }
 
-/* Color buttons in filters modal */
+/* Filters Modal Color Options */
 .colorOptions {
   display: flex;
-  gap: 8px;
+  flex-direction: column;
+  gap: 12px;
 }
 
-.colorBtn {
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
+.colorOption {
+  display: flex;
+  align-items: center;
+  gap: 12px;
   cursor: pointer;
+  padding: 6px;
+  border-radius: 6px;
+  transition: 0.2s;
 }
 
-/* theme colors */
-/* Varsayılan (dark) */
-body.theme-dark {
-  background-color: #1e1e1e;
-  color: #f1f1f1;
+.colorOption:hover {
+  background-color: #333;
 }
 
-/* Light */
-body.theme-light {
-  background-color: #ffffff;
-  color: #222222;
-}
-
-/* Turquoise */
-body.theme-turquoise {
-  background-color: #1abc9c;
-  color: #ffffff;
-}
-
-/* Tema butonu */
-.btnTheme {
-  padding: 6px 12px;
-  border-radius: 8px;
-  border: none;
-  cursor: pointer;
+.selectedPriority {
   background-color: #444;
-  color: #fff;
-  transition: 0.3s;
 }
 
-body.theme-light .btnTheme {
-  background-color: #ddd;
-  color: #222;
-}
-
-body.theme-turquoise .btnTheme {
-  background-color: #16a085;
-  color: #fff;
+.priorityLabel {
+  color: white;
+  font-size: 1rem;
+  min-width: 60px;
 }
 
 /* Kullanıcı info */

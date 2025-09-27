@@ -1,38 +1,47 @@
 import React, { useState } from "react";
 import Column from "./Column";
 import Styles from "./dashboard.module.css";
-import HeaderDashboard from "./HeaderDashboard";
 import AddAnotherColumn from "./AddAnotherColumn";
+import { FaFilter } from "react-icons/fa";
 
 // Filters Modal component
-const FiltersModal = ({ onClose, onSelectPriority }) => {
+const FiltersModal = ({ onClose, onSelectPriority, selectedPriority }) => {
   const priorities = ["none", "low", "medium", "high"];
 
   return (
     <div className={Styles.modalOverlay}>
       <div className={Styles.modalContent}>
         <h3 className={Styles.modalTitle}>Select Priority</h3>
+
         <div className={Styles.colorOptions}>
           {priorities.map((p) => (
-            <button
+            <div
               key={p}
-              className={`${Styles.colorBtn} ${
-                p === "low"
-                  ? Styles.priorityLow
-                  : p === "medium"
-                  ? Styles.priorityMedium
-                  : p === "high"
-                  ? Styles.priorityHigh
-                  : Styles.priorityNone
+              className={`${Styles.colorOption} ${
+                selectedPriority === p ? Styles.selectedPriority : ""
               }`}
               onClick={() => onSelectPriority(p)}
             >
-              {p === "none"
-                ? "Without"
-                : p.charAt(0).toUpperCase() + p.slice(1)}
-            </button>
+              <span
+                className={`${Styles.priorityDot} ${
+                  p === "low"
+                    ? Styles.priorityLow
+                    : p === "medium"
+                    ? Styles.priorityMedium
+                    : p === "high"
+                    ? Styles.priorityHigh
+                    : Styles.priorityNone
+                }`}
+              ></span>
+              <span className={Styles.priorityLabel}>
+                {p === "none"
+                  ? "Without"
+                  : p.charAt(0).toUpperCase() + p.slice(1)}
+              </span>
+            </div>
           ))}
         </div>
+
         <button onClick={onClose} className={Styles.btnCloseModal}>
           Close
         </button>
@@ -73,9 +82,7 @@ const MainDashboard = () => {
   const [showAddColumn, setShowAddColumn] = useState(false);
   const [showFilters, setShowFilters] = useState(false);
 
-  const addColumn = (newCol) => {
-    setColumns([...columns, newCol]);
-  };
+  const addColumn = (newCol) => setColumns([...columns, newCol]);
 
   const addCard = (columnId, card) => {
     setColumns(
@@ -84,71 +91,65 @@ const MainDashboard = () => {
       )
     );
   };
-  // Kartı güncelleme
-const updateCard = (columnId, updatedCard) => {
-  setColumns(
-    columns.map((col) =>
-      col.id === columnId
-        ? {
-            ...col,
-            cards: col.cards.map((card) =>
-              card.id === updatedCard.id ? updatedCard : card
-            ),
-          }
-        : col
-    )
-  );
-};
 
-// Kartı silme
-const deleteCard = (columnId, cardId) => {
-  setColumns(
-    columns.map((col) =>
-      col.id === columnId
-        ? { ...col, cards: col.cards.filter((card) => card.id !== cardId) }
-        : col
-    )
-  );
-};
-const moveCard = (columnId, cardId) => {
-  setColumns((prevColumns) => {
-    const currentIndex = prevColumns.findIndex((col) => col.id === columnId);
-
-    // Eğer zaten son kolondaysa -> hiçbir şey yapma
-    if (currentIndex === prevColumns.length - 1) {
-      return prevColumns;
-    }
-
-    // Taşınacak kartı bul
-    const currentCol = prevColumns[currentIndex];
-    const card = currentCol.cards.find((c) => c.id === cardId);
-    if (!card) return prevColumns;
-
-    // 1) Kartı bulunduğu kolondan çıkar
-    const newColumns = prevColumns.map((col, i) =>
-      col.id === columnId
-        ? { ...col, cards: col.cards.filter((c) => c.id !== cardId) }
-        : col
+  const updateCard = (columnId, updatedCard) => {
+    setColumns(
+      columns.map((col) =>
+        col.id === columnId
+          ? {
+              ...col,
+              cards: col.cards.map((card) =>
+                card.id === updatedCard.id ? updatedCard : card
+              ),
+            }
+          : col
+      )
     );
+  };
 
-    // 2) Kartı bir sonraki kolona ekle
-    newColumns[currentIndex + 1] = {
-      ...newColumns[currentIndex + 1],
-      cards: [...newColumns[currentIndex + 1].cards, card],
-    };
+  const deleteCard = (columnId, cardId) => {
+    setColumns(
+      columns.map((col) =>
+        col.id === columnId
+          ? { ...col, cards: col.cards.filter((card) => card.id !== cardId) }
+          : col
+      )
+    );
+  };
 
-    return newColumns;
-  });
-};
+  const moveCard = (columnId, cardId) => {
+    setColumns((prevColumns) => {
+      const currentIndex = prevColumns.findIndex((col) => col.id === columnId);
+      if (currentIndex === prevColumns.length - 1) return prevColumns;
+
+      const currentCol = prevColumns[currentIndex];
+      const card = currentCol.cards.find((c) => c.id === cardId);
+      if (!card) return prevColumns;
+
+      const newColumns = prevColumns.map((col, i) =>
+        col.id === columnId
+          ? { ...col, cards: col.cards.filter((c) => c.id !== cardId) }
+          : col
+      );
+
+      newColumns[currentIndex + 1] = {
+        ...newColumns[currentIndex + 1],
+        cards: [...newColumns[currentIndex + 1].cards, card],
+      };
+
+      return newColumns;
+    });
+  };
 
   return (
     <div className={Styles.screensPage}>
-      {/* Filters butonu artık MainDashboard’da */}
       <div className={Styles.filtersWrapper}>
+        <h2>Project Office</h2>
         <button
           className={Styles.btnFilters}
           onClick={() => setShowFilters(true)}
         >
+          <FaFilter style={{ marginRight: "8px" }} />
           Filters
         </button>
       </div>
@@ -157,6 +158,7 @@ const moveCard = (columnId, cardId) => {
         <FiltersModal
           onClose={() => setShowFilters(false)}
           onSelectPriority={(p) => setSelectedPriority(p)}
+          selectedPriority={selectedPriority}
         />
       )}
 
@@ -165,11 +167,19 @@ const moveCard = (columnId, cardId) => {
           {columns.map((col) => (
             <Column
               key={col.id}
-              column={col}
+              column={{
+                ...col,
+                cards:
+                  selectedPriority === "none"
+                    ? col.cards
+                    : col.cards.filter(
+                        (card) => card.priority === selectedPriority
+                      ),
+              }}
               onAddCard={addCard}
-               onUpdateCard={updateCard}
-               onDeleteCard={deleteCard}
-               onMoveCard={moveCard}
+              onUpdateCard={updateCard}
+              onDeleteCard={deleteCard}
+              onMoveCard={moveCard}
               selectedPriority={selectedPriority}
             />
           ))}
