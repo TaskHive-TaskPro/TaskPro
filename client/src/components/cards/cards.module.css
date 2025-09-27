@@ -3,16 +3,16 @@
   color: #ffffff;
   border-radius: 12px;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.4);
-  padding: 0; /* paddingi cardContent’e taşıyoruz */
+  padding: 0;
   margin-bottom: 12px;
   display: flex;
-  flex-direction: row; /* solda şerit için row */
+  flex-direction: row;
   overflow: hidden;
 }
 
 .priorityStripe {
-  width: 6px; /* şerit kalınlığı */
-  background-color: grey; /* default renk */
+  width: 6px;
+  background-color: grey;
 }
 
 .cardContent {
@@ -20,7 +20,7 @@
   display: flex;
   flex-direction: column;
   gap: 8px;
-  padding: 16px; /* eski card paddingi buraya taşındı */
+  padding: 16px;
 }
 
 .card-header {
