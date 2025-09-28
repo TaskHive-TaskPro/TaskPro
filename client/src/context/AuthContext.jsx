@@ -1,7 +1,8 @@
-import React, { createContext, useState, useEffect } from 'react';
+// src/context/AuthContext.jsx
+import React, { createContext, useState, useEffect, useContext } from 'react';
 import authAPI from '../api/auth';
 
-const AuthContext = createContext();
+export const AuthContext = createContext(null);
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
@@ -28,13 +29,14 @@ export const AuthProvider = ({ children }) => {
       const message = await authAPI.register(userData);
       return message;
     } catch (error) {
-      throw error;
+
+      throw error; 
     }
   };
 
   const logout = () => {
-    authAPI.logout();
-    setUser(null);
+    authAPI.logout(); 
+    setUser(null); 
   };
 
   const value = {
@@ -47,4 +49,10 @@ export const AuthProvider = ({ children }) => {
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };
 
-export default AuthContext;
+export const useAuth = () => {
+  const context = useContext(AuthContext);
+  if (context === null) { 
+    throw new Error('useAuth, AuthProvider içinde kullanılmalıdır.');
+  }
+  return context;
+};

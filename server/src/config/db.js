@@ -3,13 +3,19 @@ const dotenv = require('dotenv');
 dotenv.config();
 
 const connectDB = async () => {
+    const MONGO_URI = process.env.MONGO_URI; 
+    
+    if (!MONGO_URI) {
+        console.error("Hata: MONGO_URI .env dosyasında tanımlı değil!");
+        process.exit(1); 
+    }
+    
     try {
-        const MONGO_URI = `mongodb+srv://${process.env.MONGODB_USER}:${process.env.MONGODB_PASSWORD}@${process.env.MONGODB_URL}/${process.env.MONGODB_DB}?retryWrites=true&w=majority`;
         const conn = await mongoose.connect(MONGO_URI);
         console.log(`MongoDB Bağlantısı Başarılı: ${conn.connection.host}`);
     } catch (error) {
-        console.error(`Hata: ${error.message}`);
-        process.exit(1);
+        console.error(`MongoDB Bağlantı Hatası: ${error.message}`);
+        process.exit(1); 
     }
 };
 
