@@ -1,0 +1,105 @@
+.card {
+  background-color: rgba(18, 18, 18, 1);
+  color: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.4);
+  padding: 0;
+  margin-bottom: 12px;
+  display: flex;
+  flex-direction: row;
+  overflow: hidden;
+}
+
+.priorityStripe {
+  width: 6px;
+  background-color: grey;
+}
+
+.cardContent {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 16px;
+}
+
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.card-header h3 {
+  font-size: 16px;
+  font-weight: 600;
+  margin: 0;
+  color: #fff;
+}
+
+.card-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.icon-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 4px;
+}
+
+.icon-btn img {
+  width: 18px;
+  height: 18px;
+  filter: brightness(0) invert(1);
+}
+
+.card-description {
+  font-size: 14px;
+  color: #b0b0b0;
+  line-height: 1.4;
+}
+
+.card-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 13px;
+}
+
+.priority {
+  padding: 2px 8px;
+  border-radius: 8px;
+  font-weight: 500;
+  text-transform: capitalize;
+}
+
+.priority.low {
+  background-color: #2e7d32;
+  color: #e6f9ed;
+}
+
+.priority.medium {
+  background-color: #ef6c00;
+  color: #fff4e6;
+}
+
+.priority.high {
+  background-color: #c62828;
+  color: #fdecea;
+}
+
+.priority.none {
+  background-color: #444;
+  color: #ccc;
+}
+
+.deadline {
+  color: #bbb;
+}
+/* Card footer içindeki priority ve deadline'ı yan yana göstermek için */
+.priority-deadline {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}

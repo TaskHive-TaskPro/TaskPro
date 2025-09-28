@@ -1,9 +1,17 @@
 import React, { useState } from "react";
 import Styles from "./dashboard.module.css";
-import Card from "../cards/Card"; // Card bileşenini import et
-import EditCardModal from "../cards/EditCardModal"; // Düzenleme modalı
+import Card from "../cards/Card";
+import EditCardModal from "../cards/EditCardModal";
 
-// AddCardModal
+// Priority renkleri
+const priorityColors = {
+  none: "#bdc3c7",
+  low: "#2ecc71",
+  medium: "#f1c40f",
+  high: "#e74c3c",
+};
+
+// ---------------- AddCardModal ----------------
 const AddCardModal = ({ onAdd, onClose, selectedPriority }) => {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
@@ -12,7 +20,14 @@ const AddCardModal = ({ onAdd, onClose, selectedPriority }) => {
   const handleSubmit = (e) => {
     e.preventDefault();
     if (title && description) {
-      onAdd({ id: Date.now().toString(), title, description, priority });
+      const today = new Date().toISOString().split("T")[0]; // bugünün tarihi
+      onAdd({
+        id: Date.now().toString(),
+        title,
+        description,
+        priority,
+        deadline: today,
+      });
       onClose();
     }
   };
@@ -39,11 +54,20 @@ const AddCardModal = ({ onAdd, onClose, selectedPriority }) => {
           className={Styles.modalInput}
           value={priority}
           onChange={(e) => setPriority(e.target.value)}
+          style={{ color: priorityColors[priority] }}
         >
-          <option value="none">Without priority</option>
-          <option value="low">Low</option>
-          <option value="medium">Medium</option>
-          <option value="high">High</option>
+          <option value="none" style={{ color: priorityColors.none }}>
+            Without priority
+          </option>
+          <option value="low" style={{ color: priorityColors.low }}>
+            Low
+          </option>
+          <option value="medium" style={{ color: priorityColors.medium }}>
+            Medium
+          </option>
+          <option value="high" style={{ color: priorityColors.high }}>
+            High
+          </option>
         </select>
         <div className={Styles.modalActions}>
           <button type="button" onClick={onClose} className={Styles.btnCancel}>
@@ -58,9 +82,17 @@ const AddCardModal = ({ onAdd, onClose, selectedPriority }) => {
   );
 };
 
-const Column = ({ column, onAddCard, selectedPriority }) => {
+// ---------------- Column ----------------
+const Column = ({
+  column,
+  onAddCard,
+  onUpdateCard,
+  onDeleteCard,
+  onMoveCard,
+  selectedPriority,
+}) => {
   const [showModal, setShowModal] = useState(false);
-  const [editCard, setEditCard] = useState(null); // Düzenlenecek kart
+  const [editCard, setEditCard] = useState(null);
 
   return (
     <div className={Styles.columnContainer}>
@@ -71,8 +103,9 @@ const Column = ({ column, onAddCard, selectedPriority }) => {
           <Card
             key={card.id}
             card={card}
-            onEdit={(c) => setEditCard(c)} // Düzenleme modalını aç
-            onDelete={(id) => onDeleteCard && onDeleteCard(column.id, id)} // Silme fonksiyonu, opsiyonel
+            onEdit={() => setEditCard(card)}
+            onDelete={() => onDeleteCard && onDeleteCard(column.id, card.id)}
+            onMove={() => onMoveCard && onMoveCard(column.id, card.id)}
           />
         ))}
       </div>
