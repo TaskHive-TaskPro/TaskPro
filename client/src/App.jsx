@@ -13,7 +13,7 @@
 import React from "react";
 import { BrowserRouter as Router } from "react-router-dom";
 import DashboardRoutes from "./routes/DashboardRoutes";
-
+import './styles/globals.css'
 function App() {
   return (
     <Router>
