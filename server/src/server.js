@@ -2,8 +2,9 @@
 import express from "express";
 import dotenv from "dotenv";
 import cors from "cors";
-import { connectDB } from "./db/connect.js"; // connectDB fonksiyonu
-import cardRoutes from "./routes/cardRoutes.js"; // oluşturduğun router
+import { connectDB } from "./config/db.js";       // MongoDB bağlantısı
+import cardRoutes from "./routes/cards.js";       // Card router
+import authRoutes from "./routes/authRoutes.js";  // Auth router
 
 dotenv.config();
 const app = express();
@@ -17,6 +18,7 @@ app.use(express.json());
 connectDB();
 
 // Routes
+app.use("/api/auth", authRoutes);   // <-- Auth route eklendi
 app.use("/api/cards", cardRoutes);
 
 // Test route

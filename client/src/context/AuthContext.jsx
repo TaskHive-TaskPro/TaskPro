@@ -1,87 +1,57 @@
-// client/src/context/AuthContext.jsx
-import React, { createContext, useState, useEffect } from 'react';
-import authAPI from '../api/auth';
+ // src/context/AuthContext.jsx
+import React, { createContext, useState, useEffect, useContext } from 'react';
+import authAPI from '../api/auth.js';
 
-const AuthContext = createContext();
+export const AuthContext = createContext(null);
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
-  const [token, setToken] = useState(localStorage.getItem('token') || null);
-  const [isLoading, setIsLoading] = useState(false);
 
-  const updateUser = (newUser) => {
-    setUser(newUser);
-  };
+  useEffect(() => {
+    const storedUser = localStorage.getItem('user');
+    if (storedUser) {
+      setUser(JSON.parse(storedUser));
+    }
+  }, []);
 
-  // Kayıt olma
-  const register = async (name, email, password) => {
+  const login = async (userData) => {
     try {
-      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/auth/register`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name, email, password })
-      });
-
-      const data = await response.json();
-      if (!response.ok) {
-        throw new Error(data.message || 'Kayıt başarısız');
-      }
-
-      localStorage.setItem('token', data.token);
-      setToken(data.token);
-      setUser(data.user);
-
-      return { success: true, user: data.user };
+      const response = await authAPI.login(userData);
+      setUser(response);
+      return response;
     } catch (error) {
-      throw error;
+      throw error; 
     }
   };
 
-  // Giriş yapma
-  const login = async (email, password) => {
+  const register = async (userData) => {
     try {
-      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/auth/login`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, password })
-      });
-
-      const data = await response.json();
-      if (!response.ok) {
-        throw new Error(data.message || 'Giriş başarısız');
-      }
-
-      localStorage.setItem('token', data.token);
-      setToken(data.token);
-      setUser(data.user);
-
-      return { success: true, user: data.user };
+      const message = await authAPI.register(userData);
+      return message;
     } catch (error) {
-      throw error;
+      throw error; 
     }
   };
 
-  // Çıkış yapma
   const logout = () => {
-    authAPI.logout();
-    localStorage.removeItem('token');
-    setUser(null);
-    setToken(null);
+    authAPI.logout(); 
+    setUser(null); 
   };
 
-  return (
-    <AuthContext.Provider value={{ 
-      user, 
-      token, 
-      isLoading, 
-      updateUser,
-      register,
-      login,
-      logout 
-    }}>
-      {children}
-    </AuthContext.Provider>
-  );
+  const value = {
+    user,
+    login,
+    register,
+    logout,
+  };
+
+  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };
 
-export default AuthContext;
+export const useAuth = () => {
+  const context = useContext(AuthContext);
+  if (context === null) { 
+    throw new Error('useAuth, AuthProvider içinde kullanılmalıdır.');
+  }
+  return context;
+};
