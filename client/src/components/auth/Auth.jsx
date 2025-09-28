@@ -1,26 +1,31 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './AuthPage.css';
 import { FaEye, FaEyeSlash } from 'react-icons/fa';
-import logo from './icon.png';
-import avatar from './headerIcon.png';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { registerSchema, loginSchema } from '../../validation/authSchema';
-import { useAuth } from '../../hooks/useAuth';
+import { useAuth } from '../../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
+import LoadingOverlay from '../LoadingOverlay/LoadingOverlay'; 
+import HeaderIcon from "./assets/headerIcon.png";
+import TextIcon from "./assets/icon.png"
 
-const Auth = () => {
-  const [showModal, setShowModal] = useState(false);
+const Auth = ({ verificationStatus, showModalInitially = false }) => {
+  const [showModal, setShowModal] = useState(showModalInitially);
   const [isRegister, setIsRegister] = useState(true);
   const [showPassword, setShowPassword] = useState(false);
+  const [isLoading, setIsLoading] = useState(false); 
 
   const { login, register: registerUser } = useAuth();
   const navigate = useNavigate();
 
   const handleModalToggle = () => setShowModal(!showModal);
-  const handleAuthTypeChange = (type) => setIsRegister(type === 'register');
 
-  // Register form
+  const handleAuthTypeChange = (type) => {
+    setIsRegister(type === 'register');
+    reset();
+  };
+
   const {
     register,
     handleSubmit,
@@ -30,19 +35,49 @@ const Auth = () => {
     resolver: yupResolver(isRegister ? registerSchema : loginSchema),
   });
 
+  const calculateRandomDelay = () => {
+      const minMs = 2000;
+      const maxMs = 3000;
+      return Math.floor(Math.random() * (maxMs - minMs + 1)) + minMs;
+  };
+
   const onSubmit = async (data) => {
-    try {
+    setIsLoading(true); 
+    
+    const delayTime = calculateRandomDelay();
+    const minDelay = new Promise(resolve => setTimeout(resolve, delayTime));
+    
+    const authOperation = (async () => {
       if (isRegister) {
-        await registerUser(data);
-        alert('Kayıt başarılı! Giriş yapabilirsiniz.');
+        const message = await registerUser(data);
+        alert(message);
+        reset();
+        setIsRegister(false); 
       } else {
         await login(data);
+        reset();
+        setShowModal(false);
+        navigate('/home');
       }
-      reset();
-      setShowModal(false);
-      navigate('/home');
+    })();
+    
+    try {
+      await Promise.all([authOperation, minDelay]);
+      
     } catch (err) {
-      alert(err);
+      let errorMessage = 'Bilinmeyen bir hata oluştu.';
+      if (err?.response?.data?.message) {
+        errorMessage = err.response.data.message;
+      } else if (err.message) {
+        errorMessage = err.message;
+      }
+      alert(`Hata: ${errorMessage}`);
+      if (errorMessage.includes('doğrulayın') || errorMessage.includes('onay')) {
+        setIsRegister(false);
+        setShowModal(true);
+      }
+    } finally {
+      setIsLoading(false); 
     }
   };
 
@@ -92,12 +127,38 @@ const Auth = () => {
     </form>
   );
 
+  const VerificationStatusDisplay = () => {
+    if (!verificationStatus) return null;
+    const { loading, message, success } = verificationStatus;
+    const className = success ? 'success' : 'error';
+    return (
+      <div className={`verification-status ${className}`}>
+        {loading ? '⏳' : success ? '✅' : '❌'}
+        <p>{message}</p>
+        {!loading && (
+          <button onClick={handleModalToggle} className="ok-btn">
+            {success ? 'Giriş Yap' : 'Kapat'}
+          </button>
+        )}
+      </div>
+    );
+  };
+
   return (
     <div className="auth-container">
       <div className="auth-card">
-        <img src={avatar} alt="Avatar" className="auth-avatar" />
+                <img 
+            src={HeaderIcon} 
+            alt="Main Logo" 
+            className="auth-avatar-main"
+        />
+
         <div className="logo-section">
-          <img src={logo} alt="Task Pro Logo" className="logo-img" />
+          <img 
+            src={TextIcon}
+            alt="Task Pro Icon" 
+            className="logo-img"
+          />
           <h1>Task Pro</h1>
         </div>
         <p className="tagline">
@@ -129,25 +190,35 @@ const Auth = () => {
       {showModal && (
         <div className="modal-overlay" onClick={handleModalToggle}>
           <div className="modal-content" onClick={(e) => e.stopPropagation()}>
-            <div className="modal-header">
-              <span
-                className={`modal-tab ${isRegister ? 'active' : ''}`}
-                onClick={() => handleAuthTypeChange('register')}
-              >
-                Registration
-              </span>
-              <span
-                className={`modal-tab ${!isRegister ? 'active' : ''}`}
-                onClick={() => handleAuthTypeChange('login')}
-              >
-                Log In
-              </span>
-            </div>
-            {isRegister ? <RegistrationForm /> : <LoginForm />}
-            <button className="close-modal" onClick={handleModalToggle}>&times;</button>
+            {verificationStatus ? (
+              <VerificationStatusDisplay />
+            ) : (
+              <>
+                <div className="modal-header">
+                  <span
+                    className={`modal-tab ${isRegister ? 'active' : ''}`}
+                    onClick={() => handleAuthTypeChange('register')}
+                  >
+                    Registration
+                  </span>
+                  <span
+                    className={`modal-tab ${!isRegister ? 'active' : ''}`}
+                    onClick={() => handleAuthTypeChange('login')}
+                  >
+                    Log In
+                  </span>
+                </div>
+                {isRegister ? <RegistrationForm /> : <LoginForm />}
+              </>
+            )}
+            <button className="close-modal" onClick={handleModalToggle}>
+              &times;
+            </button>
           </div>
         </div>
       )}
+
+      {isLoading && <LoadingOverlay />} 
     </div>
   );
 };

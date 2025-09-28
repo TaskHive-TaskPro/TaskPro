@@ -1,29 +1,52 @@
-
-
-
-
-
-// Ana uygulama bileşeni
-// İleride eklenebilecek modüller ve route dosyaları için örnekler:
-// import AuthRoutes from "./routes/AuthRoutes"; // Kullanıcı giriş/çıkış işlemleri
-// import AdminRoutes from "./routes/AdminRoutes"; // Yönetici paneli
-// import UserRoutes from "./routes/UserRoutes"; // Kullanıcıya özel sayfalar
-// import Layout from "./components/Layout"; // Ortak layout (header, footer, sidebar)
-
 import React from "react";
-import { BrowserRouter as Router } from "react-router-dom";
-import DashboardRoutes from "./routes/DashboardRoutes";
-import './styles/globals.css'
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+
+
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+
+// Context
+import { AuthProvider } from "./context/AuthContext";
+
+// Sayfalar & Bileşenler
+import DashboardRoutes from "./routes/DashboardRoutes"; 
+import AuthWrapper from "./pages/AuthWrapper"; 
+import VerifyEmailPage from "./pages/VerifyEmailPage";
+import Home from "./pages/HomePage";
+
+// import Layout from "./components/Layout"; // Eğer ortak layout kullanmak istersen
+import './styles/globals.css';
+
 function App() {
   return (
-    <Router>
-      {/* Ortak layout eklemek isterseniz: <Layout><DashboardRoutes /></Layout> */}
-      <DashboardRoutes />
-      {/* İleride farklı modül route'ları eklemek için aşağıya ekleyebilirsiniz: */}
-      {/* <AuthRoutes /> */}
-      {/* <AdminRoutes /> */}
-      {/* <UserRoutes /> */}
-    </Router>
+    <AuthProvider>
+      <Router>
+        {/* Ortak Layout eklemek isterseniz:
+          <Layout>
+            <Routes>...</Routes>
+          </Layout>
+        */}
+        <Routes>
+          {/* Auth ile ilgili rotalar */}
+          <Route path="/" element={<AuthWrapper />} />
+          <Route
+            path="/verify/:token"
+            element={
+              <AuthWrapper>
+                <VerifyEmailPage />
+              </AuthWrapper>
+            }
+          />
+          <Route path="/home" element={<Home />} />
+
+          {/* Dashboard veya modüller */}
+          <Route path="/dashboard/*" element={<DashboardRoutes />} />
+
+          {/* İleride ekleyebileceğin route örnekleri */}
+          {/* <Route path="/admin/*" element={<AdminRoutes />} /> */}
+          {/* <Route path="/user/*" element={<UserRoutes />} /> */}
+        </Routes>
+      </Router>
+    </AuthProvider>
   );
 }
 
