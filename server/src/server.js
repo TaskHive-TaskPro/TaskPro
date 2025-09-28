@@ -2,8 +2,8 @@
 import express from "express";
 import dotenv from "dotenv";
 import cors from "cors";
-import { connectDB } from "./db/connect.js"; // connectDB fonksiyonu
-import cardRoutes from "./routes/cardRoutes.js"; // oluşturduğun router
+import { connectDB } from "./config/db.js"; // connectDB fonksiyonu
+import cardRoutes from "./routes/cards.js"; // oluşturduğun router
 
 dotenv.config();
 const app = express();
