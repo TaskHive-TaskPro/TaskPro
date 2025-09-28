@@ -1,9 +1,7 @@
-
-
 import React, { createContext, useState, useEffect } from 'react';
+import authAPI from '../api/auth';
 
-
-export const AuthContext = createContext();
+const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
@@ -97,53 +95,13 @@ export const AuthProvider = ({ children }) => {
 
       return { success: true, user: data.user };
     } catch (error) {
-      return { success: false, error: error.message };
+      throw error;
     }
   };
 
-  // Çıkış yapma
-  const logout = async () => {
-    try {
-      if (token) {
-        await fetch(`${import.meta.env.VITE_API_URL}/api/auth/logout`, {
-          method: 'POST',
-          headers: {
-            'Authorization': `Bearer ${token}`
-          }
-        });
-      }
-    } catch (error) {
-      console.error('Logout error:', error);
-    } finally {
-      localStorage.removeItem('token');
-      setToken(null);
-      setUser(null);
-    }
-  };
-
-  // Kullanıcı bilgilerini güncelleme
-  const updateUser = async (updatedUser) => {
-    try {
-
-      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/user/current`, {
-        headers: {
-          'Authorization': `Bearer ${token}`
-        }
-      });
-
-      if (response.ok) {
-        const userData = await response.json();
-        setUser(userData.user);
-      } else {
-
-        setUser(updatedUser);
-      }
-    } catch (error) {
-      console.error('Update user error:', error);
-
-      setUser(updatedUser);
-    }
-
+  const logout = () => {
+    authAPI.logout();
+    setUser(null);
   };
 
   const value = {
@@ -164,4 +122,4 @@ export const AuthProvider = ({ children }) => {
   );
 };
 
-
+export default AuthContext;
