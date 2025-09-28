@@ -1,17 +1,25 @@
-const express = require("express");
-const {
+// backend/src/routes/authRoutes.js
+import express from "express";
+import {
   registerUser,
   loginUser,
-  verifyEmail,
+  verifyEmail as verifyEmailController,
   forgotPassword,
   resetPassword,
-} = require("../controllers/authController");
-const User = require("../models/User");
-const jwt = require("jsonwebtoken");
+} from "../controllers/authController.js";
+
+import User from "../models/User.js";
+import jwt from "jsonwebtoken";
 
 const router = express.Router();
 
+// Register route
 router.post("/register", registerUser);
+
+// Login route
+router.post("/login", loginUser);
+
+// Verify email route
 router.get("/verify/:token", async (req, res) => {
   try {
     const { token } = req.params;
@@ -52,8 +60,10 @@ router.get("/verify/:token", async (req, res) => {
   }
 });
 
-router.post("/login", loginUser);
+// Forgot password route
 router.post("/forgot-password", forgotPassword);
+
+// Reset password route
 router.post("/reset-password/:token", resetPassword);
 
-module.exports = router;
+export default router;

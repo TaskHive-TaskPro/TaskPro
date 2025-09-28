@@ -1,24 +1,30 @@
-const mongoose = require('mongoose');
+// backend/src/models/User.js
+import mongoose from "mongoose";
 
-const userSchema = new mongoose.Schema({
-  name: { 
-    type: String, 
-    required: [true, "Ad alanı boş bırakılamaz"] 
+const userSchema = new mongoose.Schema(
+  {
+    name: {
+      type: String,
+      required: [true, "Ad alanı boş bırakılamaz"]
+    },
+    email: {
+      type: String,
+      required: [true, "Email alanı boş bırakılamaz"],
+      unique: true,
+      match: [/.+@.+\..+/, "Lütfen geçerli bir email adresi girin."]
+    },
+    password: {
+      type: String,
+      required: [true, "Şifre alanı boş bırakılamaz"]
+    },
+    verified: { type: Boolean, default: false },
+    verificationToken: { type: String },
+    resetPasswordToken: { type: String },
+    resetPasswordExpires: { type: Date },
   },
-  email: { 
-    type: String, 
-    required: [true, "Email alanı boş bırakılamaz"], 
-    unique: true, 
-    match: [/.+@.+\..+/, "Lütfen geçerli bir email adresi girin."] 
-  },
-  password: { 
-    type: String, 
-    required: [true, "Şifre alanı boş bırakılamaz"] 
-  },
-  verified: { type: Boolean, default: false },
-  verificationToken: { type: String },
-  resetPasswordToken: { type: String },
-  resetPasswordExpires: { type: Date },
-}, { timestamps: true });
+  { timestamps: true }
+);
 
-module.exports = mongoose.model('User', userSchema);
+const User = mongoose.model("User", userSchema);
+
+export default User; // ESModule uyumlu

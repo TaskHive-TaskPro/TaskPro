@@ -1,18 +1,19 @@
-const asyncHandler = require("express-async-handler");
-const bcrypt = require("bcrypt");
-const jwt = require("jsonwebtoken");
-const crypto = require("crypto");
-const User = require("../models/User");
-const { hashPassword } = require("../utils/hash");
-const { registerSchema } = require("../utils/validate");
-const { sendEmail } = require("../utils/email");
+// backend/src/controllers/authController.js
+import asyncHandler from "express-async-handler";
+import bcrypt from "bcrypt";
+import jwt from "jsonwebtoken";
+import crypto from "crypto";
+import User from "../models/User.js";
+import { hashPassword } from "../utils/hash.js";
+import { registerSchema } from "../utils/validate.js";
+import { sendEmail } from "../utils/email.js";
 
 const generateVerificationToken = () => {
   return crypto.randomBytes(32).toString("hex");
 };
 
 // Kullanıcı kayıt
-const registerUser = asyncHandler(async (req, res) => {
+export const registerUser = asyncHandler(async (req, res) => {
   const { error, value } = registerSchema.validate(req.body);
   if (error) {
     res.status(400);
@@ -61,8 +62,8 @@ const registerUser = asyncHandler(async (req, res) => {
   }
 });
 
-// Email doğrulama 
-const verifyEmail = asyncHandler(async (req, res) => {
+// Email doğrulama
+export const verifyEmail = asyncHandler(async (req, res) => {
   const { token } = req.params;
   const user = await User.findOne({ verificationToken: token });
 
@@ -85,8 +86,8 @@ const verifyEmail = asyncHandler(async (req, res) => {
   });
 });
 
-// Giriş 
-const loginUser = asyncHandler(async (req, res) => {
+// Giriş
+export const loginUser = asyncHandler(async (req, res) => {
   const { email, password } = req.body;
   const user = await User.findOne({ email });
 
@@ -117,7 +118,7 @@ const loginUser = asyncHandler(async (req, res) => {
 });
 
 // Şifre sıfırlama talebi
-const forgotPassword = asyncHandler(async (req, res) => {
+export const forgotPassword = asyncHandler(async (req, res) => {
   const { email } = req.body;
   const user = await User.findOne({ email });
 
@@ -146,7 +147,7 @@ const forgotPassword = asyncHandler(async (req, res) => {
 });
 
 // Yeni şifre belirleme
-const resetPassword = asyncHandler(async (req, res) => {
+export const resetPassword = asyncHandler(async (req, res) => {
   const { token } = req.params;
   const { password } = req.body;
 
@@ -176,11 +177,3 @@ const resetPassword = asyncHandler(async (req, res) => {
 
   res.status(200).json({ message: "Şifreniz başarıyla sıfırlandı." });
 });
-
-module.exports = {
-  registerUser,
-  verifyEmail,
-  loginUser,
-  forgotPassword,
-  resetPassword,
-};
