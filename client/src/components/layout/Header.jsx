@@ -1,6 +1,5 @@
-
 import React, { useState, useContext } from 'react';
-import { Sun, Moon, Palette, Menu } from 'lucide-react';
+import { Sun, Moon, Palette, Menu, User } from 'lucide-react';
 import UserInfo from './UserInfo';
 import { ThemeContext } from '../../context/ThemeContext';
 import { useAuth } from '../../hooks/useAuth';
@@ -112,7 +111,12 @@ const Header = ({ onSidebarToggle }) => {
           </div>
 
           {/* User Info */}
-          <UserInfo />
+          <div className="user-info">
+            <button className="user-info-btn">
+              <User size={20} />
+              <span>{user?.name || 'Kullanıcı'}</span>
+            </button>
+          </div>
         </div>
       </div>
     </header>

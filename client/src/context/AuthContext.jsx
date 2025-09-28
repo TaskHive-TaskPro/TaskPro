@@ -1,4 +1,4 @@
-// src/context/AuthContext.jsx
+ // src/context/AuthContext.jsx
 import React, { createContext, useState, useEffect, useContext } from 'react';
 import authAPI from '../api/auth';
 
@@ -35,7 +35,7 @@ export const AuthProvider = ({ children }) => {
 
   const logout = () => {
     authAPI.logout(); 
-    setUser(null);
+    setUser(null); 
   };
 
   const value = {

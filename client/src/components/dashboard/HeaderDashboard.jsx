@@ -1,7 +1,7 @@
 // HeaderDashboard.jsx
 import React, { useState, useEffect } from "react";
 import Styles from "./dashboard.module.css";
-import themes from "./dashboardCss/theme.css";
+import './dashboardCss/theme.css'
 
 // ---------------- Header ----------------
 const HeaderDashboard = ({ title, user, onSelectPriority }) => {
