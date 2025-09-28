@@ -1,3 +1,4 @@
+// client/src/context/AuthContext.jsx
 import React, { createContext, useState, useEffect } from 'react';
 import authAPI from '../api/auth';
 
@@ -5,71 +6,11 @@ const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
-  const [token, setToken] = useState(localStorage.getItem('token'));
-  const [isLoading, setIsLoading] = useState(true);
+  const [token, setToken] = useState(localStorage.getItem('token') || null);
+  const [isLoading, setIsLoading] = useState(false);
 
-
-  useEffect(() => {
-    const initAuth = async () => {
-      const storedToken = localStorage.getItem('token');
-      
-      if (storedToken) {
-        try {
-          const response = await fetch(`${import.meta.env.VITE_API_URL}/api/user/current`, {
-            headers: {
-              'Authorization': `Bearer ${storedToken}`
-            }
-          });
-
-          if (response.ok) {
-            const userData = await response.json();
-            setUser(userData.user);
-            setToken(storedToken);
-          } else {
-
-            localStorage.removeItem('token');
-            setToken(null);
-            setUser(null);
-          }
-        } catch (error) {
-          console.error('Auth init error:', error);
-          localStorage.removeItem('token');
-          setToken(null);
-          setUser(null);
-        }
-      }
-      
-      setIsLoading(false);
-    };
-
-    initAuth();
-  }, []);
-
-  // Giriş yapma
-  const login = async (email, password) => {
-    try {
-      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/auth/login`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ email, password })
-      });
-
-      const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(data.message || 'Giriş başarısız');
-      }
-
-      localStorage.setItem('token', data.token);
-      setToken(data.token);
-      setUser(data.user);
-
-      return { success: true, user: data.user };
-    } catch (error) {
-      return { success: false, error: error.message };
-    }
+  const updateUser = (newUser) => {
+    setUser(newUser);
   };
 
   // Kayıt olma
@@ -77,14 +18,11 @@ export const AuthProvider = ({ children }) => {
     try {
       const response = await fetch(`${import.meta.env.VITE_API_URL}/api/auth/register`, {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ name, email, password })
       });
 
       const data = await response.json();
-
       if (!response.ok) {
         throw new Error(data.message || 'Kayıt başarısız');
       }
@@ -99,24 +37,48 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  const logout = () => {
-    authAPI.logout();
-    setUser(null);
+  // Giriş yapma
+  const login = async (email, password) => {
+    try {
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/auth/login`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, password })
+      });
+
+      const data = await response.json();
+      if (!response.ok) {
+        throw new Error(data.message || 'Giriş başarısız');
+      }
+
+      localStorage.setItem('token', data.token);
+      setToken(data.token);
+      setUser(data.user);
+
+      return { success: true, user: data.user };
+    } catch (error) {
+      throw error;
+    }
   };
 
-  const value = {
-    user,
-
-    token,
-    isLoading,
-    login,
-    register,
-    logout,
-    updateUser
+  // Çıkış yapma
+  const logout = () => {
+    authAPI.logout();
+    localStorage.removeItem('token');
+    setUser(null);
+    setToken(null);
   };
 
   return (
-    <AuthContext.Provider value={value}>
+    <AuthContext.Provider value={{ 
+      user, 
+      token, 
+      isLoading, 
+      updateUser,
+      register,
+      login,
+      logout 
+    }}>
       {children}
     </AuthContext.Provider>
   );

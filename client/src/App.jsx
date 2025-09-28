@@ -1,6 +1,9 @@
 import React from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
+
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+
 // Context
 import { AuthProvider } from "./context/AuthContext";
 
@@ -9,7 +12,9 @@ import DashboardRoutes from "./routes/DashboardRoutes";
 import AuthWrapper from "./pages/AuthWrapper"; 
 import VerifyEmailPage from "./pages/VerifyEmailPage";
 import Home from "./pages/HomePage";
+
 // import Layout from "./components/Layout"; // Eğer ortak layout kullanmak istersen
+import './styles/globals.css';
 
 function App() {
   return (
