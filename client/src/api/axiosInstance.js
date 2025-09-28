@@ -1,8 +1,40 @@
-import axios from 'axios';
+import axios from "axios";
 
-const axiosInstance = axios.create({
-  baseURL: process.env.VITE_API_URL || 'http://localhost:5000',
-  withCredentials: true,
-});
+const API_URL = "http://localhost:5000/api/auth";
 
-export default axiosInstance;
+const register = async (userData) => {
+  try {
+    const response = await axios.post(`${API_URL}/register`, userData);
+    return response.data.message;
+  } catch (error) {
+    throw error.response?.data?.message || "Kayıt başarısız oldu.";
+  }
+};
+
+const login = async (userData) => {
+  try {
+    const response = await axios.post(`${API_URL}/login`, userData);
+    if (response.data.token) {
+      localStorage.setItem("user", JSON.stringify(response.data));
+    }
+    return response.data;
+  } catch (error) {
+    throw error.response?.data?.message || "Giriş başarısız oldu.";
+  }
+};
+
+
+const verifyEmail = async (token) => {
+  try {
+    const response = await axios.get(`${API_URL}/verify/${token}`);
+    return response.data; 
+  } catch (error) {
+    throw error.response?.data?.message || "Doğrulama başarısız oldu.";
+  }
+};
+
+const logout = () => {
+  localStorage.removeItem("user");
+};
+
+export default { register, login, logout, verifyEmail };
