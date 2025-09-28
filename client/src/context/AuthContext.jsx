@@ -1,5 +1,4 @@
-// client/src/context/AuthContext.jsx
-import React, { createContext, useState, useEffect } from 'react';
+import React, { createContext, useState, useEffect, useContext } from 'react';
 import authAPI from '../api/auth';
 
 const AuthContext = createContext();
@@ -23,6 +22,7 @@ export const AuthProvider = ({ children }) => {
       });
 
       const data = await response.json();
+      console.log(response)
       if (!response.ok) {
         throw new Error(data.message || 'Kayıt başarısız');
       }
@@ -83,5 +83,8 @@ export const AuthProvider = ({ children }) => {
     </AuthContext.Provider>
   );
 };
+
+// Buraya dikkat: useContext import edilmeli
+export const useAuth = () => useContext(AuthContext);
 
 export default AuthContext;
