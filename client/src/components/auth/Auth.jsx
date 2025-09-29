@@ -54,10 +54,14 @@ const Auth = ({ verificationStatus, showModalInitially = false }) => {
         reset();
         setIsRegister(false); 
       } else {
-        await login(data);
-        reset();
-        setShowModal(false);
-        navigate('/home');
+        const response = await login(data);
+        if (response && response.token) {
+          reset();
+          setShowModal(false);
+          navigate('/home');
+        } else {
+          throw new Error('Login başarısız: Token alınamadı');
+        }
       }
     })();
     

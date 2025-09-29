@@ -2,7 +2,7 @@ import React, { useState, useContext } from 'react';
 import { Sun, Moon, Palette, Menu, User } from 'lucide-react';
 import UserInfo from './UserInfo';
 import { ThemeContext } from '../../context/ThemeContext';
-import { useAuth } from '../../hooks/useAuth';
+import { useAuth } from '../../context/AuthContext';
 
 const Header = ({ onSidebarToggle }) => {
   const { theme, setTheme } = useContext(ThemeContext);
