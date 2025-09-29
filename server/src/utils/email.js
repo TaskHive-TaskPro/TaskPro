@@ -1,6 +1,6 @@
 // backend/src/utils/email.js
-import nodemailer from "nodemailer";
-import dotenv from "dotenv";
+import nodemailer from 'nodemailer';
+import dotenv from 'dotenv';
 dotenv.config();
 
 const transporter = nodemailer.createTransport({
@@ -9,7 +9,7 @@ const transporter = nodemailer.createTransport({
   secure: process.env.EMAIL_PORT == 465,
   auth: {
     user: process.env.EMAIL_USER,
-    pass: process.env.EMAIL_PASS.trim(),
+    pass: process.env.EMAIL_PASS ? process.env.EMAIL_PASS.trim() : '',
   },
 });
 
@@ -17,7 +17,7 @@ export const sendEmail = async (mailOptions) => {
   try {
     await transporter.sendMail(mailOptions);
   } catch (error) {
-    console.error("E-posta Gönderme Hatası:", error);
-    throw new Error("E-posta gönderimi başarısız oldu.");
+    console.error('E-posta Gönderme Hatası:', error);
+    throw new Error('E-posta gönderimi başarısız oldu.');
   }
 };
