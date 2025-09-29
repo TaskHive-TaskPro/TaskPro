@@ -3,7 +3,7 @@ import { Formik } from 'formik';
 import * as Yup from 'yup';
 import { toast } from 'react-hot-toast';
 import { useDispatch } from 'react-redux';
-import { needHelp } from 'redux/auth/authOperations';
+import { needHelp } from '../../../redux/auth/authOperations';
 import { BtnCloseBlack } from '../../buttons/buttons';
 import { useTheme } from '@mui/material/styles';
 import {

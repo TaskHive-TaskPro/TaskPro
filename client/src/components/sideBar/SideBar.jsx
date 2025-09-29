@@ -1,21 +1,20 @@
+
 import CssBaseline from '@mui/material/CssBaseline';
 import cactus from '../../images/cactus.png';
 import cactus2x from '../../images/cactus@2x.png';
 import cactus3x from '../../images/cactus@3x.png';
-import icon from '../../images/icons.svg';
-import NewBoardForm from 'components/forms/newBoardForm/NewBoardForm';
-import ModalHelp from 'components/forms/needHelpModal/NeedHelpModal';
+import icons from '../../images/icons.svg';
+import NewBoardForm from '../forms/newBoardForm/NewBoardForm';
 import MainModal from '../mainModal/MainModal';
-import NeedHelpModal from 'components/forms/needHelpModal/NeedHelpModal';
-import sprite from '../../images/icons.svg';
+import NeedHelpModal from '../forms/needHelpModal/NeedHelpModal';
 import { Box, Button, Typography, Drawer, Link } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
-import { logOut } from 'redux/auth/authOperations';
+import { logOut } from '../../redux/auth/authOperations';
 import { useTheme } from '@mui/material';
-import { selectUser } from 'redux/auth/authSelectors';
-import { useGetBoardsQuery } from 'redux/boards/boardsApi';
+import { selectUser } from '../../redux/auth/authSelectors';
+import { useGetBoardsQuery } from '../../redux/boards/boardsApi';
 import { useLocation, useParams, useNavigate } from 'react-router-dom';
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import {
   SideBarStyled,
   LogoIcon,
@@ -42,7 +41,7 @@ import {
   useAddBoardMutation,
   useUpdateBoardMutation,
   useDeleteBoardMutation,
-} from 'redux/boards/boardsApi';
+} from '../../redux/boards/boardsApi'; // ← alias yerine relative
 
 const SideBar = ({ active, onClick }) => {
   const [openAddModal, setOpenAddModal] = useState(false);
@@ -50,23 +49,21 @@ const SideBar = ({ active, onClick }) => {
   const [openHelpModal, setOpenHelpModal] = useState(false);
   const [activeBoardTitle, setActiveBoardTitle] = useState('');
   const [activeBoardIcon, setActiveBoardIcon] = useState('');
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [newBoard, setNewBoard] = useState(true);
   const { data = [] } = useGetBoardsQuery();
 
   const location = useLocation();
   const { boardId } = useParams();
 
-  const [addBoard, result] = useAddBoardMutation();
+  const [addBoard] = useAddBoardMutation();
   const [updateBoard] = useUpdateBoardMutation();
   const [deleteBoard] = useDeleteBoardMutation();
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const openModal = () => setIsModalOpen(true);
-  const closeModal = () => setIsModalOpen(false);
+  const openModal = () => setOpenHelpModal(true);
+  const closeModal = () => setOpenHelpModal(false);
 
-  const openEditModalHandler = (boardTitle, boardIcon) => { 
+  const openEditModalHandler = (boardTitle, boardIcon) => {
     setActiveBoardTitle(boardTitle);
     setActiveBoardIcon(boardIcon);
     setOpenEditModal(true);
@@ -76,40 +73,37 @@ const SideBar = ({ active, onClick }) => {
   const closeEditModal = () => setOpenEditModal(false);
   const closeHelpModal = () => setOpenHelpModal(false);
 
-  useEffect(() => {
-    if (result.data && newBoard) {
-      navigate(`/home/${result.data._id}`);
-      setNewBoard(false);
-    }
-  }, [newBoard, navigate, result.data]);
-
-  const handleSubmit = async (data, formTitle) => {
+  const handleSubmit = async (formData, formTitle) => {
     const currentBoardId = boardId;
 
     if (formTitle === 'New board') {
-      addBoard({ data });
-      closeAddModal();
-      setNewBoard(true);
+      try {
+        const res = await addBoard({ data: formData }).unwrap();
+        closeAddModal();
+        navigate(`/home/${res._id}`);
+      } catch (e) {
+        // TODO: toast/snackbar ile hata bildir
+      }
       return;
     }
 
     if (formTitle === 'Edit board') {
-      updateBoard({ boardId: currentBoardId, data });
+      updateBoard({ boardId: currentBoardId, data: formData });
       closeEditModal();
       return;
     }
   };
 
-  const deleteBoardHanlder = boardId => {
-    deleteBoard({ boardId });
-    navigate('/');
+  const deleteBoardHandler = (id) => {
+    deleteBoard({ boardId: id });
+    navigate('/home');
   };
 
   const theme = useTheme();
-  const user = useSelector(selectUser);
+  const user = useSelector(selectUser) || { theme: 'light' };
 
-  const logoSvg =
-    user.theme === 'violet' ? '#icon-logo-violet' : '#icon-icon-1';
+
+  const logoSvg = user.theme === 'violet' ? '#icon-logo-violet' : '#icon-icon-1';
   const needHelpSvg =
     user.theme === 'violet' || user.theme === 'dark'
       ? '#icon-help-white'
@@ -123,6 +117,7 @@ const SideBar = ({ active, onClick }) => {
     <SideBarStyled
       sx={{
         bgcolor: 'background.default',
+        // İstersen bu iki satırı kaldır: scrollbar'ı BoardsList içinde yönetiyoruz
         '&::-webkit-scrollbar': { backgroundColor: 'background.warning', width: '8px' },
         '&::-webkit-scrollbar-thumb': { backgroundColor: 'background.info' },
       }}
@@ -137,7 +132,7 @@ const SideBar = ({ active, onClick }) => {
           }}
         >
           <LogoIcon>
-            <use href={icon + `${logoSvg}`}></use>
+            <use href={icons + `${logoSvg}`}></use>
           </LogoIcon>
           <Typography
             variant="h2"
@@ -203,7 +198,7 @@ const SideBar = ({ active, onClick }) => {
             }}
           >
             <PlusIcon theme={theme}>
-              <use href={icon + '#icon-plus-2'}></use>
+              <use href={icons + '#icon-plus-2'}></use>
             </PlusIcon>
           </Button>
         </Box>
@@ -211,7 +206,7 @@ const SideBar = ({ active, onClick }) => {
         <BoardsContainer>
           <BoardsList theme={theme}>
             {data &&
-              data.map(board => {
+              data.map((board) => {
                 const isSelected = `/home/${board._id}` === location.pathname;
 
                 return (
@@ -223,7 +218,7 @@ const SideBar = ({ active, onClick }) => {
                     >
                       <TitleBox>
                         <IconTitle theme={theme}>
-                          <use href={sprite + board.icon}></use>
+                          <use href={icons + board.icon}></use>
                         </IconTitle>
                         <Title theme={theme}>{board.title}</Title>
                       </TitleBox>
@@ -232,17 +227,21 @@ const SideBar = ({ active, onClick }) => {
                       <IconsBox theme={theme}>
                         <IconButton
                           type="button"
+                          aria-label="Edit board"
                           onClick={() =>
                             openEditModalHandler(board.title, board.icon)
                           }
                         >
                           <Edit>
-                            <use href={icon + '#icon-pencil-01'}></use>
+                            <use href={icons + '#icon-pencil-01'}></use>
                           </Edit>
                         </IconButton>
-                        <IconLink onClick={() => deleteBoardHanlder(board._id)}>
+                        <IconLink
+                          aria-label="Delete board"
+                          onClick={() => deleteBoardHandler(board._id)}
+                        >
                           <Delete>
-                            <use href={icon + '#icon-trash-04'}></use>
+                            <use href={icons + '#icon-trash-04'}></use>
                           </Delete>
                         </IconLink>
                       </IconsBox>
@@ -258,8 +257,11 @@ const SideBar = ({ active, onClick }) => {
         <NeedHelpBox sx={{ backgroundColor: 'background.error' }}>
           <Box>
             <Picture>
-              <source srcSet={`${cactus} 1x, ${cactus2x} 2x, ${cactus3x} 3x`} />
-              <img srcSet={`${cactus} 1x`} alt="cactus" />
+              <img
+                src={cactus}
+                srcSet={`${cactus2x} 2x, ${cactus3x} 3x`}
+                alt="cactus"
+              />
             </Picture>
           </Box>
 
@@ -277,6 +279,7 @@ const SideBar = ({ active, onClick }) => {
             >
               If you need help with
               <Link
+                component="button"
                 sx={{
                   fontFamily: 'Poppins',
                   fontWeight: 400,
@@ -309,7 +312,7 @@ const SideBar = ({ active, onClick }) => {
             }}
           >
             <HelpIcon theme={theme}>
-              <use href={icon + `${needHelpSvg}`}></use>
+              <use href={icons + `${needHelpSvg}`}></use>
             </HelpIcon>
             <Typography
               sx={{
@@ -326,12 +329,10 @@ const SideBar = ({ active, onClick }) => {
             </Typography>
           </Button>
 
-          <MainModal modalIsOpen={isModalOpen} closeModal={closeModal}>
+          <MainModal modalIsOpen={openHelpModal} closeModal={closeModal}>
             <NeedHelpModal closeModal={closeModal} />
           </MainModal>
         </NeedHelpBox>
-
-        {/* TeamGallery bölümü kaldırıldı */}
 
         <Box
           sx={{
@@ -355,7 +356,7 @@ const SideBar = ({ active, onClick }) => {
             }}
           >
             <LogoutIcon>
-              <use href={icon + `${logOutSvg}`}></use>
+              <use href={icons + `${logOutSvg}`}></use>
             </LogoutIcon>
             <Typography
               sx={{
@@ -429,10 +430,6 @@ const SideBar = ({ active, onClick }) => {
             boardIcon={activeBoardIcon}
             closeModal={closeEditModal}
           />
-        </MainModal>
-
-        <MainModal modalIsOpen={openHelpModal} closeModal={closeHelpModal}>
-          <ModalHelp closeModal={closeHelpModal} />
         </MainModal>
       </Box>
     </>

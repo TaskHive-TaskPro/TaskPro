@@ -1,7 +1,7 @@
+import images from "./background.js";
 import * as Yup from 'yup';
 import React, { useState } from 'react';
 import BtnAdd from '../../buttons/btn/buttonAdd';
-import images from '../../../images/backgrounds.js';
 import bgImageLight from '../../../images/bgImage-light.jpg';
 import bgImageDark from '../../../images/bgImage-dark.jpg';
 import sprite from '../../../images/icons.svg';
@@ -9,7 +9,7 @@ import { toast } from 'react-hot-toast';
 import { Formik } from 'formik';
 import { BtnCloseBlack } from '../../buttons/buttons';
 import { useSelector } from 'react-redux';
-import { selectTheme } from 'redux/auth/authSelectors.js';
+import { selectTheme } from '../../../redux/auth/authSelectors.js';
 import { useTheme } from '@mui/material';
 import {
   FormContainer,
