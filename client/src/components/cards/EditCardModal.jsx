@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import styles from "./editCards.module.css";
 
 const EditCardModal = ({ card, onClose, onUpdate }) => {
   const [title, setTitle] = useState(card.title);
@@ -16,7 +17,6 @@ const EditCardModal = ({ card, onClose, onUpdate }) => {
       return;
     }
 
-    // güncellenmiş kart verisini üst componente gönder
     onUpdate({
       ...card,
       title,
@@ -29,21 +29,27 @@ const EditCardModal = ({ card, onClose, onUpdate }) => {
   };
 
   return (
-    <div className="modal">
-      <form onSubmit={handleSubmit}>
-        <h2>Edit Card</h2>
+    <div className={styles.modal}>
+      <form onSubmit={handleSubmit} className={styles.form}>
+        <h2 className={styles.heading}>Edit Card</h2>
         <input
           type="text"
           placeholder="Title"
           value={title}
           onChange={(e) => setTitle(e.target.value)}
+          className={styles.input}
         />
         <textarea
           placeholder="Description"
           value={description}
           onChange={(e) => setDescription(e.target.value)}
+          className={styles.textarea}
         />
-        <select value={priority} onChange={(e) => setPriority(e.target.value)}>
+        <select
+          value={priority}
+          onChange={(e) => setPriority(e.target.value)}
+          className={styles.select}
+        >
           <option value="low">Low</option>
           <option value="medium">Medium</option>
           <option value="high">High</option>
@@ -53,9 +59,14 @@ const EditCardModal = ({ card, onClose, onUpdate }) => {
           value={deadline}
           min={today} // geçmiş tarih seçilemez
           onChange={(e) => setDeadline(e.target.value)}
+          className={styles.dateInput}
         />
-        <button type="submit">Save Changes</button>
-        <button type="button" onClick={onClose}>Cancel</button>
+        <button type="submit" className={styles.saveButton}>
+          Save Changes
+        </button>
+        <button type="button" onClick={onClose} className={styles.cancelButton}>
+          Cancel
+        </button>
       </form>
     </div>
   );
