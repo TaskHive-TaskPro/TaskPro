@@ -6,13 +6,13 @@
   background-color: #111;
   color: white;
 }
+
 /* Priority colors */
 .priorityDot {
-  width: 12px;
-  height: 12px;
+  width: 20px;
+  height: 20px;
   border-radius: 50%;
   display: inline-block;
-  margin-right: 8px;
 }
 
 .priorityNone {
@@ -31,31 +31,20 @@
   background-color: #7d2d2d;
 }
 
-
 /* HeaderDashboard */
 .headerDashboard {
   display: flex;
   justify-content: space-between;
   align-items: center;
   padding: 16px;
-  border-bottom: 1px solid #444;
   background-color: #000;
 }
 
-.headerTitle {
-  font-size: 1.25rem;
-  font-weight: 600;
-}
-
-.btnFilters {
-  padding: 8px 16px;
-  background-color: #222;
-  border-radius: 8px;
-  cursor: pointer;
-}
-
-.btnFilters:hover {
-  background-color: #444;
+.headerRight {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 12px;
 }
 
 /* MainDashboard */
@@ -127,6 +116,10 @@
   padding: 8px 12px;
 }
 
+.btnCloseModal {
+  margin-top: 12px;
+}
+
 .btnAddCard {
   color: #4ade80;
   background: none;
@@ -148,6 +141,30 @@
 
 .columnAddBtn:hover {
   background-color: #444;
+}
+
+/* Filters Button*/
+.filtersWrapper {
+  display: flex;
+  justify-content: space-between;
+  padding: 16px 16px 0 16px;
+  background-color: #111;
+}
+
+.btnFilters {
+  padding: 8px 16px;
+  border-radius: 8px;
+  background-color: transparent;
+  color: white;
+  cursor: pointer;
+  border: none;
+  display: flex;
+  align-items: center;
+  transition: 0.2s;
+}
+
+.btnFilters:hover {
+  color: green;
 }
 
 /* Modals */
@@ -176,14 +193,24 @@
 }
 
 .modalInput,
-.modalTextarea {
+.modalTextarea,
+.modalSelect {
   margin-bottom: 8px;
-  padding: 8px;
+  padding: 8px 12px;
   border-radius: 6px;
   border: 1px solid #444;
   background-color: #111;
   color: white;
   width: 100%;
+  box-sizing: border-box;
+  height: 40px; 
+  font-size: 14px;
+}
+
+.modalTextarea {
+  min-height: 80px;
+  height: auto;
+  resize: vertical;
 }
 
 .modalActions {
@@ -212,15 +239,76 @@
   background-color: #555;
 }
 
-/* Color buttons in filters modal */
+/* Filters Modal Color Options */
 .colorOptions {
   display: flex;
-  gap: 8px;
+  flex-direction: column;
+  gap: 12px;
 }
 
-.colorBtn {
+.colorOption {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  cursor: pointer;
+  padding: 6px;
+  border-radius: 6px;
+  transition: 0.2s;
+}
+
+.colorOption:hover {
+  background-color: #333;
+}
+
+.selectedPriority {
+  background-color: #444;
+}
+
+.priorityLabel {
+  color: white;
+  font-size: 1rem;
+  min-width: 60px;
+}
+
+/* Kullanıcı info */
+.userInfo {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-left: 16px;
+}
+
+.userAvatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.userName {
+  font-weight: 500;
+}
+
+/* Loading styles */
+.loadingContainer {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 300px;
+  gap: 20px;
+}
+
+.loader {
   width: 40px;
   height: 40px;
+  border: 4px solid #f3f3f3;
+  border-top: 4px solid #3498db;
   border-radius: 50%;
-  cursor: pointer;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
 }

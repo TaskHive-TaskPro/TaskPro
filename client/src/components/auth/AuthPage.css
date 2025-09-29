@@ -1,0 +1,241 @@
+/* Font */
+@import url("https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap");
+
+.auth-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background-image: linear-gradient(
+    var(--darkreader-background-ffffff, #000000) 0%,
+    var(--darkreader-background-d4e2c7, #3c570f) 100%
+  );
+  background-color: initial;
+  color: #fff;
+  font-family: "Poppins", sans-serif;
+}
+
+.auth-card {
+  width: 475px;
+  height: 440px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  position: relative;
+}
+
+.auth-avatar-main {
+  width: 162px; 
+  height: 162px;
+  object-fit: cover;
+  margin-bottom: 24px;
+}
+
+.logo-img {
+  width: 48px; 
+  height: 48px;
+  object-fit: cover;
+}
+
+@media (max-width: 474px) {
+  .auth-avatar-main {
+    width: 124px; 
+    height: 124px;
+  }
+  
+  .logo-img {
+    width: 40px; 
+    height: 40px;
+  }
+  
+  .auth-card {
+    width: 100%;
+    height: auto;
+    padding: 20px;
+  }
+}
+
+.logo-section {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 24px;
+}
+
+.auth-card h1 {
+  font-family: "Poppins", sans-serif;
+  font-weight: 600;
+  font-size: 40px;
+  line-height: 100%;
+  letter-spacing: -0.04em;
+  color: #fff;
+  margin: 0;
+}
+
+.tagline {
+  font-family: "Poppins", sans-serif;
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 18px;
+  letter-spacing: -0.02em;
+  color: #fff;
+  text-align: center;
+  width: 344px;
+  margin-bottom: 40px;
+}
+
+.button-group {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.register-btn,
+.login-btn {
+  width: 344px;
+  height: 49px;
+  border-radius: 8px;
+  font-family: "Poppins", sans-serif;
+  font-weight: 500;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.register-btn {
+  background-color: #000000;
+  color: #ffffff;
+  border: none;
+}
+
+.login-btn {
+  background-color: transparent;
+  color: #fff;
+  border: 1px solid #ffffff;
+}
+
+.register-btn:hover,
+.login-btn:hover {
+  background-color: #ffffff;
+  color: #1f1f1f;
+  border: 1px solid #1f1f1f;
+}
+
+/* Modal Stilleri */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.modal-content {
+  width: 424px;
+  background-color: #151515;
+  border-radius: 8px;
+  padding: 40px;
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+  position: relative;
+  overflow-y: auto; 
+  max-height: 90vh; 
+}
+
+.modal-header {
+  display: flex;
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.modal-tab {
+  font-family: "Poppins", sans-serif;
+  font-weight: 500;
+  font-size: 18px;
+  line-height: 100%;
+  letter-spacing: -0.02em;
+  color: #ffffff4d;
+  cursor: pointer;
+  transition: color 0.3s ease;
+}
+
+.modal-tab.active {
+  color: #ffffff;
+}
+
+.input-group {
+  margin-bottom: 14px;
+  position: relative;
+}
+
+.input-group input {
+  width: 100%;
+  height: 49px;
+  padding: 0 16px;
+  border-radius: 8px;
+  background-color: #1f1f1f;
+  color: #ffffff;
+  border: 1px solid #1f1f1f;
+  opacity: 0.4;
+  outline: none;
+  box-sizing: border-box;
+}
+
+.input-group input::placeholder {
+  color: #ffffff;
+}
+
+.password-input {
+  position: relative;
+}
+
+.password-toggle {
+  position: absolute;
+  right: 16px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #ffffff;
+  cursor: pointer;
+}
+
+.register-now-btn,
+.login-now-btn {
+  width: 100%;
+  height: 49px;
+  background: var(--darkreader-background-d4e2c7, #9dff00d3) 100%;
+  border-radius: 8px;
+  border: none;
+  font-family: "Poppins", sans-serif;
+  font-weight: 500;
+  font-size: 14px;
+  color: #ffffff;
+  cursor: pointer;
+  margin-top: 10px;
+  transition: background-color 0.5s ease, color 0.3s ease;
+}
+
+.register-now-btn:hover,
+.login-now-btn:hover {
+  background-color: #ffffff;
+  color: #1f1f1f;
+  border: 1px solid #1f1f1f;
+}
+
+.close-modal {
+  position: absolute;
+  top: 10px;
+  right: 15px;
+  background: none;
+  border: none;
+  font-size: 2rem;
+  color: #ffffff;
+  cursor: pointer;
+}
