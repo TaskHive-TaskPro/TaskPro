@@ -47,7 +47,9 @@ const AddCardModal = ({ onClose, onAdd }) => {
           onChange={(e) => setDeadline(e.target.value)}
         />
         <button type="submit">Add Card</button>
-        <button type="button" onClick={onClose}>Cancel</button>
+        <button type="button" onClick={onClose}>
+          Cancel
+        </button>
       </form>
     </div>
   );
