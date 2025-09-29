@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from 'react';
+import { Navigate } from 'react-router-dom';
 import Auth from '../components/auth/Auth';
-import { AuthProvider } from '../context/AuthContext';
+import { useAuth } from '../context/AuthContext';
 import LoadingOverlay from '../components/LoadingOverlay/LoadingOverlay';
 
 const AuthWrapper = () => {
     const [isInitialLoading, setIsInitialLoading] = useState(true);
+    const { isAuthenticated, isLoading } = useAuth();
 
     useEffect(() => {
         const timer = setTimeout(() => {
@@ -14,11 +16,16 @@ const AuthWrapper = () => {
         return () => clearTimeout(timer); 
     }, []);
 
+    // Eğer kullanıcı zaten giriş yapmışsa, home'a yönlendir
+    if (!isLoading && isAuthenticated) {
+        return <Navigate to="/home" replace />;
+    }
+
     return (
-        <AuthProvider>
-            {isInitialLoading && <LoadingOverlay />}
+        <>
+            {(isInitialLoading || isLoading) && <LoadingOverlay />}
             <Auth />
-        </AuthProvider>
+        </>
     );
 };
 

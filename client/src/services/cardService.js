@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const API_URL = "/api/cards";
+const API_URL = "http://localhost:5001/api/cards";
 
 export const getCards = async (token) => { // token parametresi al
   console.log("getCards fonksiyonu çağrıldı", token); // token'ı konsola yazdır
@@ -22,13 +22,21 @@ export const createCard = async (card, token) => {
   return res.data;
 };
 
-export const updateCard = async (id, updatedCard) => {
-  const res = await axios.put(`${API_URL}/${id}`, updatedCard);
+export const updateCard = async (id, updatedCard, token) => {
+  const res = await axios.put(`${API_URL}/${id}`, updatedCard, {
+    headers: {
+      Authorization: `Bearer ${token}`
+    }
+  });
   return res.data;
 };
 
-export const deleteCard = async (id) => {
-  const res = await axios.delete(`${API_URL}/${id}`);
+export const deleteCard = async (id, token) => {
+  const res = await axios.delete(`${API_URL}/${id}`, {
+    headers: {
+      Authorization: `Bearer ${token}`
+    }
+  });
   return res.data;
 };
 export const moveCard = async (id, newColumnId) => {

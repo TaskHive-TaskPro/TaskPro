@@ -1,8 +1,10 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Column from "./Column";
 import Styles from "./dashboard.module.css";
 import AddAnotherColumn from "./AddAnotherColumn";
 import { FaFilter } from "react-icons/fa";
+import { getCards, createCard, updateCard as updateCardAPI, deleteCard as deleteCardAPI } from "../../services/cardService";
+import { useAuth } from "../../context/AuthContext";
 
 // Filters Modal component
 const FiltersModal = ({ onClose, onSelectPriority, selectedPriority }) => {
@@ -51,90 +53,149 @@ const FiltersModal = ({ onClose, onSelectPriority, selectedPriority }) => {
 };
 
 const MainDashboard = () => {
+  const { token } = useAuth();
   const [columns, setColumns] = useState([
     {
       id: "1",
       title: "To do",
-      cards: [
-        {
-          id: "c1",
-          title: "The Watch Spot Design",
-          description: "Complete visually stunning and eye-catching design...",
-          priority: "none",
-        },
-      ],
+      cards: [],
     },
     {
       id: "2",
       title: "In progress",
-      cards: [
-        {
-          id: "c2",
-          title: "Content Creation",
-          description: "Write and design marketing content...",
-          priority: "none",
-        },
-      ],
+      cards: [],
+    },
+    {
+      id: "3",
+      title: "Done",
+      cards: [],
     },
   ]);
 
   const [selectedPriority, setSelectedPriority] = useState("none");
   const [showAddColumn, setShowAddColumn] = useState(false);
   const [showFilters, setShowFilters] = useState(false);
+  const [loading, setLoading] = useState(true);
+
+  // Cards'ları API'den yükle
+  useEffect(() => {
+    const fetchCards = async () => {
+      if (!token) return;
+      
+      try {
+        setLoading(true);
+        const cards = await getCards(token);
+        console.log('Fetched cards:', cards);
+        
+        // Cards'ları kolonlara dağıt (varsayılan olarak "To do" kolonuna)
+        if (cards && cards.length > 0) {
+          setColumns(prevColumns => 
+            prevColumns.map(col => 
+              col.id === "1" 
+                ? { ...col, cards: cards }
+                : col
+            )
+          );
+        }
+      } catch (error) {
+        console.error('Error fetching cards:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchCards();
+  }, [token]);
 
   const addColumn = (newCol) => setColumns([...columns, newCol]);
 
-  const addCard = (columnId, card) => {
-    setColumns(
-      columns.map((col) =>
-        col.id === columnId ? { ...col, cards: [...col.cards, card] } : col
-      )
-    );
+  const addCard = async (columnId, card) => {
+    try {
+      const newCard = await createCard(card, token);
+      setColumns(
+        columns.map((col) =>
+          col.id === columnId ? { ...col, cards: [...col.cards, newCard] } : col
+        )
+      );
+    } catch (error) {
+      console.error('Error creating card:', error);
+      alert('Kart oluşturulamadı: ' + error.message);
+    }
   };
 
-  const updateCard = (columnId, updatedCard) => {
-    setColumns(
-      columns.map((col) =>
-        col.id === columnId
-          ? {
-              ...col,
-              cards: col.cards.map((card) =>
-                card.id === updatedCard.id ? updatedCard : card
-              ),
-            }
-          : col
-      )
-    );
+  const updateCard = async (columnId, updatedCard) => {
+    try {
+      const updated = await updateCardAPI(updatedCard._id, updatedCard, token);
+      setColumns(
+        columns.map((col) =>
+          col.id === columnId
+            ? {
+                ...col,
+                cards: col.cards.map((card) =>
+                  card._id === updated._id ? updated : card
+                ),
+              }
+            : col
+        )
+      );
+    } catch (error) {
+      console.error('Error updating card:', error);
+      alert('Kart güncellenemedi: ' + error.message);
+    }
   };
 
-  const deleteCard = (columnId, cardId) => {
-    setColumns(
-      columns.map((col) =>
-        col.id === columnId
-          ? { ...col, cards: col.cards.filter((card) => card.id !== cardId) }
-          : col
-      )
-    );
+  const deleteCard = async (columnId, cardId) => {
+    try {
+      await deleteCardAPI(cardId, token);
+      setColumns(
+        columns.map((col) =>
+          col.id === columnId
+            ? { ...col, cards: col.cards.filter((card) => card._id !== cardId) }
+            : col
+        )
+      );
+    } catch (error) {
+      console.error('Error deleting card:', error);
+      alert('Kart silinemedi: ' + error.message);
+    }
   };
 
   const moveCard = (columnId, cardId) => {
+    console.log('Moving card:', { columnId, cardId }); // Debug için
+    
     setColumns((prevColumns) => {
-      const currentIndex = prevColumns.findIndex((col) => col.id === columnId);
-      if (currentIndex === prevColumns.length - 1) return prevColumns;
+      const sourceColumnIndex = prevColumns.findIndex((col) => col.id === columnId);
+      const targetColumnIndex = sourceColumnIndex + 1;
+      
+      // Son kolondaysa taşıma yapma
+      if (targetColumnIndex >= prevColumns.length) {
+        console.log('Card already in last column');
+        return prevColumns;
+      }
 
-      const currentCol = prevColumns[currentIndex];
-      const card = currentCol.cards.find((c) => c.id === cardId);
-      if (!card) return prevColumns;
+      const sourceColumn = prevColumns[sourceColumnIndex];
+      const card = sourceColumn.cards.find((c) => (c._id || c.id) === cardId);
+      
+      if (!card) {
+        console.log('Card not found:', cardId);
+        return prevColumns;
+      }
 
-      const newColumns = prevColumns.map((col, i) =>
-        col.id === columnId
-          ? { ...col, cards: col.cards.filter((c) => c.id !== cardId) }
-          : col
-      );
+      console.log('Moving card from column', sourceColumn.title, 'to', prevColumns[targetColumnIndex].title);
 
-      newColumns[currentIndex + 1] = {
-        ...newColumns[currentIndex + 1],
-        cards: [...newColumns[currentIndex + 1].cards, card],
+      // Yeni kolonları oluştur
+      const newColumns = [...prevColumns];
+      
+      // Kaynak kolondan kartı çıkar
+      newColumns[sourceColumnIndex] = {
+        ...sourceColumn,
+        cards: sourceColumn.cards.filter((c) => (c._id || c.id) !== cardId)
+      };
+      
+      // Hedef kolona kartı ekle
+      newColumns[targetColumnIndex] = {
+        ...newColumns[targetColumnIndex],
+        cards: [...newColumns[targetColumnIndex].cards, card]
       };
 
       return newColumns;
@@ -163,7 +224,13 @@ const MainDashboard = () => {
       )}
 
       <main className={Styles.mainDashboard}>
-        <div className={Styles.columnsWrapper}>
+        {loading ? (
+          <div className={Styles.loadingContainer}>
+            <div className={Styles.loader}></div>
+            <p>Loading cards...</p>
+          </div>
+        ) : (
+          <div className={Styles.columnsWrapper}>
           {columns.map((col) => (
             <Column
               key={col.id}
@@ -191,6 +258,7 @@ const MainDashboard = () => {
             + Add another column
           </div>
         </div>
+        )}
       </main>
 
       {showAddColumn && (

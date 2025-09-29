@@ -17,6 +17,13 @@ const Card = ({ card, onEdit, onDelete, onMove }) => {
   const { title, description, priority, deadline } = card;
   const today = new Date().toISOString().split("T")[0];
   const isDeadlineToday = deadline === today;
+  const isOverdue = deadline < today;
+  
+  const getDeadlineClass = () => {
+    if (isOverdue) return 'overdue';
+    if (isDeadlineToday) return 'today';
+    return '';
+  };
 
   return (
     <div className={styles.card}>
@@ -35,7 +42,10 @@ const Card = ({ card, onEdit, onDelete, onMove }) => {
                 <img src={BellIcon} alt="Deadline Today" />
               </button>
             )}
-            <button className={styles["icon-btn"]} onClick={onMove}>
+            <button className={styles["icon-btn"]} onClick={() => {
+              console.log('Move button clicked for card:', card._id || card.id);
+              if (onMove) onMove();
+            }}>
               <img src={ArrowIcon} alt="Move" />
             </button>
             <button className={styles["icon-btn"]} onClick={() => onEdit(card)}>
@@ -43,7 +53,7 @@ const Card = ({ card, onEdit, onDelete, onMove }) => {
             </button>
             <button
               className={styles["icon-btn"]}
-              onClick={() => onDelete(card.id)}
+              onClick={() => onDelete(card._id)}
             >
               <img src={TrashIcon} alt="Delete" />
             </button>
@@ -55,9 +65,11 @@ const Card = ({ card, onEdit, onDelete, onMove }) => {
         <div className={styles["card-footer"]}>
           <div className={styles["priority-deadline"]}>
             <span className={`${styles.priority} ${styles[priority]}`}>
-              {priority}
+              {priority === 'none' ? 'No Priority' : priority.charAt(0).toUpperCase() + priority.slice(1)}
             </span>
-            <span className={styles.deadline}>{deadline}</span>
+            <span className={`${styles.deadline} ${styles[getDeadlineClass()]}`}>
+              {deadline}
+            </span>
           </div>
         </div>
       </div>
