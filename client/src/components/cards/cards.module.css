@@ -1,13 +1,14 @@
 .card {
-  background-color: rgba(18, 18, 18, 1);
-  color: #ffffff;
+  background-color: var(--bg-tertiary);
+  color: var(--card-text-color);
   border-radius: 12px;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.4);
+  box-shadow: var(--shadow-md);
   padding: 0;
   margin-bottom: 12px;
   display: flex;
   flex-direction: row;
   overflow: hidden;
+  border: 1px solid var(--border-color);
 }
 
 .priorityStripe {
@@ -33,7 +34,7 @@
   font-size: 16px;
   font-weight: 600;
   margin: 0;
-  color: #fff;
+  color: var(--card-text-color);
 }
 
 .card-actions {
@@ -58,12 +59,12 @@
 .icon-btn img {
   width: 18px;
   height: 18px;
-  filter: brightness(0) invert(1);
+  filter: var(--icon-filter);
 }
 
 .card-description {
   font-size: 14px;
-  color: #b0b0b0;
+  color: var(--card-text-secondary);
   line-height: 1.4;
 }
 
@@ -102,7 +103,7 @@
 }
 
 .deadline {
-  color: #bbb;
+  color: var(--text-secondary);
   font-size: 12px;
 }
 
@@ -139,6 +140,11 @@
   display: flex;
   align-items: center;
   gap: 8px;
+}
+
+/* Bell Icon - Override filter to use original colors */
+.bell-icon {
+  filter: none !important;
 }
 
 /* Responsive Cards */

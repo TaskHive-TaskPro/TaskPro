@@ -34,12 +34,13 @@ const HomePage = () => {
         <aside className="sidebar-placeholder">
           <div style={{
             width: sidebarOpen ? '250px' : '0',
-            background: '#2d2d2d',
-            color: 'white',
+            background: 'var(--bg-secondary)',
+            color: 'var(--text-primary)',
             padding: sidebarOpen ? '20px' : '0',
             transition: 'all 0.3s',
             overflow: 'hidden',
-            height: '100vh'
+            height: '100vh',
+            borderRight: '1px solid var(--border-color)'
           }}>
             <h3>📋 Sidebar</h3>
             <p style={{ fontSize: '12px', opacity: 0.7 }}>(Kişi 4'ün görevi)</p>
