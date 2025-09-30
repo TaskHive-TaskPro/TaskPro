@@ -18,7 +18,7 @@
   const HomePage = () => {
     const { boardId } = useParams();
     const { user, token, isLoading, isAuthenticated } = useAuth();
-    const [sidebarOpen, setSidebarOpen] = useState(true);
+    const [sidebarOpen, setSidebarOpen] = useState(false);
 
     if (isLoading) {
       return (

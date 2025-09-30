@@ -38,7 +38,7 @@ function App() {
             }
           />
           <Route path="/home" element={<Home />} />
-
+          <Route path=":boardId" element={<BoardPage />} />
           {/* Dashboard veya modüller */}
           <Route path="/dashboard/*" element={<DashboardRoutes />} />
 

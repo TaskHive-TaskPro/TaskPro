@@ -1,4 +1,4 @@
-import images from "./background.js";
+import images from './background.js';
 import * as Yup from 'yup';
 import React, { useState } from 'react';
 import BtnAdd from '../../buttons/btn/buttonAdd';
@@ -25,9 +25,9 @@ import {
   BgList,
   RadioField,
   RadioFieldBg,
-  FormikContainer,
+  FormikContainer, // <== styled(Form) olmalı; styled dosyanda böyle tanımlıysa submit düzgün çalışır
   CloseButton,
-} from './NewBoardForm.styled.jsx'
+} from './NewBoardForm.styled.jsx';
 
 const NewBoardForm = ({
   formTitle,
@@ -37,21 +37,25 @@ const NewBoardForm = ({
   handleSubmit,
   closeModal,
 }) => {
-  const [background, setbackground] = useState();
-  const theme = useSelector(selectTheme);
+  // isimlendirme düzeltildi
+  const [background, setBackground] = useState(null);
 
-  const themeObj = useTheme();
+  // tema
+  const themeKey = useSelector(selectTheme);
+  const muiTheme = useTheme();
 
-  const formSubmit = values => {
-    const title = values.title.trim();
+  const formSubmit = (values, helpers) => {
+    const title = (values.title || '').trim();
 
     if (!title || title.length < 3) {
       toast.error('Title must be at least 3 characters long');
       return;
     }
-    const data = { ...values, background };
 
-    handleSubmit(data, formTitle);
+    // Formik values + seçilmiş background
+    const data = { ...values, background };
+    // dışarı verilen submit handler
+    handleSubmit?.(data, formTitle);
   };
 
   const validationSchema = Yup.object().shape({
@@ -63,181 +67,118 @@ const NewBoardForm = ({
   const initialValues = {
     title: boardTitle || '',
     icon: boardIcon,
-    background: null,
+    background: null, // Formik alanı; gerçek görsel objesini local state'te tutuyoruz
   };
 
-  const BgImageChangeHandler = data => {
-    setbackground(data);
+  const handleBgImageChange = (imgObj) => {
+    setBackground(imgObj);
   };
 
   return (
-    <FormContainer theme={themeObj}>
-      <CloseButton type="button" onClick={closeModal}>
+    <FormContainer theme={muiTheme}>
+      <CloseButton type="button" onClick={closeModal} aria-label="Close">
         <BtnCloseBlack />
       </CloseButton>
+
       <Title>{formTitle}</Title>
+
       <Formik
         initialValues={initialValues}
         validationSchema={validationSchema}
         onSubmit={formSubmit}
+        validateOnMount
       >
-        {formik => (
+        {(formik) => (
+          // DİKKAT: FormikContainer'ının styled(Form) olduğundan emin ol.
+          // Değilse, burada <form onSubmit={formik.handleSubmit}> kullan.
           <FormikContainer>
             <Container>
               <Input
-                theme={themeObj}
+                theme={muiTheme}
                 type="text"
                 placeholder="Title"
                 name="title"
+                autoFocus
               />
               <Error name="title" component="div" />
             </Container>
 
             <Text>Icons</Text>
             <IconList>
-              <li>
-                <label>
-                  <RadioField
-                    theme={themeObj}
-                    type="radio"
-                    name="icon"
-                    value="#icon-Project"
-                  />
-                  <Icon theme={themeObj}>
-                    <use href={sprite + '#icon-Project'}></use>
-                  </Icon>
-                </label>
-              </li>
-              <li>
-                <label>
-                  <RadioField
-                    theme={themeObj}
-                    type="radio"
-                    name="icon"
-                    value="#icon-star-04"
-                  />
-                  <Icon theme={themeObj}>
-                    <use href={sprite + '#icon-star-04'}></use>
-                  </Icon>
-                </label>
-              </li>
-              <li>
-                <label>
-                  <RadioField
-                    theme={themeObj}
-                    type="radio"
-                    name="icon"
-                    value="#icon-loading-03"
-                  />
-                  <Icon theme={themeObj}>
-                    <use href={sprite + '#icon-loading-03'}></use>
-                  </Icon>
-                </label>
-              </li>
-              <li>
-                <label>
-                  <RadioField
-                    theme={themeObj}
-                    type="radio"
-                    name="icon"
-                    value="#icon-puzzle-piece-02"
-                  />
-                  <Icon theme={themeObj}>
-                    <use href={sprite + '#icon-puzzle-piece-02'}></use>
-                  </Icon>
-                </label>
-              </li>
-              <li>
-                <label>
-                  <RadioField
-                    theme={themeObj}
-                    type="radio"
-                    name="icon"
-                    value="#icon-container"
-                  />
-                  <Icon theme={themeObj}>
-                    <use href={sprite + '#icon-container'}></use>
-                  </Icon>
-                </label>
-              </li>
-              <li>
-                <label>
-                  <RadioField
-                    theme={themeObj}
-                    type="radio"
-                    name="icon"
-                    value="#icon-lightning-02"
-                  />
-                  <Icon theme={themeObj}>
-                    <use href={sprite + '#icon-lightning-02'}></use>
-                  </Icon>
-                </label>
-              </li>
-              <li>
-                <label>
-                  <RadioField
-                    theme={themeObj}
-                    type="radio"
-                    name="icon"
-                    value="#icon-colors"
-                  />
-                  <Icon theme={themeObj}>
-                    <use href={sprite + '#icon-colors'}></use>
-                  </Icon>
-                </label>
-              </li>
-              <li>
-                <label>
-                  <RadioField
-                    theme={themeObj}
-                    type="radio"
-                    name="icon"
-                    value="#icon-hexagon-01"
-                  />
-                  <Icon theme={themeObj}>
-                    <use href={sprite + '#icon-hexagon-01'}></use>
-                  </Icon>
-                </label>
-              </li>
+              {[
+                '#icon-Project',
+                '#icon-star-04',
+                '#icon-loading-03',
+                '#icon-puzzle-piece-02',
+                '#icon-container',
+                '#icon-lightning-02',
+                '#icon-colors',
+                '#icon-hexagon-01',
+              ].map((val) => (
+                <li key={val}>
+                  <label>
+                    <RadioField
+                      theme={muiTheme}
+                      type="radio"
+                      name="icon"
+                      value={val}
+                    />
+                    <Icon theme={muiTheme}>
+                      <use href={sprite + val}></use>
+                    </Icon>
+                  </label>
+                </li>
+              ))}
             </IconList>
 
             <Text>Background</Text>
             <BgList>
+              {/* “Düz renk / boş arkaplan” seçeneği */}
               <BgColor>
                 <label>
                   <RadioFieldBg
                     type="radio"
                     name="background"
                     onChange={() =>
-                      BgImageChangeHandler({
-                        min: ' ',
-                        desktop: ' ',
-                        tablet: ' ',
-                        mobile: ' ',
+                      handleBgImageChange({
+                        min: '',
+                        desktop: '',
+                        tablet: '',
+                        mobile: '',
                       })
                     }
                   />
-                  {theme === 'dark' ? (
+                  {themeKey === 'dark' ? (
                     <Img src={bgImageDark} alt="bgImage" />
                   ) : (
                     <Img src={bgImageLight} alt="bgImage" />
                   )}
                 </label>
               </BgColor>
-              {images.map(image => (
-                <BgColor key={image.min}>
-                  <label>
-                    <RadioFieldBg
-                      type="radio"
-                      name="background"
-                      onChange={() => BgImageChangeHandler(image)}
-                    />
-                    <Img src={image.min} alt="bgImage" />
-                  </label>
-                </BgColor>
-              ))}
+
+              {/* Görsel arkaplanlar */}
+              {Array.isArray(images) &&
+                images.map((image) => (
+                  <BgColor key={image.min}>
+                    <label>
+                      <RadioFieldBg
+                        type="radio"
+                        name="background"
+                        onChange={() => handleBgImageChange(image)}
+                      />
+                      <Img src={image.min} alt="bgImage" />
+                    </label>
+                  </BgColor>
+                ))}
             </BgList>
-            <BtnAdd btnTitle={btnText} />
+
+            {/* Submit butonu: component prop'u ile disable kontrolü */}
+            <BtnAdd
+              btnTitle={btnText}
+              isDisabled={
+                formik.isSubmitting || !formik.isValid || !formik.dirty
+              }
+            />
           </FormikContainer>
         )}
       </Formik>
