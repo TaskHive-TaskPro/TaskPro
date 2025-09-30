@@ -1,12 +1,15 @@
 import axios from "axios";
 
-const API_URL = "http://localhost:5000/api/auth";
+const API_URL = "http://localhost:5001/api/auth";
 
 const register = async (userData) => {
   try {
+    console.log('Sending register data:', userData);
     const response = await axios.post(`${API_URL}/register`, userData);
+    console.log('Register response:', response.data);
     return response.data.message;
   } catch (error) {
+    console.error('Register error:', error.response?.data);
     throw error.response?.data?.message || "Kayıt başarısız oldu.";
   }
 };
@@ -14,9 +17,6 @@ const register = async (userData) => {
 const login = async (userData) => {
   try {
     const response = await axios.post(`${API_URL}/login`, userData);
-    if (response.data.token) {
-      localStorage.setItem("user", JSON.stringify(response.data));
-    }
     return response.data;
   } catch (error) {
     throw error.response?.data?.message || "Giriş başarısız oldu.";

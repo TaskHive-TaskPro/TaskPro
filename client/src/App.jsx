@@ -5,6 +5,7 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
 // Context
 import { AuthProvider } from "./context/AuthContext";
+import { ThemeProvider } from "./context/ThemeContext";
 
 // Sayfalar & Bileşenler
 import DashboardRoutes from "./routes/DashboardRoutes"; 
@@ -17,8 +18,9 @@ import './styles/globals.css';
 
 function App() {
   return (
-    <AuthProvider>
-      <Router>
+    <ThemeProvider>
+      <AuthProvider>
+        <Router>
         {/* Ortak Layout eklemek isterseniz:
           <Layout>
             <Routes>...</Routes>
@@ -44,8 +46,9 @@ function App() {
           {/* <Route path="/admin/*" element={<AdminRoutes />} /> */}
           {/* <Route path="/user/*" element={<UserRoutes />} /> */}
         </Routes>
-      </Router>
-    </AuthProvider>
+        </Router>
+      </AuthProvider>
+    </ThemeProvider>
   );
 }
 

@@ -22,7 +22,6 @@ const AddCardModal = ({ onAdd, onClose, selectedPriority }) => {
     if (title && description) {
       const today = new Date().toISOString().split("T")[0]; // bugünün tarihi
       onAdd({
-        id: Date.now().toString(),
         title,
         description,
         priority,
@@ -101,11 +100,11 @@ const Column = ({
       <div className={Styles.cardList}>
         {column.cards.map((card) => (
           <Card
-            key={card.id}
+            key={card._id || card.id}
             card={card}
             onEdit={() => setEditCard(card)}
-            onDelete={() => onDeleteCard && onDeleteCard(column.id, card.id)}
-            onMove={() => onMoveCard && onMoveCard(column.id, card.id)}
+            onDelete={() => onDeleteCard && onDeleteCard(column.id, card._id || card.id)}
+            onMove={() => onMoveCard && onMoveCard(column.id, card._id || card.id)}
           />
         ))}
       </div>

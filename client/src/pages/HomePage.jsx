@@ -2,14 +2,13 @@
 import React, { useState } from 'react';
 import { Navigate } from 'react-router-dom';
 import Header from '../components/layout/Header';
-// import Sidebar from '../components/layout/Sidebar'; 
-// import ScreensPage from './ScreensPage'; 
-import { useAuth } from '../hooks/useAuth';
+import MainDashboard from '../components/dashboard/MainDashboard';
+import { useAuth } from '../context/AuthContext';
 import { useParams } from 'react-router-dom';
 
 const HomePage = () => {
   const { boardId } = useParams();
-  const { user, token, isLoading } = useAuth();
+  const { user, token, isLoading, isAuthenticated } = useAuth();
   const [sidebarOpen, setSidebarOpen] = useState(true);
 
   if (isLoading) {
@@ -21,8 +20,9 @@ const HomePage = () => {
     );
   }
 
-  if (!token || !user) {
-    return <Navigate to="/welcome" replace />;
+  // Eğer kullanıcı authenticate olmamışsa, ana sayfaya yönlendir
+  if (!isAuthenticated) {
+    return <Navigate to="/" replace />;
   }
 
   return (
@@ -34,12 +34,13 @@ const HomePage = () => {
         <aside className="sidebar-placeholder">
           <div style={{
             width: sidebarOpen ? '250px' : '0',
-            background: '#2d2d2d',
-            color: 'white',
+            background: 'var(--bg-secondary)',
+            color: 'var(--text-primary)',
             padding: sidebarOpen ? '20px' : '0',
             transition: 'all 0.3s',
             overflow: 'hidden',
-            height: '100vh'
+            height: '100vh',
+            borderRight: '1px solid var(--border-color)'
           }}>
             <h3>📋 Sidebar</h3>
             <p style={{ fontSize: '12px', opacity: 0.7 }}>(Kişi 4'ün görevi)</p>
@@ -52,34 +53,7 @@ const HomePage = () => {
         </aside>
         
         <main className={`main-content ${!sidebarOpen ? 'sidebar-collapsed' : ''}`}>
-          {boardId ? (
-            <div className="screens-placeholder">
-              <h2>Pano: {boardId}</h2>
-              <p>ScreensPage - Kişi 5'in görevi</p>
-            </div>
-          ) : (
-            <div className="no-board-selected">
-              <div className="welcome-content">
-                <h2>Hoş Geldiniz, {user?.name || 'Kullanıcı'}!</h2>
-                <p>Başlamak için sol menüden bir pano seçin veya yeni bir pano oluşturun.</p>
-                
-                <div className="welcome-stats">
-                  <div className="stat-card">
-                    <span className="stat-number">0</span>
-                    <span className="stat-label">Aktif Panolar</span>
-                  </div>
-                  <div className="stat-card">
-                    <span className="stat-number">0</span>
-                    <span className="stat-label">Tamamlanan Görevler</span>
-                  </div>
-                  <div className="stat-card">
-                    <span className="stat-number">0</span>
-                    <span className="stat-label">Bekleyen Görevler</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-          )}
+          <MainDashboard />
         </main>
       </div>
     </div>

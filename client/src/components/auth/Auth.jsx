@@ -49,15 +49,20 @@ const Auth = ({ verificationStatus, showModalInitially = false }) => {
     
     const authOperation = (async () => {
       if (isRegister) {
+        console.log('Register form data:', data);
         const message = await registerUser(data);
         alert(message);
         reset();
         setIsRegister(false); 
       } else {
-        await login(data);
-        reset();
-        setShowModal(false);
-        navigate('/home');
+        const response = await login(data);
+        if (response && response.token) {
+          reset();
+          setShowModal(false);
+          navigate('/home');
+        } else {
+          throw new Error('Login başarısız: Token alınamadı');
+        }
       }
     })();
     

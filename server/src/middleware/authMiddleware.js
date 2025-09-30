@@ -1,5 +1,5 @@
-const jwt = require('jsonwebtoken');
-const User = require('../models/User');
+import jwt from 'jsonwebtoken';
+import User from '../models/User.js';
 
 const protect = async (req, res, next) => {
     let token;
@@ -14,15 +14,11 @@ const protect = async (req, res, next) => {
             next();
         } catch (error) {
             console.error(error);
-            res.status(401);
-            throw new Error('Yetkisiz, token başarısız oldu');
+            return res.status(401).json({ message: 'Yetkisiz, token başarısız oldu' });
         }
-    }
-
-    if (!token) {
-        res.status(401);
-        throw new Error('Yetkisiz, token yok');
+    } else {
+        return res.status(401).json({ message: 'Yetkisiz, token yok' });
     }
 };
 
-module.exports = { protect };
+export { protect };

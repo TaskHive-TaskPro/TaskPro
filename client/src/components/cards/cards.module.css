@@ -1,13 +1,14 @@
 .card {
-  background-color: rgba(18, 18, 18, 1);
-  color: #ffffff;
+  background-color: var(--bg-tertiary);
+  color: var(--card-text-color);
   border-radius: 12px;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.4);
+  box-shadow: var(--shadow-md);
   padding: 0;
   margin-bottom: 12px;
   display: flex;
   flex-direction: row;
   overflow: hidden;
+  border: 1px solid var(--border-color);
 }
 
 .priorityStripe {
@@ -33,7 +34,7 @@
   font-size: 16px;
   font-weight: 600;
   margin: 0;
-  color: #fff;
+  color: var(--card-text-color);
 }
 
 .card-actions {
@@ -46,17 +47,24 @@
   border: none;
   cursor: pointer;
   padding: 4px;
+  position: relative;
+  z-index: 10;
+}
+
+.icon-btn:hover {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 4px;
 }
 
 .icon-btn img {
   width: 18px;
   height: 18px;
-  filter: brightness(0) invert(1);
+  filter: var(--icon-filter);
 }
 
 .card-description {
   font-size: 14px;
-  color: #b0b0b0;
+  color: var(--card-text-secondary);
   line-height: 1.4;
 }
 
@@ -95,11 +103,122 @@
 }
 
 .deadline {
-  color: #bbb;
+  color: var(--text-secondary);
+  font-size: 12px;
 }
-/* Card footer içindeki priority ve deadline'ı yan yana göstermek için */
+
+.priority-deadline {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+
+/* Hover efektleri */
+.card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.6);
+  transition: all 0.2s ease;
+}
+
+.icon-btn:hover {
+  opacity: 0.7;
+  transform: scale(1.1);
+  transition: all 0.2s ease;
+}
+
+/* Deadline uyarı renkleri */
+.deadline.today {
+  color: #ff6b6b;
+  font-weight: bold;
+}
+
+.deadline.overdue {
+  color: #e74c3c;
+  font-weight: bold;
+}
 .priority-deadline {
   display: flex;
   align-items: center;
   gap: 8px;
+}
+
+/* Bell Icon - Override filter to use original colors */
+.bell-icon {
+  filter: none !important;
+}
+
+/* Responsive Cards */
+@media (max-width: 768px) {
+  .card {
+    margin-bottom: 10px;
+    padding: 0;
+  }
+  
+  .cardContent {
+    padding: 12px;
+    gap: 6px;
+  }
+  
+  .card-header h3 {
+    font-size: 14px;
+  }
+  
+  .card-actions {
+    gap: 6px;
+  }
+  
+  .icon-btn {
+    padding: 3px;
+  }
+  
+  .icon-btn img {
+    width: 16px;
+    height: 16px;
+  }
+  
+  .card-description {
+    font-size: 13px;
+    line-height: 1.3;
+  }
+  
+  .card-footer {
+    font-size: 12px;
+  }
+  
+  .priority {
+    padding: 1px 6px;
+    font-size: 11px;
+  }
+  
+  .deadline {
+    font-size: 11px;
+  }
+}
+
+@media (max-width: 480px) {
+  .cardContent {
+    padding: 10px;
+    gap: 4px;
+  }
+  
+  .card-header h3 {
+    font-size: 13px;
+  }
+  
+  .card-actions {
+    gap: 4px;
+  }
+  
+  .icon-btn img {
+    width: 14px;
+    height: 14px;
+  }
+  
+  .card-description {
+    font-size: 12px;
+  }
+  
+  .priority-deadline {
+    gap: 8px;
+  }
 }
