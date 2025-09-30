@@ -1,3 +1,4 @@
+// src/components/buttons/btn/buttonAdd/buttonAdd.styled.jsx
 import styled from 'styled-components';
 
 export const Container = styled.button`
@@ -14,6 +15,9 @@ export const Container = styled.button`
   border: 0;
   border-radius: 8px;
   cursor: pointer;
+
+  /* İkonlar için varsayılan yazı/ikon rengi: */
+  color: ${p => p.theme.palette.secondary.info};
 
   background-color: ${p => p.theme.palette.text.hint};
   transition: background-color 200ms linear, opacity 150ms ease;
@@ -38,11 +42,19 @@ export const PlusIcon = styled.svg`
   width: 14px;
   height: 14px;
   flex: 0 0 auto;
-  stroke: ${p => p.theme.palette.secondary.error};
+
+  /* Sprite <use> için önerilen ayarlar: */
+  display: inline-block;
+  fill: currentColor;
+  stroke: currentColor;
+
+  /* İstediğin renge override etmek istersen buradan ver: */
+  color: ${p => p.theme.palette.secondary.error};
 `;
 
 export const TitleButton = styled.span`
-  color: ${p => p.theme.palette.secondary.info};
+  /* Container'da color verildi; bu da onu kullanır.
+     Ayrı renk istersen override edebilirsin. */
   font-family: Poppins;
   font-size: 14px;
   font-weight: 500;
@@ -66,6 +78,9 @@ export const ContainerColumn = styled.button`
 
   background-color: ${p => p.theme.palette.background.paper};
 
+  /* Bu varyantta ikon ve metin rengi: */
+  color: ${p => p.theme.palette.text.primary};
+
   &:focus-visible {
     outline: 2px solid ${p => p.theme.palette.primary.main};
     outline-offset: 2px;
@@ -76,11 +91,18 @@ export const PlusIconColumn = styled.svg`
   width: 14px;
   height: 14px;
   flex: 0 0 auto;
-  stroke: ${p => p.theme.palette.text.primary}; /* görünür olsun */
+
+  display: inline-block;
+  fill: currentColor;
+  stroke: currentColor;
+
+  /* ContainerColumn’dan gelen currentColor’ı kullanır */
+  /* İstersen burada da ayrıca renk verebilirsin: */
+  /* color: ${p => p.theme.palette.text.primary}; */
 `;
 
 export const TitleButtonColumn = styled.span`
-  color: ${p => p.theme.palette.text.primary};
+  /* ContainerColumn’da color var; onu devralır */
   font-family: Poppins;
   font-size: 14px;
   font-weight: 500;

@@ -8,8 +8,6 @@ import { useTheme } from '@mui/material';
 import cactus from '../../images/cactus.png';
 import cactus2x from '../../images/cactus@2x.png';
 import cactus3x from '../../images/cactus@3x.png';
-import icons from '../../images/icons.svg';
-
 import MainModal from '../mainModal/MainModal';
 import NewBoardForm from '../forms/newBoardForm/NewBoardForm';
 import NeedHelpModal from '../forms/needHelpModal/NeedHelpModal';
@@ -48,6 +46,7 @@ import {
   NeedHelpBox,
 } from './Sidebar.styled';
 
+const SPRITE = import.meta.env.BASE_URL + 'icons.svg';
 const SideBar = ({ active, onClick }) => {
   const theme = useTheme();
   const dispatch = useDispatch();
@@ -127,15 +126,15 @@ const SideBar = ({ active, onClick }) => {
   };
 
   // tema bazli ikonlar
-  const logoSvg = user.theme === 'violet' ? '#icon-logo-violet' : '#icon-icon-1';
+  const logoSvg = user.theme === 'violet' ? '#icon-Logo-violet' : '##icon-logo';
   const needHelpSvg =
     user.theme === 'violet' || user.theme === 'dark'
-      ? '#icon-help-white'
-      : '#icon-help';
+      ? '#icon-help-circle'
+      : '#icon-help-circle';
   const logOutSvg =
     user.theme === 'dark' || user.theme === 'light'
-      ? '#icon-login-green'
-      : '#icon-login-white';
+      ? '#icon-login'
+      : '#icon-login';
 
   const drawerContent = (
     <SideBarStyled
@@ -155,7 +154,7 @@ const SideBar = ({ active, onClick }) => {
           }}
         >
           <LogoIcon>
-            <use href={icons + `${logoSvg}`}></use>
+            <use href={`${SPRITE}${logoSvg}`} xlinkHref={`${SPRITE}${logoSvg}`} />
           </LogoIcon>
           <Typography
             variant="h2"
@@ -222,7 +221,7 @@ const SideBar = ({ active, onClick }) => {
             }}
           >
             <PlusIcon theme={theme}>
-              <use href={icons + '#icon-plus-2'}></use>
+              <use href={`${SPRITE}#icon-plus`} xlinkHref={`${SPRITE}#icon-plus`} />
             </PlusIcon>
           </Button>
         </Box>
@@ -242,7 +241,7 @@ const SideBar = ({ active, onClick }) => {
                       <TitleBox>
                         <IconTitle theme={theme}>
                           {/* board.icon unicode ise <use> calismaz; sprite id ise calisir */}
-                          <use href={icons + (board.icon || '#icon-board')}></use>
+                          <use href={`${SPRITE}${board.icon || '#icon-Project'}`} xlinkHref={`${SPRITE}${board.icon || '#icon-Project'}`} />
                         </IconTitle>
                         <Title theme={theme}>{board.title}</Title>
                       </TitleBox>
@@ -258,7 +257,7 @@ const SideBar = ({ active, onClick }) => {
                           }
                         >
                           <Edit>
-                            <use href={icons + '#icon-pencil-01'}></use>
+                            <use href={`${SPRITE}#icon-pencil`} xlinkHref={`${SPRITE}#icon-pencil`} />
                           </Edit>
                         </IconButton>
                         <IconLink
@@ -266,7 +265,7 @@ const SideBar = ({ active, onClick }) => {
                           onClick={() => deleteBoardHandler(board._id)}
                         >
                           <Delete>
-                            <use href={icons + '#icon-trash-04'}></use>
+                            <use href={`${SPRITE}#icon-trash`} xlinkHref={`${SPRITE}#icon-trash`} />
                           </Delete>
                         </IconLink>
                       </IconsBox>
@@ -336,7 +335,7 @@ const SideBar = ({ active, onClick }) => {
             }}
           >
             <HelpIcon theme={theme}>
-              <use href={icons + `${needHelpSvg}`}></use>
+              <use href={`${SPRITE}${needHelpSvg}`} xlinkHref={`${SPRITE}${needHelpSvg}`} />
             </HelpIcon>
             <Typography
               sx={{
@@ -381,7 +380,7 @@ const SideBar = ({ active, onClick }) => {
             }}
           >
             <LogoutIcon>
-              <use href={icons + `${logOutSvg}`}></use>
+               <use href={`${SPRITE}${logOutSvg}`} xlinkHref={`${SPRITE}${logOutSvg}`} />
             </LogoutIcon>
             <Typography
               sx={{

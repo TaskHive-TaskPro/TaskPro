@@ -113,12 +113,12 @@ const NeedHelpModal = ({ closeModal }) => {
               </Container>
             </FormWrapper>
 
-            <AuthFormSubmitButton
-              theme={theme}
-              type="submit"
-              disabled={formik.isSubmitting || !formik.isValid}
-              aria-busy={formik.isSubmitting}
-            >
+             <AuthFormSubmitButton
+  theme={theme}
+   type="submit"
+   disabled={formik.isSubmitting}
+   aria-busy={formik.isSubmitting}
+ >
               {formik.isSubmitting ? 'Sending...' : 'Send'}
             </AuthFormSubmitButton>
           </ModalForm>

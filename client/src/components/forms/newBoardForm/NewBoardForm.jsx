@@ -2,9 +2,9 @@ import images from './background.js';
 import * as Yup from 'yup';
 import React, { useState } from 'react';
 import BtnAdd from '../../buttons/btn/buttonAdd';
-import bgImageLight from '../../../images/bgImage-light.jpg';
+import bgImageLight from '../../../images/bgImage-light.svg';
 import bgImageDark from '../../../images/bgImage-dark.jpg';
-import sprite from '../../../images/icons.svg';
+import sprite from '../../../../../public/icons.svg';
 import { toast } from 'react-hot-toast';
 import { Formik } from 'formik';
 import { BtnCloseBlack } from '../../buttons/buttons';
@@ -123,9 +123,9 @@ const NewBoardForm = ({
                       name="icon"
                       value={val}
                     />
-                    <Icon theme={muiTheme}>
-                      <use href={sprite + val}></use>
-                    </Icon>
+                    <Icon theme={muiTheme} role="img" aria-hidden="true">
+    <use href={`${sprite}${val}`} xlinkHref={`${sprite}${val}`} />
+ </Icon>
                   </label>
                 </li>
               ))}
