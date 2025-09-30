@@ -1,6 +1,7 @@
 // client/src/routes/DashboardRoutes.jsx
 import { Routes, Route } from "react-router-dom";
 import HomePage from "../pages/HomePage";
+import AuthWrapper from "../pages/AuthWrapper";
 
 export default function DashboardRoutes() {
   return (
