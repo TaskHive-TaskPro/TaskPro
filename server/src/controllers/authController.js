@@ -14,8 +14,10 @@ const generateVerificationToken = () => {
 
 // Kullanıcı kayıt
 export const registerUser = asyncHandler(async (req, res) => {
+  console.log('Server received register data:', req.body);
   const { error, value } = registerSchema.validate(req.body);
   if (error) {
+    console.log('Validation error:', error.details[0].message);
     res.status(400);
     throw new Error(error.details[0].message);
   }

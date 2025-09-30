@@ -7,7 +7,7 @@ export default defineConfig({
     port: 3000, // Güvenli port
     open: true,
     proxy: {
-      "/api": "http://localhost:5001/", // Backend URL
+      "/api": "http://localhost:5001", // Backend URL
     },
   },
 });

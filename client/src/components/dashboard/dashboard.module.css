@@ -3,8 +3,8 @@
   display: flex;
   flex-direction: column;
   height: 100vh;
-  background-color: #111;
-  color: white;
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
 }
 
 /* Priority colors */
@@ -18,15 +18,12 @@
 .priorityNone {
   background-color: grey;
 }
-
 .priorityLow {
   background-color: #4d1b3d;
 }
-
 .priorityMedium {
   background-color: #df81e2;
 }
-
 .priorityHigh {
   background-color: #7d2d2d;
 }
@@ -37,7 +34,8 @@
   justify-content: space-between;
   align-items: center;
   padding: 16px;
-  background-color: #000;
+  background-color: var(--bg-primary);
+  border-bottom: 1px solid var(--border-color);
 }
 
 .headerRight {
@@ -50,31 +48,76 @@
 /* MainDashboard */
 .mainDashboard {
   flex: 1;
-  overflow-x: auto;
+  overflow: hidden; /* artık ana container overflow hidden */
   padding: 16px;
+  background-color: var(--bg-primary);
 }
 
+/* Columns Wrapper - yatay kaydırma */
 .columnsWrapper {
   display: flex;
+  flex-direction: row;
   gap: 16px;
+  padding-bottom: 12px;
   min-height: 100%;
+
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  scroll-behavior: smooth;
+}
+
+/* Modern yatay scroll stili */
+.columnsWrapper::-webkit-scrollbar {
+  height: 8px;
+}
+.columnsWrapper::-webkit-scrollbar-track {
+  background: transparent;
+}
+.columnsWrapper::-webkit-scrollbar-thumb {
+  background-color: rgba(100, 100, 100, 0.5);
+  border-radius: 4px;
 }
 
 /* Column */
+/* Column */
 .columnContainer {
   width: 288px;
-  background-color: #222;
+  background-color: var(--bg-secondary);
   border-radius: 12px;
   padding: 16px;
   display: flex;
   flex-direction: column;
   flex-shrink: 0;
+  border: 1px solid var(--border-color);
+
+  /* Kartlar fazla olursa iç scroll */
+  max-height: 80vh;
+  overflow-y: auto;
+}
+
+/* Modern dikey scroll (görünmez) */
+.columnContainer::-webkit-scrollbar {
+  width: 0px;
+  background: transparent;
+}
+.columnContainer {
+  -ms-overflow-style: none; /* IE 10+ */
+  scrollbar-width: none; /* Firefox */
+}
+
+.columnContainer::-webkit-scrollbar-track {
+  background: transparent;
+}
+.columnContainer::-webkit-scrollbar-thumb {
+  background-color: rgba(100, 100, 100, 0.5);
+  border-radius: 3px;
 }
 
 .columnTitle {
   font-size: 1.125rem;
   font-weight: 500;
   margin-bottom: 16px;
+  color: var(--column-text-color);
 }
 
 .cardList {
@@ -85,23 +128,23 @@
 }
 
 .cardItem {
-  background-color: #333;
+  background-color: var(--bg-tertiary);
   padding: 12px;
   border-radius: 8px;
   cursor: pointer;
 }
 
 .cardItem:hover {
-  background-color: #444;
+  background-color: var(--hover-color);
 }
 
 .cardTitle {
   font-weight: 500;
+  color: var(--card-text-color);
 }
-
 .cardDesc {
   font-size: 0.875rem;
-  color: #aaa;
+  color: var(--card-text-secondary);
 }
 
 /* Buttons */
@@ -116,74 +159,83 @@
   padding: 8px 12px;
 }
 
-.btnCloseModal {
-  margin-top: 12px;
-}
-
 .btnAddCard {
-  color: #4ade80;
+  color: var(--add-another-color);
   background: none;
   margin-top: 12px;
 }
-
 .btnAddCard:hover {
-  color: #22c55e;
+  opacity: 0.8;
 }
 
 .columnAddBtn {
-  width: 288px;
+  width: 100%;
+  max-width: 288px;
   height: fit-content;
-  background-color: #333;
+  background-color: var(--bg-secondary);
+  color: var(--add-another-color);
   display: flex;
   align-items: center;
   justify-content: center;
+  border: 1px solid var(--border-color);
+  transition: all 0.3s ease;
 }
-
 .columnAddBtn:hover {
-  background-color: #444;
+  background-color: var(--hover-color);
+  opacity: 0.8;
 }
 
-/* Filters Button*/
+/* Filters Button */
 .filtersWrapper {
   display: flex;
   justify-content: space-between;
   padding: 16px 16px 0 16px;
-  background-color: #111;
+  background-color: var(--bg-primary);
 }
 
 .btnFilters {
   padding: 8px 16px;
   border-radius: 8px;
   background-color: transparent;
-  color: white;
+  color: var(--text-primary);
   cursor: pointer;
   border: none;
   display: flex;
   align-items: center;
   transition: 0.2s;
 }
-
 .btnFilters:hover {
-  color: green;
+  color: var(--accent-color);
 }
 
 /* Modals */
 .modalOverlay {
   position: fixed;
   inset: 0;
-  background-color: rgba(0, 0, 0, 0.5);
+  background-color: rgba(0, 0, 0, 0.7);
   display: flex;
   align-items: center;
   justify-content: center;
+  z-index: 1000;
+  padding: 1rem;
+  backdrop-filter: blur(6px);
+  overflow: auto;
 }
 
 .modalContent {
-  background-color: #222;
+  background-color: var(--bg-secondary);
+  color: var(--text-primary);
   padding: 24px;
   border-radius: 12px;
-  min-width: 300px;
+  width: 90%;
+  max-width: 400px;
   display: flex;
   flex-direction: column;
+  transition: transform 0.3s ease;
+  border: 1px solid var(--border-color);
+}
+.modalContent:hover {
+  transform: translateY(-3px);
 }
 
 .modalTitle {
@@ -203,7 +255,7 @@
   color: white;
   width: 100%;
   box-sizing: border-box;
-  height: 40px; 
+  height: 40px;
   font-size: 14px;
 }
 
@@ -223,17 +275,14 @@
   background-color: #4ade80;
   color: #111;
 }
-
 .btnAdd:hover {
   background-color: #22c55e;
 }
-
 .btnCancel,
 .btnCloseModal {
   background-color: #444;
   color: white;
 }
-
 .btnCancel:hover,
 .btnCloseModal:hover {
   background-color: #555;
@@ -245,7 +294,6 @@
   flex-direction: column;
   gap: 12px;
 }
-
 .colorOption {
   display: flex;
   align-items: center;
@@ -255,15 +303,12 @@
   border-radius: 6px;
   transition: 0.2s;
 }
-
 .colorOption:hover {
   background-color: #333;
 }
-
 .selectedPriority {
   background-color: #444;
 }
-
 .priorityLabel {
   color: white;
   font-size: 1rem;
@@ -277,14 +322,12 @@
   gap: 8px;
   margin-left: 16px;
 }
-
 .userAvatar {
   width: 32px;
   height: 32px;
   border-radius: 50%;
   object-fit: cover;
 }
-
 .userName {
   font-weight: 500;
 }
@@ -298,7 +341,6 @@
   height: 300px;
   gap: 20px;
 }
-
 .loader {
   width: 40px;
   height: 40px;
@@ -307,8 +349,32 @@
   border-radius: 50%;
   animation: spin 1s linear infinite;
 }
-
 @keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+/* Tablet */
+@media (min-width: 481px) and (max-width: 1024px) {
+  .columnContainer {
+    flex: 0 0 45%;
+    max-width: 288px;
+  }
+  .modalContent {
+    width: 70%;
+  }
+}
+
+/* Desktop */
+@media (min-width: 1025px) {
+  .columnContainer {
+    flex: 0 0 288px;
+  }
+  .modalContent {
+    width: 400px;
+  }
 }

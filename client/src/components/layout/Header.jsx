@@ -5,7 +5,9 @@ import { ThemeContext } from '../../context/ThemeContext';
 import { useAuth } from '../../context/AuthContext';
 
 const Header = ({ onSidebarToggle }) => {
-  const { theme, setTheme } = useContext(ThemeContext);
+  const themeContext = useContext(ThemeContext);
+  const theme = themeContext?.theme || 'light';
+  const setTheme = themeContext?.setTheme || (() => {});
   const [themeDropdownOpen, setThemeDropdownOpen] = useState(false);
   const { user } = useAuth();
 
@@ -15,27 +17,9 @@ const Header = ({ onSidebarToggle }) => {
     { name: 'Violet', value: 'violet', icon: Palette }
   ];
 
-  const handleThemeChange = async (selectedTheme) => {
-    try {
-      setTheme(selectedTheme);
-      setThemeDropdownOpen(false);
-      
-
-      const token = localStorage.getItem('token');
-      if (token) {
-        await fetch(`${import.meta.env.VITE_API_URL}/api/user/theme`, {
-          method: 'PATCH',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${token}`
-          },
-          body: JSON.stringify({ theme: selectedTheme })
-        });
-      }
-    } catch (error) {
-      console.error('Tema güncellenirken hata:', error);
-
-    }
+  const handleThemeChange = (selectedTheme) => {
+    setTheme(selectedTheme);
+    setThemeDropdownOpen(false);
   };
 
   const currentTheme = themes.find(t => t.value === theme) || themes[0];

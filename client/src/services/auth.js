@@ -4,7 +4,6 @@ const API_URL = import.meta.env.VITE_API_URL
   ? `${import.meta.env.VITE_API_URL}/api/auth`
   : "http://localhost:5000/api/auth";
 
-// Axios instance oluşturuldu, withCredentials kaldırıldı
 const axiosInstance = axios.create({
   baseURL: API_URL,
   headers: {
@@ -17,17 +16,17 @@ const register = async (userData) => {
   console.log("API URL:", API_URL);
 
   try {
-    // Basit axios.post kullanımı
+    console.log('Sending register data:', userData);
     const response = await axios.post(`${API_URL}/register`, userData, {
       headers: {
         "Content-Type": "application/json",
       },
     });
-    console.log("Register success:", response.data);
+    console.log('Register response:', response.data);
     return response.data.message;
   } catch (error) {
-    console.error("Register error:", error.response?.data || error.message);
-
+    console.error('Register error:', error.response?.data);
+    console.error('Full error:', error);
     throw error.response?.data?.message || "Kayıt başarısız oldu.";
   }
 };

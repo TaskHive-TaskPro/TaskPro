@@ -4,7 +4,7 @@ import { FaEye, FaEyeSlash } from 'react-icons/fa';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { registerSchema, loginSchema } from '../../validation/authSchema';
-import { useAuth } from '../../context/AuthContext';
+import { useAuth } from '../../hooks/useAuth';
 import { useNavigate } from 'react-router-dom';
 import LoadingOverlay from '../LoadingOverlay/LoadingOverlay'; 
 import HeaderIcon from "./assets/headerIcon.png";
@@ -49,6 +49,7 @@ const Auth = ({ verificationStatus, showModalInitially = false }) => {
     
     const authOperation = (async () => {
       if (isRegister) {
+        console.log('Register form data:', data);
         const message = await registerUser(data);
         alert(message);
         reset();
