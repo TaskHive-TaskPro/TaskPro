@@ -17,11 +17,8 @@ app.use(cors({
     'http://localhost:3000',
     'http://localhost:3001',
     'http://127.0.0.1:3000',
-<<<<<<<<< Temporary merge branch 1
     'http://localhost:5173',
-=========
     'http://127.0.0.1:3001',
->>>>>>>>> Temporary merge branch 2
     process.env.CLIENT_URL
   ],
   credentials: true,

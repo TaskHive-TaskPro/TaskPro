@@ -73,11 +73,9 @@ const HomePage = () => {
         </div>
       </div>
     );
-  };
 
-<<<<<<<<< Temporary merge branch 1
-  export default HomePage;
-=========
+
+
   // Eğer kullanıcı authenticate olmamışsa, ana sayfaya yönlendir
   if (!isAuthenticated) {
     return <Navigate to="/" replace />;
@@ -119,4 +117,3 @@ const HomePage = () => {
 };
 
 export default HomePage;
->>>>>>>>> Temporary merge branch 2
