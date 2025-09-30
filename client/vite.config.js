@@ -7,11 +7,8 @@ export default defineConfig({
     port: 3000, // Güvenli port
     open: true,
     proxy: {
-<<<<<<<<< Temporary merge branch 1
       "/api": "http://localhost:5001/", // Backend URL
-=========
-      "/api": "http://localhost:5001", // Backend URL
->>>>>>>>> Temporary merge branch 2
+
     },
   },
 });
