@@ -1,20 +1,21 @@
-import React, { useState, useContext } from 'react';
-import { Sun, Moon, Palette, Menu, User } from 'lucide-react';
-import UserInfo from './UserInfo';
-import { ThemeContext } from '../../context/ThemeContext';
-import { useAuth } from '../../context/AuthContext';
+import React, { useState, useContext } from "react";
+import { Menu } from "lucide-react";
+import UserInfo from "./UserInfo";
+import { ThemeContext } from "../../context/ThemeContext";
+import { useAuth } from "../../hooks/useAuth";
+import logo from "../auth/assets/icon.png";
 
 const Header = ({ onSidebarToggle }) => {
   const themeContext = useContext(ThemeContext);
-  const theme = themeContext?.theme || 'light';
+  const theme = themeContext?.theme || "light";
   const setTheme = themeContext?.setTheme || (() => {});
   const [themeDropdownOpen, setThemeDropdownOpen] = useState(false);
   const { user } = useAuth();
 
   const themes = [
-    { name: 'Light', value: 'light', icon: Sun },
-    { name: 'Dark', value: 'dark', icon: Moon },
-    { name: 'Violet', value: 'violet', icon: Palette }
+    { name: "Light", value: "light" },
+    { name: "Dark", value: "dark" },
+    { name: "Violet", value: "violet" },
   ];
 
   const handleThemeChange = (selectedTheme) => {
@@ -22,20 +23,18 @@ const Header = ({ onSidebarToggle }) => {
     setThemeDropdownOpen(false);
   };
 
-  const currentTheme = themes.find(t => t.value === theme) || themes[0];
-  const CurrentIcon = currentTheme.icon;
-
+  const currentTheme = themes.find((t) => t.value === theme) || themes[0];
 
   React.useEffect(() => {
     const handleClickOutside = (event) => {
-      if (themeDropdownOpen && !event.target.closest('.theme-selector')) {
+      if (themeDropdownOpen && !event.target.closest(".theme-selector")) {
         setThemeDropdownOpen(false);
       }
     };
 
-    document.addEventListener('mousedown', handleClickOutside);
+    document.addEventListener("mousedown", handleClickOutside);
     return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
+      document.removeEventListener("mousedown", handleClickOutside);
     };
   }, [themeDropdownOpen]);
 
@@ -43,16 +42,18 @@ const Header = ({ onSidebarToggle }) => {
     <header className="header">
       <div className="header-container">
         <div className="header-left">
-          {/* Mobile/Desktop Menu Toggle */}
-          <button 
+          <button
             className="sidebar-toggle-btn"
             onClick={onSidebarToggle}
             aria-label="Sidebar'ı aç/kapat"
           >
             <Menu size={20} />
           </button>
-          
+
           <div className="app-brand">
+            <div className="app-logo">
+              <img src={logo} alt="TaskPro" />
+            </div>
             <h1 className="app-title">
               Task<span className="brand-accent">Pro</span>
             </h1>
@@ -68,39 +69,31 @@ const Header = ({ onSidebarToggle }) => {
               aria-label="Tema seç"
               aria-expanded={themeDropdownOpen}
             >
-              <CurrentIcon size={18} />
-              <span className="theme-text">{currentTheme.name}</span>
+              <span className="theme-text">Theme</span>
             </button>
 
             {themeDropdownOpen && (
               <div className="theme-dropdown">
-                {themes.map((themeOption) => {
-                  const Icon = themeOption.icon;
-                  return (
-                    <button
-                      key={themeOption.value}
-                      className={`theme-option ${theme === themeOption.value ? 'active' : ''}`}
-                      onClick={() => handleThemeChange(themeOption.value)}
-                    >
-                      <Icon size={16} />
-                      <span>{themeOption.name}</span>
-                      {theme === themeOption.value && (
-                        <div className="active-indicator" />
-                      )}
-                    </button>
-                  );
-                })}
+                {themes.map((themeOption) => (
+                  <button
+                    key={themeOption.value}
+                    className={`theme-option ${
+                      theme === themeOption.value ? "active" : ""
+                    }`}
+                    onClick={() => handleThemeChange(themeOption.value)}
+                  >
+                    <span>{themeOption.name}</span>
+                    {theme === themeOption.value && (
+                      <div className="active-indicator" />
+                    )}
+                  </button>
+                ))}
               </div>
             )}
           </div>
 
           {/* User Info */}
-          <div className="user-info">
-            <button className="user-info-btn">
-              <User size={20} />
-              <span>{user?.name || 'Kullanıcı'}</span>
-            </button>
-          </div>
+          <UserInfo />
         </div>
       </div>
     </header>
