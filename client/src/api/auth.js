@@ -4,9 +4,13 @@ const API_URL = "http://localhost:5001/api/auth";
 
 const register = async (userData) => {
   try {
+    console.log('auth.js - Sending register data:', userData);
     const response = await axios.post(`${API_URL}/register`, userData);
+    console.log('auth.js - Register response:', response.data);
     return response.data.message;
   } catch (error) {
+    console.error('auth.js - Register error:', error.response?.data);
+    console.error('auth.js - Full error:', error);
     throw error.response?.data?.message || "Kayıt başarısız oldu.";
   }
 };

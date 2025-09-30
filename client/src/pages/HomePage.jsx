@@ -15,6 +15,7 @@
     render() { return this.state.hasError ? null : this.props.children; }
   }
 
+
   const HomePage = () => {
     const { boardId } = useParams();
     const { user, token, isLoading, isAuthenticated } = useAuth();
@@ -42,6 +43,7 @@
         </SidebarBoundary>
 
         <Header onSidebarToggle={() => setSidebarOpen(!sidebarOpen)} />
+
         
 
        <div className="home-content" style={{ marginLeft: '260px' }}> {/* kalıcı drawer boşluğu için sınıf eklendi */}

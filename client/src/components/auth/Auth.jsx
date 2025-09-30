@@ -49,6 +49,7 @@ const Auth = ({ verificationStatus, showModalInitially = false }) => {
     
     const authOperation = (async () => {
       if (isRegister) {
+        console.log('Register form data:', data);
         const message = await registerUser(data);
         alert(message);
         reset();
