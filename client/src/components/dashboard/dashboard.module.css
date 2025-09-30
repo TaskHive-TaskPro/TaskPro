@@ -2,7 +2,6 @@
 .screensPage {
   display: flex;
   flex-direction: column;
-
   height: 100vh;
   background-color: var(--bg-primary);
   color: var(--text-primary);
@@ -49,7 +48,7 @@
 /* MainDashboard */
 .mainDashboard {
   flex: 1;
-  overflow-x: auto;
+  overflow: hidden; /* artık ana container overflow hidden */
   padding: 16px;
   background-color: var(--bg-primary);
 }
@@ -57,26 +56,61 @@
 /* Columns Wrapper - yatay kaydırma */
 .columnsWrapper {
   display: flex;
-  flex-direction: row; /* kolonlar yan yana */
-  gap: 16px; /* kolonlar arası boşluk */
-  overflow-x: auto; /* yatay scroll */
+  flex-direction: row;
+  gap: 16px;
   padding-bottom: 12px;
   min-height: 100%;
-  -webkit-overflow-scrolling: touch; /* smooth scroll iOS */
+
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  scroll-behavior: smooth;
 }
 
+/* Modern yatay scroll stili */
+.columnsWrapper::-webkit-scrollbar {
+  height: 8px;
+}
+.columnsWrapper::-webkit-scrollbar-track {
+  background: transparent;
+}
+.columnsWrapper::-webkit-scrollbar-thumb {
+  background-color: rgba(100, 100, 100, 0.5);
+  border-radius: 4px;
+}
+
+/* Column */
 /* Column */
 .columnContainer {
   width: 288px;
   background-color: var(--bg-secondary);
-
   border-radius: 12px;
   padding: 16px;
   display: flex;
   flex-direction: column;
-
   flex-shrink: 0;
   border: 1px solid var(--border-color);
+
+  /* Kartlar fazla olursa iç scroll */
+  max-height: 80vh;
+  overflow-y: auto;
+}
+
+/* Modern dikey scroll (görünmez) */
+.columnContainer::-webkit-scrollbar {
+  width: 0px;
+  background: transparent;
+}
+.columnContainer {
+  -ms-overflow-style: none; /* IE 10+ */
+  scrollbar-width: none; /* Firefox */
+}
+
+.columnContainer::-webkit-scrollbar-track {
+  background: transparent;
+}
+.columnContainer::-webkit-scrollbar-thumb {
+  background-color: rgba(100, 100, 100, 0.5);
+  border-radius: 3px;
 }
 
 .columnTitle {
@@ -130,9 +164,7 @@
   background: none;
   margin-top: 12px;
 }
-
 .btnAddCard:hover {
-  color: var(--add-another-color);
   opacity: 0.8;
 }
 
@@ -145,13 +177,9 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  cursor: pointer;
   border: 1px solid var(--border-color);
-  border-radius: 12px;
-  padding: 16px;
   transition: all 0.3s ease;
 }
-
 .columnAddBtn:hover {
   background-color: var(--hover-color);
   opacity: 0.8;
@@ -161,7 +189,6 @@
 .filtersWrapper {
   display: flex;
   justify-content: space-between;
-
   padding: 16px 16px 0 16px;
   background-color: var(--bg-primary);
 }
@@ -177,7 +204,6 @@
   align-items: center;
   transition: 0.2s;
 }
-
 .btnFilters:hover {
   color: var(--accent-color);
 }
@@ -208,10 +234,10 @@
   transition: transform 0.3s ease;
   border: 1px solid var(--border-color);
 }
-
 .modalContent:hover {
   transform: translateY(-3px);
 }
+
 .modalTitle {
   font-weight: 600;
   margin-bottom: 12px;
@@ -249,17 +275,14 @@
   background-color: #4ade80;
   color: #111;
 }
-
 .btnAdd:hover {
   background-color: #22c55e;
 }
-
 .btnCancel,
 .btnCloseModal {
   background-color: #444;
   color: white;
 }
-
 .btnCancel:hover,
 .btnCloseModal:hover {
   background-color: #555;
@@ -271,7 +294,6 @@
   flex-direction: column;
   gap: 12px;
 }
-
 .colorOption {
   display: flex;
   align-items: center;
@@ -281,15 +303,12 @@
   border-radius: 6px;
   transition: 0.2s;
 }
-
 .colorOption:hover {
   background-color: #333;
 }
-
 .selectedPriority {
   background-color: #444;
 }
-
 .priorityLabel {
   color: white;
   font-size: 1rem;
@@ -303,14 +322,12 @@
   gap: 8px;
   margin-left: 16px;
 }
-
 .userAvatar {
   width: 32px;
   height: 32px;
   border-radius: 50%;
   object-fit: cover;
 }
-
 .userName {
   font-weight: 500;
 }
@@ -324,7 +341,6 @@
   height: 300px;
   gap: 20px;
 }
-
 .loader {
   width: 40px;
   height: 40px;
@@ -333,7 +349,6 @@
   border-radius: 50%;
   animation: spin 1s linear infinite;
 }
-
 @keyframes spin {
   0% {
     transform: rotate(0deg);
@@ -346,7 +361,7 @@
 /* Tablet */
 @media (min-width: 481px) and (max-width: 1024px) {
   .columnContainer {
-    flex: 0 0 45%; /* tablet için yan yana genişlik */
+    flex: 0 0 45%;
     max-width: 288px;
   }
   .modalContent {
@@ -357,7 +372,7 @@
 /* Desktop */
 @media (min-width: 1025px) {
   .columnContainer {
-    flex: 0 0 288px; /* desktop sabit genişlik */
+    flex: 0 0 288px;
   }
   .modalContent {
     width: 400px;
