@@ -2,13 +2,84 @@ import React, { useState } from "react";
 import Styles from "./dashboard.module.css";
 import Card from "../cards/Card";
 import EditCardModal from "../cards/EditCardModal";
+import { FaPencilAlt, FaTrash } from "react-icons/fa";
 
 // Priority renkleri
 const priorityColors = {
-  none: "#bdc3c7",
-  low: "#2ecc71",
-  medium: "#f1c40f",
-  high: "#e74c3c",
+  none: "grey",
+  low: "#a88fddff",
+  medium: "#d28dd5ff",
+  high: "#6cb98eff",
+};
+
+// ---------------- EditColumnModal ----------------
+const EditColumnModal = ({ columnTitle, onSave, onClose }) => {
+  const [title, setTitle] = useState(columnTitle);
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (title && title.trim() !== "") {
+      onSave(title.trim());
+      onClose();
+    }
+  };
+
+  return (
+    <div className={Styles.modalOverlay} onClick={onClose}>
+      <form 
+        className={Styles.modalContent} 
+        onSubmit={handleSubmit}
+        onClick={(e) => e.stopPropagation()}
+      >
+        <h3 className={Styles.modalTitle}>Edit Column</h3>
+        <input
+          className={Styles.modalInput}
+          placeholder="Column title"
+          value={title}
+          onChange={(e) => setTitle(e.target.value)}
+          required
+          autoFocus
+        />
+        <div className={Styles.modalActions}>
+          <button type="button" onClick={onClose} className={Styles.btnCancel}>
+            Cancel
+          </button>
+          <button type="submit" className={Styles.btnAdd}>
+            Save
+          </button>
+        </div>
+      </form>
+    </div>
+  );
+};
+
+// ---------------- DeleteColumnModal ----------------
+const DeleteColumnModal = ({ columnTitle, onConfirm, onClose }) => {
+  return (
+    <div className={Styles.modalOverlay} onClick={onClose}>
+      <div 
+        className={Styles.modalContent}
+        onClick={(e) => e.stopPropagation()}
+      >
+        <h3 className={Styles.modalTitle}>Delete Column</h3>
+        <p className={Styles.modalText}>
+          Are you sure you want to delete <strong>"{columnTitle}"</strong>?
+          <br />
+          <span className={Styles.modalWarning}>
+            This will also delete all cards in this column.
+          </span>
+        </p>
+        <div className={Styles.modalActions}>
+          <button onClick={onClose} className={Styles.btnCancel}>
+            Cancel
+          </button>
+          <button onClick={onConfirm} className={Styles.btnDelete}>
+            Delete
+          </button>
+        </div>
+      </div>
+    </div>
+  );
 };
 
 // ---------------- AddCardModal ----------------
@@ -88,15 +159,37 @@ const Column = ({
   onUpdateCard,
   onDeleteCard,
   onMoveCard,
+  onEditColumn,
+  onDeleteColumn,
   selectedPriority,
 }) => {
   const [showModal, setShowModal] = useState(false);
   const [editCard, setEditCard] = useState(null);
+  const [showEditColumnModal, setShowEditColumnModal] = useState(false);
+  const [showDeleteColumnModal, setShowDeleteColumnModal] = useState(false);
 
   return (
     <div className={Styles.columnContainer}>
-      <h2 className={Styles.columnTitle}>{column.title}</h2>
-
+      <div className={Styles.columnHeader}>
+        <h3 className={Styles.columnTitle}>{column.title}</h3>
+        <div className={Styles.columnActions}>
+          <button 
+            className={Styles.columnActionBtn}
+            onClick={() => setShowEditColumnModal(true)}
+            aria-label="Edit column"
+          >
+            <FaPencilAlt size={14} />
+          </button>
+          <button 
+            className={Styles.columnActionBtn}
+            onClick={() => setShowDeleteColumnModal(true)}
+            aria-label="Delete column"
+          >
+            <FaTrash size={14} />
+          </button>
+        </div>
+      </div>
+      
       <div className={Styles.cardList}>
         {column.cards.map((card) => (
           <Card
@@ -129,6 +222,28 @@ const Column = ({
             setEditCard(null);
           }}
           onClose={() => setEditCard(null)}
+        />
+      )}
+
+      {showEditColumnModal && (
+        <EditColumnModal
+          columnTitle={column.title}
+          onSave={(newTitle) => {
+            onEditColumn && onEditColumn(column.id, newTitle);
+            setShowEditColumnModal(false);
+          }}
+          onClose={() => setShowEditColumnModal(false)}
+        />
+      )}
+
+      {showDeleteColumnModal && (
+        <DeleteColumnModal
+          columnTitle={column.title}
+          onConfirm={() => {
+            onDeleteColumn && onDeleteColumn(column.id);
+            setShowDeleteColumnModal(false);
+          }}
+          onClose={() => setShowDeleteColumnModal(false)}
         />
       )}
     </div>

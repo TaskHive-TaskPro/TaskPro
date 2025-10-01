@@ -87,15 +87,30 @@ const MainDashboard = () => {
         const cards = await getCards(token);
         console.log('Fetched cards:', cards);
         
-        // Cards'ları kolonlara dağıt (varsayılan olarak "To do" kolonuna)
+        // Kartları üç ayrı kolona eşit olarak dağıt
         if (cards && cards.length > 0) {
-          setColumns(prevColumns => 
-            prevColumns.map(col => 
-              col.id === "1" 
-                ? { ...col, cards: cards }
-                : col
-            )
-          );
+          const chunkSize = Math.ceil(cards.length / 3);
+          const todoCards = cards.slice(0, chunkSize);
+          const inProgressCards = cards.slice(chunkSize, chunkSize * 2);
+          const doneCards = cards.slice(chunkSize * 2);
+          
+          setColumns([
+            {
+              id: "1",
+              title: "To do",
+              cards: todoCards,
+            },
+            {
+              id: "2",
+              title: "In progress",
+              cards: inProgressCards,
+            },
+            {
+              id: "3",
+              title: "Done",
+              cards: doneCards,
+            },
+          ]);
         }
       } catch (error) {
         console.error('Error fetching cards:', error);
@@ -108,6 +123,18 @@ const MainDashboard = () => {
   }, [token]);
 
   const addColumn = (newCol) => setColumns([...columns, newCol]);
+
+  // Kolonu düzenleme
+  const editColumn = (columnId, newTitle) => {
+    setColumns(columns.map(col => 
+      col.id === columnId ? { ...col, title: newTitle } : col
+    ));
+  };
+
+  // Kolonu silme
+  const deleteColumn = (columnId) => {
+    setColumns(columns.filter(col => col.id !== columnId));
+  };
 
   const addCard = async (columnId, card) => {
     try {
@@ -231,33 +258,36 @@ const MainDashboard = () => {
           </div>
         ) : (
           <div className={Styles.columnsWrapper}>
-          {columns.map((col) => (
-            <Column
-              key={col.id}
-              column={{
-                ...col,
-                cards:
-                  selectedPriority === "none"
-                    ? col.cards
-                    : col.cards.filter(
-                        (card) => card.priority === selectedPriority
-                      ),
-              }}
-              onAddCard={addCard}
-              onUpdateCard={updateCard}
-              onDeleteCard={deleteCard}
-              onMoveCard={moveCard}
-              selectedPriority={selectedPriority}
-            />
-          ))}
-
-          <div
-            className={Styles.columnAddBtn}
-            onClick={() => setShowAddColumn(true)}
-          >
-            + Add another column
+            {columns.map((col) => (
+              <Column
+                key={col.id}
+                column={{
+                  ...col,
+                  cards:
+                    selectedPriority === "none"
+                      ? col.cards
+                      : col.cards.filter(
+                          (card) => card.priority === selectedPriority
+                        ),
+                }}
+                onAddCard={addCard}
+                onUpdateCard={updateCard}
+                onDeleteCard={deleteCard}
+                onMoveCard={moveCard}
+                onEditColumn={editColumn}
+                onDeleteColumn={deleteColumn}
+                selectedPriority={selectedPriority}
+              />
+            ))}
+            
+            {/* Add Another Column Button */}
+            <button 
+              className={Styles.columnAddBtn}
+              onClick={() => setShowAddColumn(true)}
+            >
+              + Add another column
+            </button>
           </div>
-        </div>
         )}
       </main>
 
