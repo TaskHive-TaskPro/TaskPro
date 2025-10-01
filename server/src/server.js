@@ -5,8 +5,7 @@ import cors from 'cors';
 import { connectDB } from './config/db.js';
 import cardRoutes from './routes/cards.js';
 import authRoutes from './routes/authRoutes.js';
-import boardsRoutes from './routes/boards.js';
-import feedbackRoutes from './routes/feedback.js';
+import boards from "./routes/boards.js";
 
 
 dotenv.config();
@@ -39,7 +38,7 @@ connectDB();
 // Routes
 app.use('/api/auth', authRoutes);
 app.use('/api/cards', cardRoutes);
-app.use("/api/boards", boardsRoutes);
+app.use("/api/boards", boards);
 app.use('/api/feedback', feedbackRoutes);
 
 // Test route

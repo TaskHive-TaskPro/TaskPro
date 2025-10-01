@@ -157,11 +157,12 @@
   flex-direction: row;
   gap: 16px;
   padding-bottom: 12px;
-  flex: 1;
   overflow-x: auto;
-  overflow-y: auto;
-  -webkit-overflow-scrolling: touch;
+  overflow-y: hidden;
   scroll-behavior: smooth;
+  align-items: flex-start;
+  flex-wrap: nowrap; 
+  min-width: max-content; 
 }
 
 /* Modern scroll style */
@@ -178,39 +179,39 @@
 }
 
 /* Column */
-/* Column */
+
 .columnContainer {
-  width: 288px;
+  flex: 0 0 288px; 
+  min-width: 288px;
+  max-width: 288px;
   background-color: var(--bg-secondary);
   border-radius: 12px;
   padding: 16px;
   display: flex;
   flex-direction: column;
-  flex-shrink: 0;
   border: 1px solid var(--border-color);
-
-  /* Kartlar fazla olursa iç scroll */
-  max-height: 75vh;
+  max-height: calc(100dvh - 80px);
   overflow-y: auto;
 }
 
-/* Modern dikey scroll (görünmez) */
+/* Scrollbar görünür olsun istersen */
 .columnContainer::-webkit-scrollbar {
-  width: 0px;
-  background: transparent;
+  width: 6px;
 }
+.columnContainer::-webkit-scrollbar-thumb {
+  background: rgba(120, 120, 120, 0.4);
+  border-radius: 3px;
+}
+
 .columnContainer {
-  -ms-overflow-style: none; /* IE 10+ */
-  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; 
+  scrollbar-width: none; 
 }
 
 .columnContainer::-webkit-scrollbar-track {
   background: transparent;
 }
-.columnContainer::-webkit-scrollbar-thumb {
-  background-color: rgba(100, 100, 100, 0.5);
-  border-radius: 3px;
-}
+
 
 .columnTitle {
   font-size: 1.125rem;
@@ -273,7 +274,7 @@
 .cardList {
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 8px;
   flex-grow: 1;
 }
 
@@ -354,7 +355,7 @@
 .filtersWrapper {
   display: flex;
   justify-content: space-between;
-  padding: 16px 16px 0 16px;
+  padding: 16px 16px 0 16px;  
   background-color: var(--bg-primary);
 }
 
@@ -577,7 +578,7 @@
   .columnContainer {
     width: 240px;
     padding: 12px;
-    max-height: 70vh;
+     max-height: calc(100dvh - 80px);
   }
 
   .columnTitle {
@@ -619,7 +620,7 @@
 /* Mobile */
 @media (max-width: 480px) {
   .screensPage {
-    height: 100dvh; /* Dynamic viewport height for mobile */
+    height: 100dvh; 
   }
 
   .mainDashboard {
@@ -627,7 +628,7 @@
     overflow: hidden;
     display: flex;
     flex-direction: column;
-    height: calc(100dvh - 60px); /* Adjust based on header height */
+    height: calc(100dvh - 60px); 
   }
 
   .filtersWrapper {
@@ -666,13 +667,13 @@
     display: flex;
     flex: 1;
     height: 100%;
-    /* Hide scrollbar */
-    scrollbar-width: none; /* Firefox */
-    -ms-overflow-style: none; /* IE 10+ */
+    
+    scrollbar-width: none; 
+    -ms-overflow-style: none; 
   }
 
   .columnsWrapper::-webkit-scrollbar {
-    display: none; /* Chrome, Safari, Opera */
+    display: none; 
   }
 
   .columnContainer {
@@ -725,7 +726,7 @@
     flex: 1;
     overflow-y: auto;
     margin-bottom: 12px;
-    /* Hide scrollbar for card list */
+   
     scrollbar-width: none;
     -ms-overflow-style: none;
   }
@@ -742,7 +743,7 @@
   }
 
   .columnAddBtn {
-    display: none; /* Hide add column button on mobile */
+    display: none; 
   }
 
   /* Modal adjustments for mobile */
@@ -836,6 +837,7 @@
 @media (min-width: 1025px) {
   .columnContainer {
     flex: 0 0 288px;
+    max-height: calc(100dvh - 100px);
   }
   
   .modalContent {
