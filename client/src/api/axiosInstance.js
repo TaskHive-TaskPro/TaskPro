@@ -32,7 +32,11 @@ const verifyEmail = async (token) => {
     throw error.response?.data?.message || "Doğrulama başarısız oldu.";
   }
 };
-
+const base = import.meta.env.VITE_API_URL || '';
+const axiosInstance = axios.create({
+  baseURL: `${base}/api`,
+  withCredentials: true, // cookie yoksa kaldır
+});
 const logout = () => {
   localStorage.removeItem("user");
 };

@@ -7,19 +7,16 @@ const FormContainer = styled.div`
   flex-direction: column;
   gap: 24px;
   padding: 24px;
-  background: ${props => {
-    return props.theme.palette.background.paper;
-  }};
-  color: ${props => {
-    return props.theme.palette.text.secondary;
-  }};
+  background: ${props => props.theme.palette.background.paper};
+  color: ${props => props.theme.palette.text.secondary};
   border-radius: 8px;
-  width: 100vw;
+  width: 100%;                 /* 100vw -> 100% */
   max-width: 350px;
+  box-sizing: border-box;      /* taşma ve padding hesapları için */
 `;
 
 const Title = styled.h2`
-  font-style: medium;
+  /* font-style: medium;  -> geçersiz, kaldırıldı */
   font-weight: 600;
   font-size: 18px;
   line-height: 27px;
@@ -47,16 +44,9 @@ const Input = styled(Field)`
   display: inline-block;
   width: 100%;
   padding: 18px 14px;
-
-  color: ${props => {
-    return props.theme.palette.text.primary;
-  }};
+  color: ${props => props.theme.palette.text.primary};
   background: inherit;
-  border: 1px solid
-    ${props => {
-      return props.theme.palette.text.info;
-    }};
-
+  border: 1px solid ${props => props.theme.palette.text.info};
   border-radius: 8px;
   outline: none;
 
@@ -84,7 +74,7 @@ const Error = styled(ErrorMessage)`
 
 const Text = styled.p`
   font-family: 'Poppins';
-  font-style: medium;
+  /* font-style: medium; -> geçersiz, kaldırıldı */
   font-weight: 500;
   font-size: 14px;
   letter-spacing: -0.02em;
@@ -102,16 +92,13 @@ const IconList = styled.ul`
 const Icon = styled.svg`
   height: 18px;
   width: 18px;
-  stroke: ${props => {
-    return props.theme.palette.primary.info;
-  }};
+  stroke: ${props => props.theme.palette.primary.info};
 `;
 
 const BgList = styled.ul`
   list-style: none;
   padding: 0;
-  margin: 0;
-  margin-bottom: 16px;
+  margin: 0 0 16px 0;
   max-width: 256px;
 `;
 
@@ -121,7 +108,7 @@ const Img = styled.img`
 
 const BgColor = styled.li`
   display: inline-block;
-  padding: 0px;
+  padding: 0;
   height: 28px;
   width: 28px;
   margin: 2px;
@@ -135,9 +122,7 @@ const RadioField = styled(Field)`
   position: absolute;
 
   &:checked + ${Icon} {
-    stroke: ${props => {
-      return props.theme.palette.text.primary;
-    }};
+    stroke: ${props => props.theme.palette.text.primary};
   }
 `;
 
@@ -151,10 +136,15 @@ const RadioFieldBg = styled.input`
   }
 `;
 
-const CloseButton = styled.div`
+/* button'a çevrildi: type / keyboard / a11y düzgün çalışır */
+const CloseButton = styled.button`
   position: absolute;
   top: 14px;
   right: 14px;
+  background: transparent;
+  border: none;
+  padding: 0;
+  cursor: pointer;
 `;
 
 export {
