@@ -1,10 +1,12 @@
 // backend/src/controllers/cardController.js
-import Card from "../models/Card.js"; // Card modelini oluşturmalısın
+import Card from "../models/Card.js";
 
-// Tüm kartları getir
+// Tüm kartları getir (opsiyonel boardId filtresi ile)
 export const getCards = async (req, res) => {
   try {
-    const cards = await Card.find(); // Tüm kartları çek
+    const { boardId } = req.query;
+    const filter = boardId ? { boardId } : {};
+    const cards = await Card.find(filter);
     res.json(cards);
   } catch (error) {
     res.status(500).json({ message: "Kartlar getirilemedi", error: error.message });
@@ -14,8 +16,20 @@ export const getCards = async (req, res) => {
 // Yeni kart oluştur
 export const createCard = async (req, res) => {
   try {
-    const { title, description, priority, deadline } = req.body;
-    const newCard = new Card({ title, description, priority, deadline });
+    const { title, description, priority, deadline, boardId, columnId } = req.body;
+    
+    if (!boardId || !columnId) {
+      return res.status(400).json({ message: "boardId ve columnId gerekli" });
+    }
+    
+    const newCard = new Card({ 
+      title, 
+      description, 
+      priority, 
+      deadline, 
+      boardId, 
+      columnId 
+    });
     await newCard.save();
     res.status(201).json(newCard);
   } catch (error) {

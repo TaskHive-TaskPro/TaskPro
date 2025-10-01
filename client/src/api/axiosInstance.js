@@ -1,44 +1,49 @@
 import axios from "axios";
 
-const API_URL = "http://localhost:5001/api/auth";
+const BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:5001";
 
-const register = async (userData) => {
-  try {
-    console.log('Sending register data:', userData);
-    const response = await axios.post(`${API_URL}/register`, userData);
-    console.log('Register response:', response.data);
-    return response.data.message;
-  } catch (error) {
-    console.error('Register error:', error.response?.data);
-    throw error.response?.data?.message || "Kayıt başarısız oldu.";
-  }
-};
-
-const login = async (userData) => {
-  try {
-    const response = await axios.post(`${API_URL}/login`, userData);
-    return response.data;
-  } catch (error) {
-    throw error.response?.data?.message || "Giriş başarısız oldu.";
-  }
-};
-
-
-const verifyEmail = async (token) => {
-  try {
-    const response = await axios.get(`${API_URL}/verify/${token}`);
-    return response.data; 
-  } catch (error) {
-    throw error.response?.data?.message || "Doğrulama başarısız oldu.";
-  }
-};
-const base = import.meta.env.VITE_API_URL || '';
 const axiosInstance = axios.create({
-  baseURL: `${base}/api`,
-  withCredentials: true, // cookie yoksa kaldır
+  baseURL: BASE_URL,
+  withCredentials: true,
+  headers: {
+    "Content-Type": "application/json",
+  },
 });
-const logout = () => {
-  localStorage.removeItem("user");
-};
 
-export default { register, login, logout, verifyEmail };
+// Request interceptor - token ekle
+axiosInstance.interceptors.request.use(
+  (config) => {
+    const token = localStorage.getItem("token");
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`;
+    }
+    console.log(`🔵 ${config.method?.toUpperCase()} ${config.url}`, config.data);
+    return config;
+  },
+  (error) => {
+    console.error("Request error:", error);
+    return Promise.reject(error);
+  }
+);
+
+// Response interceptor - hataları yakala
+axiosInstance.interceptors.response.use(
+  (response) => {
+    console.log(`✅ Response from ${response.config.url}:`, response.data);
+    return response;
+  },
+  (error) => {
+    console.error(`❌ Error from ${error.config?.url}:`, error.response?.data);
+    
+    // 401 Unauthorized - token geçersiz, logout yap
+    if (error.response?.status === 401) {
+      localStorage.removeItem("token");
+      localStorage.removeItem("user");
+      window.location.href = "/auth";
+    }
+    
+    return Promise.reject(error);
+  }
+);
+
+export default axiosInstance;

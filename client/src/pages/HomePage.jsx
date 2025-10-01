@@ -77,74 +77,13 @@ const HomePage = () => {
         <Header onSidebarToggle={() => setSidebarOpen(!sidebarOpen)} />
         
 
-       <div className="home-content" style={{ marginLeft: '260px' }}> {/* kalıcı drawer boşluğu için sınıf eklendi */}
-          {}
-         {/* <aside className="sidebar-placeholder">  // geçici olarak gizledik
-            <div style={{
-              width: sidebarOpen ? '250px' : '0',
-              background: '#2d2d2d',
-              color: 'white',
-              padding: sidebarOpen ? '20px' : '0',
-              transition: 'all 0.3s',
-              overflow: 'hidden',
-              height: '100vh'
-            }}>
-              <h3>📋 Sidebar</h3>
-              <p style={{ fontSize: '12px', opacity: 0.7 }}>(Kişi 4'ün görevi)</p>
-              <ul style={{ listStyle: 'none', padding: 0, marginTop: '20px' }}>
-                <li style={{ padding: '8px 0' }}>• Panolar</li>
-                <li style={{ padding: '8px 0' }}>• Create Board</li>
-                <li style={{ padding: '8px 0' }}>• Logout</li>
-              </ul>
-            </div>
--         </aside>
-+         </aside> */}
-           
+       <div className="home-content" style={{ marginLeft: '260px' }}>
           <main className={`main-content ${!sidebarOpen ? 'sidebar-collapsed' : ''}`}>
-            <MainDashboard />
+            <MainDashboard boardId={boardId} />
           </main>
         </div>
       </div>
     );
-
-
-
-  // Eğer kullanıcı authenticate olmamışsa, ana sayfaya yönlendir
-  if (!isAuthenticated) {
-    return <Navigate to="/" replace />;
-  }
-
-  return (
-    <div className="home-page" data-theme="home">
-      <Header onSidebarToggle={() => setSidebarOpen(!sidebarOpen)} />
-      
-      <div className="home-content">
-        {}
-        <aside className={`sidebar-placeholder ${sidebarOpen ? 'open' : ''}`}>
-          <div style={{
-            width: '100%',
-            background: 'transparent',
-            color: 'var(--text-primary)',
-            padding: '20px',
-            height: '100%',
-            overflow: 'auto'
-          }}>
-            <h3>📋 Sidebar</h3>
-            <p style={{ fontSize: '12px', opacity: 0.7, marginBottom: '20px' }}>(Kişi 4'ün görevi)</p>
-            <ul style={{ listStyle: 'none', padding: 0, marginTop: '20px' }}>
-              <li style={{ padding: '12px 0', cursor: 'pointer', borderRadius: '6px', paddingLeft: '8px', transition: 'background 0.2s' }}>• Panolar</li>
-              <li style={{ padding: '12px 0', cursor: 'pointer', borderRadius: '6px', paddingLeft: '8px', transition: 'background 0.2s' }}>• Create Board</li>
-              <li style={{ padding: '12px 0', cursor: 'pointer', borderRadius: '6px', paddingLeft: '8px', transition: 'background 0.2s' }}>• Logout</li>
-            </ul>
-          </div>
-        </aside>
-        
-        <main className={`main-content ${!sidebarOpen ? 'sidebar-collapsed' : ''}`}>
-          <MainDashboard />
-        </main>
-      </div>
-    </div>
-  );
 };
 
 export default HomePage;

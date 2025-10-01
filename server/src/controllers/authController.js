@@ -91,15 +91,30 @@ export const verifyEmail = asyncHandler(async (req, res) => {
 // Giriş
 export const loginUser = asyncHandler(async (req, res) => {
   const { email, password } = req.body;
+  
+  console.log('🔵 Login attempt for:', email);
+  
   const user = await User.findOne({ email });
 
   if (!user) {
+    console.log('❌ User not found:', email);
     return res.status(404).json({ message: "Kullanıcı bulunamadı" });
+  }
+
+  console.log('✅ User found, verified status:', user.verified);
+
+  // Email doğrulama kontrolü
+  if (!user.verified) {
+    console.log('⚠️ User not verified:', email);
+    return res.status(403).json({ 
+      message: "Lütfen önce email adresinizi doğrulayın. Doğrulama linki email adresinize gönderildi." 
+    });
   }
 
   const isMatch = await bcrypt.compare(password, user.password);
   if (!isMatch) {
-    return res.status(400).json({ message: "Şifre yanlış" });
+    console.log('❌ Password mismatch for:', email);
+    return res.status(400).json({ message: "Email veya şifre yanlış" });
   }
 
   const token = jwt.sign(
@@ -108,12 +123,15 @@ export const loginUser = asyncHandler(async (req, res) => {
     { expiresIn: "7d" }
   );
 
+  console.log('✅ Login successful for:', email);
+
   res.json({
     token,
     user: {
       id: user._id,
       name: user.name,
       email: user.email,
+      verified: user.verified,
     },
     message: "Giriş başarılı!",
   });
@@ -156,7 +174,7 @@ export const resetPassword = asyncHandler(async (req, res) => {
   let decoded;
   try {
     decoded = jwt.verify(token, process.env.JWT_SECRET);
-  } catch (error) {
+  } catch {
     res.status(400);
     throw new Error("Geçersiz veya süresi dolmuş token");
   }

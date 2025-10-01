@@ -30,10 +30,10 @@ export default function App() {
         {/* /home altında layout + child routes */}
         <Route path="/home" element={<HomeLayout />}>
           <Route index element={<Home />} />
-          <Route path=":boardId" element={<BoardPage />} />
+          <Route path=":boardId" element={<Home />} />
         </Route>
 
-        {/* Dashboard */}
+        {/* Dashboard - deprecated, /home kullanılmalı */}
         <Route path="/dashboard/*" element={<DashboardRoutes />} />
 
         {/* 404 fallback */}
