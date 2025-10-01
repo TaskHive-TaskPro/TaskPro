@@ -1,55 +1,44 @@
+// src/App.jsx
 import React from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
-
-
-// Context
-import { AuthProvider } from "./context/AuthContext";
-import { ThemeProvider } from "./context/ThemeContext";
-
 // Sayfalar & Bileşenler
-import DashboardRoutes from "./routes/DashboardRoutes"; 
-import AuthWrapper from "./pages/AuthWrapper"; 
+import DashboardRoutes from "./routes/DashboardRoutes";
+import AuthWrapper from "./pages/AuthWrapper";
 import VerifyEmailPage from "./pages/VerifyEmailPage";
 import Home from "./pages/HomePage";
+import BoardPage from "./pages/BoardPage";
+import HomeLayout from "./pages/HomeLayout";
 
-// import Layout from "./components/Layout"; // Eğer ortak layout kullanmak istersen
-import './styles/globals.css';
+import "./styles/globals.css";
 
-function App() {
+export default function App() {
   return (
-    <ThemeProvider>
-      <AuthProvider>
-        <Router>
-        {/* Ortak Layout eklemek isterseniz:
-          <Layout>
-            <Routes>...</Routes>
-          </Layout>
-        */}
-        <Routes>
-          {/* Auth ile ilgili rotalar */}
-          <Route path="/" element={<AuthWrapper />} />
-          <Route
-            path="/verify/:token"
-            element={
-              <AuthWrapper>
-                <VerifyEmailPage />
-              </AuthWrapper>
-            }
-          />
-          <Route path="/home" element={<Home />} />
+    <Router>
+      <Routes>
+        {/* Auth rotaları */}
+        <Route path="/" element={<AuthWrapper />} />
+        <Route
+          path="/verify/:token"
+          element={
+            <AuthWrapper>
+              <VerifyEmailPage />
+            </AuthWrapper>
+          }
+        />
 
-          {/* Dashboard veya modüller */}
-          <Route path="/dashboard/*" element={<DashboardRoutes />} />
+        {/* /home altında layout + child routes */}
+        <Route path="/home" element={<HomeLayout />}>
+          <Route index element={<Home />} />
+          <Route path=":boardId" element={<BoardPage />} />
+        </Route>
 
-          {/* İleride ekleyebileceğin route örnekleri */}
-          {/* <Route path="/admin/*" element={<AdminRoutes />} /> */}
-          {/* <Route path="/user/*" element={<UserRoutes />} /> */}
-        </Routes>
-        </Router>
-      </AuthProvider>
-    </ThemeProvider>
+        {/* Dashboard */}
+        <Route path="/dashboard/*" element={<DashboardRoutes />} />
+
+        {/* 404 fallback */}
+        <Route path="*" element={<div>Not Found</div>} />
+      </Routes>
+    </Router>
   );
 }
-
-export default App;

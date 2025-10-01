@@ -11,10 +11,10 @@ import { ThemeContext } from "../../context/ThemeContext";
 
 // Priority renkleri
 const priorityColors = {
-  none: "#bdc3c7",
-  low: "#2ecc71",
-  medium: "#f1c40f",
-  high: "#e74c3c",
+  none: "grey",
+  low: "#a88fddff",
+  medium: "#d28dd5ff",
+  high: "#6cb98eff",
 };
 
 const Card = ({ card, onEdit, onDelete, onMove }) => {

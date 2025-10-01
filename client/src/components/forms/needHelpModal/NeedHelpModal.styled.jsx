@@ -9,11 +9,13 @@ export const Section = styled.div`
   align-items: start;
   background-color: ${props => props.theme.palette.background.paper};
   color: ${props => props.theme.palette.text.primary};
-  width: 100vw;
+  width: 100%;
   max-width: 400px;
   border-radius: 8px;
   gap: 24px;
   padding: 24px;
+  box-sizing: border-box;
+  pointer-events: auto;
 `;
 
 export const SectionTitle = styled.h2`
@@ -22,6 +24,7 @@ export const SectionTitle = styled.h2`
   font-weight: 600;
   letter-spacing: -0.36px;
   color: inherit;
+  margin: 0;
 `;
 
 export const ModalForm = styled(Form)`
@@ -29,6 +32,7 @@ export const ModalForm = styled(Form)`
   width: 100%;
   display: flex;
   flex-direction: column;
+  gap: 16px;
 `;
 
 export const FormWrapper = styled.div`
@@ -38,6 +42,7 @@ export const FormWrapper = styled.div`
   justify-content: center;
   align-items: start;
   margin-bottom: 24px;
+  gap: 16px;
 `;
 
 export const Container = styled.div`
@@ -70,12 +75,16 @@ export const TitleInput = styled(Field)`
   font-family: 'Poppins';
   letter-spacing: -0.28px;
 
-  color: ${props => props.theme.palette.text.secondary};
+  color: ${props => props.theme.palette.text.primary};
   background: inherit;
-  border: 1px solid;
-  border-color: ${props => props.theme.palette.text.info};
+  border: 1px solid ${props => props.theme.palette.text.info};
   border-radius: 8px;
   outline: none;
+
+  &::placeholder {
+    color: ${props => props.theme.palette.text.secondary};
+    font-size: 14px;
+  }
 
   &:focus {
     border-color: ${props => props.theme.palette.text.hint};
@@ -96,19 +105,14 @@ export const Textarea = styled(Field)`
   line-height: normal;
   letter-spacing: -0.28px;
 
-  color: ${props => {
-    return props.theme.palette.text.secondary;
-  }};
+  color: ${props => props.theme.palette.text.primary};
   background: inherit;
-  border: 1px solid;
-  border-color: ${props => props.theme.palette.text.info};
+  border: 1px solid ${props => props.theme.palette.text.info};
   outline: none;
   border-radius: 8px;
 
   &::placeholder {
-    color: ${props => {
-      return props.theme.palette.text.secondary;
-    }};
+    color: ${props => props.theme.palette.text.secondary};
     font-size: 14px;
   }
 
@@ -129,24 +133,35 @@ export const AuthFormSubmitButton = styled.button`
   font-size: 14px;
   letter-spacing: -0.28px;
 
-  background-color: ${props => {
-    return props.theme.palette.text.hint;
-  }};
-  color: ${props => {
-    return props.theme.palette.primary.hint;
-  }};
+  background-color: ${props => props.theme.palette.text.hint};
+  color: ${props => props.theme.palette.primary.hint};
   border-radius: 8px;
+  border: none;
+  cursor: pointer;
 
-  transition: background-color 200ms linear;
+  transition: background-color 200ms linear, opacity 150ms ease;
 
   &:hover,
   &:focus {
     background-color: ${props => props.theme.palette.text.error};
   }
+
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
 `;
 
-export const CloseButton = styled.div`
+export const CloseButton = styled.button`
   position: absolute;
   top: 14px;
   right: 14px;
+  background: transparent;
+  border: none;
+  padding: 0;
+  line-height: 0;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
 `;

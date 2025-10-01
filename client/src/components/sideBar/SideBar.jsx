@@ -1,22 +1,29 @@
+import { useState } from 'react';
+import { Box, Button, Typography, Drawer, Link } from '@mui/material';
 import CssBaseline from '@mui/material/CssBaseline';
+import { useDispatch, useSelector } from 'react-redux';
+import { useLocation, useParams, useNavigate } from 'react-router-dom';
+import { useTheme } from '@mui/material';
+
 import cactus from '../../images/cactus.png';
 import cactus2x from '../../images/cactus@2x.png';
 import cactus3x from '../../images/cactus@3x.png';
-import icon from '../../images/icons.svg';
-import NewBoardForm from 'components/forms/newBoardForm/NewBoardForm';
-import ModalHelp from 'components/forms/needHelpModal/NeedHelpModal';
 import MainModal from '../mainModal/MainModal';
-import NeedHelpModal from 'components/forms/needHelpModal/NeedHelpModal';
-import sprite from '../../images/icons.svg';
-import { Box, Button, Typography, Drawer, Link } from '@mui/material';
-import { useDispatch, useSelector } from 'react-redux';
-import { logOut } from 'redux/auth/authOperations';
-import { useTheme } from '@mui/material';
-import { selectUser } from 'redux/auth/authSelectors';
-import { useGetBoardsQuery } from 'redux/boards/boardsApi';
-import { useLocation, useParams, useNavigate } from 'react-router-dom';
-import { useState, useEffect } from 'react';
+import NewBoardForm from '../forms/newBoardForm/NewBoardForm';
+import NeedHelpModal from '../forms/needHelpModal/NeedHelpModal';
+
+import { logOut } from '../../redux/auth/authOperations';
+import { selectUser } from '../../redux/auth/authSelectors';
+import { useGetBoardsQuery } from '../../redux/boards/boardsApi';
 import {
+  useAddBoardMutation,
+  useUpdateBoardMutation,
+  useDeleteBoardMutation,
+} from '../../redux/boards/boardsApi';
+
+// context logout + navigate (logout tamam)
+import { useAuth } from '../../context/AuthContext';
+import { 
   SideBarStyled,
   LogoIcon,
   PlusIcon,
@@ -38,86 +45,96 @@ import {
   Picture,
   NeedHelpBox,
 } from './Sidebar.styled';
-import {
-  useAddBoardMutation,
-  useUpdateBoardMutation,
-  useDeleteBoardMutation,
-} from 'redux/boards/boardsApi';
 
+const SPRITE = import.meta.env.BASE_URL + 'icons.svg';
 const SideBar = ({ active, onClick }) => {
-  const [openAddModal, setOpenAddModal] = useState(false);
-  const [openEditModal, setOpenEditModal] = useState(false);
-  const [openHelpModal, setOpenHelpModal] = useState(false);
-  const [activeBoardTitle, setActiveBoardTitle] = useState('');
-  const [activeBoardIcon, setActiveBoardIcon] = useState('');
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [newBoard, setNewBoard] = useState(true);
-  const { data = [] } = useGetBoardsQuery();
+  const theme = useTheme();
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const { logout } = useAuth();
 
+  const user = useSelector(selectUser) || { theme: 'light' };
   const location = useLocation();
   const { boardId } = useParams();
 
-  const [addBoard, result] = useAddBoardMutation();
+  const { data = [] } = useGetBoardsQuery();
+  const [addBoard] = useAddBoardMutation();
   const [updateBoard] = useUpdateBoardMutation();
   const [deleteBoard] = useDeleteBoardMutation();
-  const dispatch = useDispatch();
-  const navigate = useNavigate();
 
-  const openModal = () => setIsModalOpen(true);
-  const closeModal = () => setIsModalOpen(false);
+  // modallar
+  const [openAddModal, setOpenAddModal] = useState(false);
+  const [openEditModal, setOpenEditModal] = useState(false);
+  const [openHelpModal, setOpenHelpModal] = useState(false);
 
-  const openEditModalHandler = (boardTitle, boardIcon) => { 
+  // edit icin aktif baslik/icon
+  const [activeBoardTitle, setActiveBoardTitle] = useState('');
+  const [activeBoardIcon, setActiveBoardIcon] = useState('');
+
+  const openHelp = () => setOpenHelpModal(true);
+  const closeHelp = () => setOpenHelpModal(false);
+  const closeAdd = () => setOpenAddModal(false);
+  const closeEdit = () => setOpenEditModal(false);
+
+  const openEditModalHandler = (boardTitle, boardIcon) => {
     setActiveBoardTitle(boardTitle);
     setActiveBoardIcon(boardIcon);
     setOpenEditModal(true);
   };
 
-  const closeAddModal = () => setOpenAddModal(false);
-  const closeEditModal = () => setOpenEditModal(false);
-  const closeHelpModal = () => setOpenHelpModal(false);
-
-  useEffect(() => {
-    if (result.data && newBoard) {
-      navigate(`/home/${result.data._id}`);
-      setNewBoard(false);
-    }
-  }, [newBoard, navigate, result.data]);
-
-  const handleSubmit = async (data, formTitle) => {
+  // board olusturma / guncelleme
+  const handleSubmit = async (formData, formTitle) => {
     const currentBoardId = boardId;
 
     if (formTitle === 'New board') {
-      addBoard({ data });
-      closeAddModal();
-      setNewBoard(true);
+      try {
+        const res = await addBoard({ data: formData }).unwrap();
+        closeAdd();
+        if (res && res._id) navigate(`/home/${res._id}`);
+      } catch (e) {
+        // TODO: toast/snackbar
+        console.error('addBoard failed:', e);
+      }
       return;
     }
 
     if (formTitle === 'Edit board') {
-      updateBoard({ boardId: currentBoardId, data });
-      closeEditModal();
+      try {
+        await updateBoard({ boardId: currentBoardId, data: formData }).unwrap();
+        closeEdit();
+      } catch (e) {
+        console.error('updateBoard failed:', e);
+      }
       return;
     }
   };
 
-  const deleteBoardHanlder = boardId => {
-    deleteBoard({ boardId });
+  const deleteBoardHandler = async (id) => {
+    try {
+      await deleteBoard({ boardId: id }).unwrap();
+      navigate('/home');
+    } catch (e) {
+      console.error('deleteBoard failed:', e);
+    }
+  };
+
+  // logout: redux + context + navigate
+  const handleLogout = () => {
+    dispatch(logOut());
+    if (typeof logout === 'function') logout();
     navigate('/');
   };
 
-  const theme = useTheme();
-  const user = useSelector(selectUser);
-
-  const logoSvg =
-    user.theme === 'violet' ? '#icon-logo-violet' : '#icon-icon-1';
+  // tema bazli ikonlar
+  const logoSvg = user.theme === 'violet' ? '#icon-Logo-violet' : '##icon-logo';
   const needHelpSvg =
     user.theme === 'violet' || user.theme === 'dark'
-      ? '#icon-help-white'
-      : '#icon-help';
+      ? '#icon-help-circle'
+      : '#icon-help-circle';
   const logOutSvg =
     user.theme === 'dark' || user.theme === 'light'
-      ? '#icon-login-green'
-      : '#icon-login-white';
+      ? '#icon-login'
+      : '#icon-login';
 
   const drawerContent = (
     <SideBarStyled
@@ -133,11 +150,11 @@ const SideBar = ({ active, onClick }) => {
             display: 'flex',
             gap: '8px',
             alignItems: 'center',
-            marginBottom: '60px',
+            mb: '60px',
           }}
         >
           <LogoIcon>
-            <use href={icon + `${logoSvg}`}></use>
+            <use href={`${SPRITE}${logoSvg}`} xlinkHref={`${SPRITE}${logoSvg}`} />
           </LogoIcon>
           <Typography
             variant="h2"
@@ -174,9 +191,9 @@ const SideBar = ({ active, onClick }) => {
             borderBottom: '1px solid',
             borderTop: '1px solid',
             borderColor: 'primary.contrastText',
-            padding: '14px 0',
-            marginTop: '8px',
-            marginBottom: '40px',
+            py: '14px',
+            mt: '8px',
+            mb: '40px',
           }}
         >
           <Typography
@@ -193,27 +210,27 @@ const SideBar = ({ active, onClick }) => {
             Create a new board
           </Typography>
           <Button
+            type="button"
             onClick={() => setOpenAddModal(true)}
             sx={{
               backgroundColor: 'secondary.warning',
-              padding: '8px 10px',
+              p: '8px 10px',
               minWidth: 0,
               transition: 'background-color 200ms linear',
               '&:hover': { backgroundColor: 'text.error' },
             }}
           >
             <PlusIcon theme={theme}>
-              <use href={icon + '#icon-plus-2'}></use>
+              <use href={`${SPRITE}#icon-plus`} xlinkHref={`${SPRITE}#icon-plus`} />
             </PlusIcon>
           </Button>
         </Box>
 
         <BoardsContainer>
           <BoardsList theme={theme}>
-            {data &&
-              data.map(board => {
+            {Array.isArray(data) &&
+              data.map((board) => {
                 const isSelected = `/home/${board._id}` === location.pathname;
-
                 return (
                   <BoardItem key={board._id}>
                     <BoardLink
@@ -223,26 +240,32 @@ const SideBar = ({ active, onClick }) => {
                     >
                       <TitleBox>
                         <IconTitle theme={theme}>
-                          <use href={sprite + board.icon}></use>
+                          {/* board.icon unicode ise <use> calismaz; sprite id ise calisir */}
+                          <use href={`${SPRITE}${board.icon || '#icon-Project'}`} xlinkHref={`${SPRITE}${board.icon || '#icon-Project'}`} />
                         </IconTitle>
                         <Title theme={theme}>{board.title}</Title>
                       </TitleBox>
                     </BoardLink>
+
                     {isSelected && (
                       <IconsBox theme={theme}>
                         <IconButton
                           type="button"
+                          aria-label="Edit board"
                           onClick={() =>
                             openEditModalHandler(board.title, board.icon)
                           }
                         >
                           <Edit>
-                            <use href={icon + '#icon-pencil-01'}></use>
+                            <use href={`${SPRITE}#icon-pencil`} xlinkHref={`${SPRITE}#icon-pencil`} />
                           </Edit>
                         </IconButton>
-                        <IconLink onClick={() => deleteBoardHanlder(board._id)}>
+                        <IconLink
+                          aria-label="Delete board"
+                          onClick={() => deleteBoardHandler(board._id)}
+                        >
                           <Delete>
-                            <use href={icon + '#icon-trash-04'}></use>
+                            <use href={`${SPRITE}#icon-trash`} xlinkHref={`${SPRITE}#icon-trash`} />
                           </Delete>
                         </IconLink>
                       </IconsBox>
@@ -258,12 +281,15 @@ const SideBar = ({ active, onClick }) => {
         <NeedHelpBox sx={{ backgroundColor: 'background.error' }}>
           <Box>
             <Picture>
-              <source srcSet={`${cactus} 1x, ${cactus2x} 2x, ${cactus3x} 3x`} />
-              <img srcSet={`${cactus} 1x`} alt="cactus" />
+              <img
+                src={cactus}
+                srcSet={`${cactus2x} 2x, ${cactus3x} 3x`}
+                alt="cactus"
+              />
             </Picture>
           </Box>
 
-          <Box sx={{ marginBottom: '18px' }}>
+          <Box sx={{ mb: '18px' }}>
             <Typography
               variant="body2"
               sx={{
@@ -277,6 +303,7 @@ const SideBar = ({ active, onClick }) => {
             >
               If you need help with
               <Link
+                component="button"
                 sx={{
                   fontFamily: 'Poppins',
                   fontWeight: 400,
@@ -286,30 +313,29 @@ const SideBar = ({ active, onClick }) => {
                   color: 'primary.main',
                   textDecoration: 'none',
                 }}
-                onClick={openModal}
+                onClick={openHelp}
               >
-                {' '}
-                TaskPro
+                {' '}TaskPro
               </Link>
-              , check out our support resources or reach out to our customer
-              support team.
+              , check out our support resources or reach out to our customer support team.
             </Typography>
           </Box>
 
           <Button
+            type="button"
             onClick={() => setOpenHelpModal(true)}
             sx={{
               display: 'flex',
               alignItems: 'center',
               gap: '8px',
-              padding: 0,
+              p: 0,
               minWidth: 0,
               border: 0,
               '&:hover': { backgroundColor: 'inherit', border: 0 },
             }}
           >
             <HelpIcon theme={theme}>
-              <use href={icon + `${needHelpSvg}`}></use>
+              <use href={`${SPRITE}${needHelpSvg}`} xlinkHref={`${SPRITE}${needHelpSvg}`} />
             </HelpIcon>
             <Typography
               sx={{
@@ -326,16 +352,14 @@ const SideBar = ({ active, onClick }) => {
             </Typography>
           </Button>
 
-          <MainModal modalIsOpen={isModalOpen} closeModal={closeModal}>
-            <NeedHelpModal closeModal={closeModal} />
+          <MainModal modalIsOpen={openHelpModal} closeModal={closeHelp}>
+            <NeedHelpModal closeModal={closeHelp} />
           </MainModal>
         </NeedHelpBox>
 
-        {/* TeamGallery bölümü kaldırıldı */}
-
         <Box
           sx={{
-            marginTop: '24px',
+            mt: '24px',
             textTransform: 'none',
             fontWeight: 500,
             fontSize: '12px',
@@ -343,19 +367,20 @@ const SideBar = ({ active, onClick }) => {
           }}
         >
           <Button
-            onClick={() => dispatch(logOut())}
+            type="button"
+            onClick={handleLogout}
             sx={{
               display: 'flex',
               alignItems: 'center',
               gap: '14px',
-              padding: 0,
+              p: 0,
               minWidth: 0,
               border: 0,
               '&:hover': { backgroundColor: 'inherit', border: 0 },
             }}
           >
             <LogoutIcon>
-              <use href={icon + `${logOutSvg}`}></use>
+               <use href={`${SPRITE}${logOutSvg}`} xlinkHref={`${SPRITE}${logOutSvg}`} />
             </LogoutIcon>
             <Typography
               sx={{
@@ -381,29 +406,31 @@ const SideBar = ({ active, onClick }) => {
       <Box sx={{ display: 'flex' }}>
         <CssBaseline />
 
+        {/* Mobil/Tablet: gecici drawer */}
         <Drawer
           variant="temporary"
           open={active}
           onClose={onClick}
           ModalProps={{ keepMounted: true }}
           sx={{
-            '@media (min-width: 1440px)': { display: { xs: 'block', sm: 'none' } },
+            display: { xs: 'block', lg: 'none' },
             '& .MuiDrawer-paper': { boxSizing: 'border-box', width: 225 },
             '@media (min-width: 768px)': {
-              '& .MuiDrawer-paper': { boxSizing: 'border-box', width: 260 },
+              '& .MuiDrawer-paper': { width: 260 },
             },
           }}
         >
           {drawerContent}
         </Drawer>
 
+        {/* Desktop: kalici drawer */}
         <Drawer
           variant="permanent"
           sx={{
-            '@media (max-width: 1439px)': { display: 'none' },
+            display: { xs: 'none', lg: 'block' },
             '& .MuiDrawer-paper': { boxSizing: 'border-box', width: 225 },
             '@media (min-width: 768px)': {
-              '& .MuiDrawer-paper': { boxSizing: 'border-box', width: 260 },
+              '& .MuiDrawer-paper': { width: 260 },
             },
           }}
           open
@@ -411,28 +438,24 @@ const SideBar = ({ active, onClick }) => {
           {drawerContent}
         </Drawer>
 
-        <MainModal modalIsOpen={openAddModal} closeModal={closeAddModal}>
+        <MainModal modalIsOpen={openAddModal} closeModal={closeAdd}>
           <NewBoardForm
             formTitle={'New board'}
             btnText={'Create'}
             handleSubmit={handleSubmit}
-            closeModal={closeAddModal}
+            closeModal={closeAdd}
           />
         </MainModal>
 
-        <MainModal modalIsOpen={openEditModal} closeModal={closeEditModal}>
+        <MainModal modalIsOpen={openEditModal} closeModal={closeEdit}>
           <NewBoardForm
             formTitle={'Edit board'}
             btnText={'Edit'}
             handleSubmit={handleSubmit}
             boardTitle={activeBoardTitle}
             boardIcon={activeBoardIcon}
-            closeModal={closeEditModal}
+            closeModal={closeEdit}
           />
-        </MainModal>
-
-        <MainModal modalIsOpen={openHelpModal} closeModal={closeHelpModal}>
-          <ModalHelp closeModal={closeHelpModal} />
         </MainModal>
       </Box>
     </>

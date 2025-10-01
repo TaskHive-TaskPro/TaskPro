@@ -94,10 +94,12 @@ body.theme-dark {
 
 /* ===== VIOLET THEME ===== */
 body.theme-violet {
+
     --bg-primary: #ecedfd;
     --bg-secondary: #ffffff;
     --bg-tertiary: #ffffff;
     --bg-modal: #ffffff;
+
     --bg-sidebar: #5255bc;
     --bg-card: #ffffff;
     --bg-input: #fcfcfc;
@@ -106,11 +108,13 @@ body.theme-violet {
     --text-secondary: #787878;
     --text-muted: #b4b4b4;
 
+
     --border-color: #bedbb0;
     --border-light: #d1d2e8;
 
+
     --accent-primary: #bedbb0;
-    --accent-hover: #9dc888;
+    --accent-hover: #804db0;
 
     --btn-primary-bg: #bedbb0;
     --btn-primary-text: #161616;
@@ -185,6 +189,7 @@ body.theme-violet .app-logo {
     gap: 20px;
 }
 
+
 .app-brand {
     display: flex;
     align-items: center;
@@ -198,6 +203,7 @@ body.theme-violet .app-logo {
     background-color: var(--icon-color);
     border-radius: 6px;
     display: flex;
+
     align-items: center;
     justify-content: center;
 }
@@ -729,21 +735,24 @@ body.theme-violet .app-logo {
     width: 260px;
     background-color: var(--bg-sidebar);
     border-right: 1px solid var(--border-light);
+
     padding: 20px;
     color: var(--text-secondary);
     flex-shrink: 0;
+
 }
 
 .sidebar-placeholder h3 {
-    font-size: 16px;
+    font-size: 18px;
+    font-weight: 600;
     margin-bottom: 8px;
-    color: var(--text-primary);
+    color: var(--icon-color);
 }
 
 .sidebar-placeholder p {
     font-size: 12px;
     opacity: 0.7;
-    margin-bottom: 16px;
+    color: var(--icon-color);
 }
 
 .sidebar-placeholder ul {
@@ -752,8 +761,16 @@ body.theme-violet .app-logo {
 }
 
 .sidebar-placeholder li {
-    padding: 8px 0;
+    padding: 12px 8px;
     font-size: 14px;
+    color: var(--icon-color);
+    cursor: pointer;
+    border-radius: 6px;
+    transition: background-color 0.2s;
+}
+
+.sidebar-placeholder li:hover {
+    background-color: rgba(255, 255, 255, 0.1);
 }
 
 /* ===== WELCOME SCREEN ===== */
@@ -820,10 +837,19 @@ body.theme-violet .app-logo {
 }
 
 /* ===== RESPONSIVE ===== */
+/* Tablet ve Desktop - sidebar her zaman açık */
+@media (min-width: 769px) {
+    .sidebar-toggle-btn {
+        display: none !important; /* Tablet ve desktop'ta gizli */
+    }
+}
+
+/* Mobile - sidebar toggle görünür */
 @media (max-width: 768px) {
     .header-container {
         padding: 12px 16px;
     }
+
 
     .sidebar-toggle-btn {
         display: flex;
@@ -865,17 +891,34 @@ body.theme-violet .app-logo {
     }
 
     .sidebar-placeholder {
+
         position: fixed;
         top: 64px;
         bottom: 0;
         left: 0;
-        z-index: 50;
+        z-index: 999;
         transform: translateX(-100%);
-        transition: transform 0.3s;
+        transition: transform 0.3s ease;
+        background-color: var(--bg-sidebar);
+        box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+        overflow-y: auto;
     }
 
     .sidebar-placeholder.open {
         transform: translateX(0);
+    }
+
+    /* Overlay/backdrop when sidebar is open */
+    .sidebar-placeholder.open::before {
+        content: '';
+        position: fixed;
+        top: 64px;
+        left: 280px;
+        right: 0;
+        bottom: 0;
+        background-color: rgba(0, 0, 0, 0.5);
+        z-index: -1;
+        backdrop-filter: blur(2px);
     }
 
     .welcome-stats {
