@@ -169,7 +169,7 @@ const Column = ({
   const [showDeleteColumnModal, setShowDeleteColumnModal] = useState(false);
 
   return (
-    <div className={Styles.columnContainer}>
+    <div className={Styles.columnWrapper}>
       <div className={Styles.columnHeader}>
         <h3 className={Styles.columnTitle}>{column.title}</h3>
         <div className={Styles.columnActions}>
@@ -189,6 +189,8 @@ const Column = ({
           </button>
         </div>
       </div>
+    <div className={Styles.columnContainer}>
+      
       
       <div className={Styles.cardList}>
         {column.cards.map((card) => (
@@ -202,9 +204,7 @@ const Column = ({
         ))}
       </div>
 
-      <button className={Styles.btnAddCard} onClick={() => setShowModal(true)}>
-        + Add another card
-      </button>
+      
 
       {showModal && (
         <AddCardModal
@@ -246,6 +246,10 @@ const Column = ({
           onClose={() => setShowDeleteColumnModal(false)}
         />
       )}
+    </div>
+    <button className={Styles.btnAddCard} onClick={() => setShowModal(true)}>
+        + Add another card
+      </button>
     </div>
   );
 };
