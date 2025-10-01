@@ -165,34 +165,16 @@ const SideBar = ({ active, onClick }) => {
               fontWeight: 600,
               color: 'secondary.dark',
             }}
-          >
-            Task Pro
-          </Typography>
-        </Box>
-
-        <Typography
-          variant="subtitle1"
-          sx={{
-            fontFamily: 'Poppins',
-            fontSize: '12px',
-            letterSpacing: 0.7,
-            fontWeight: 400,
-            color: 'text.disabled',
-          }}
-        >
-          My boards
+          >          Task Pro
         </Typography>
+        </Box>
 
         <Box
           sx={{
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'space-between',
-            borderBottom: '1px solid',
-            borderTop: '1px solid',
-            borderColor: 'primary.contrastText',
             py: '14px',
-            mt: '8px',
             mb: '40px',
           }}
         >
@@ -212,6 +194,7 @@ const SideBar = ({ active, onClick }) => {
           <Button
             type="button"
             onClick={() => setOpenAddModal(true)}
+            data-create-board
             sx={{
               backgroundColor: 'secondary.warning',
               p: '8px 10px',

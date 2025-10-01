@@ -5,6 +5,8 @@ import cors from 'cors';
 import { connectDB } from './config/db.js';
 import cardRoutes from './routes/cards.js';
 import authRoutes from './routes/authRoutes.js';
+import boardsRoutes from './routes/boards.js';
+import feedbackRoutes from './routes/feedback.js';
 
 
 dotenv.config();
@@ -16,12 +18,10 @@ const PORT = process.env.PORT || 5000;
 app.use(
   cors({
     origin: [
+      'http://localhost:5173',
+      'http://127.0.0.1:5173',
       'http://localhost:3000',
       'http://localhost:3001',
-      'http://localhost:5173',
-      'http://127.0.0.1:3000',
-      'http://127.0.0.1:3001',
-      'http://127.0.0.1:5173',
       process.env.CLIENT_URL,
     ].filter(Boolean),
     credentials: true,
@@ -40,6 +40,7 @@ connectDB();
 app.use('/api/auth', authRoutes);
 app.use('/api/cards', cardRoutes);
 app.use("/api/boards", boardsRoutes);
+app.use('/api/feedback', feedbackRoutes);
 
 // Test route
 app.get('/', (req, res) => res.send('Server çalışıyor'));

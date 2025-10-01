@@ -3,8 +3,85 @@
   display: flex;
   flex-direction: column;
   height: 100vh;
+  width: 100%;
   background-color: var(--bg-primary);
   color: var(--text-primary);
+  overflow: hidden;
+}
+
+/* Welcome Screen */
+.welcomeContainer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  padding: 20px;
+  overflow-y: auto;
+}
+
+.welcomeContent {
+  max-width: 600px;
+  width: 100%;
+  text-align: center;
+  animation: fadeIn 0.5s ease-in;
+  padding: 20px;
+}
+
+.welcomeTitle {
+  font-size: clamp(1.75rem, 4vw, 2.5rem);
+  font-weight: 700;
+  margin-bottom: 24px;
+  color: var(--text-primary);
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.welcomeText {
+  font-size: clamp(1rem, 2vw, 1.125rem);
+  line-height: 1.8;
+  color: var(--text-secondary);
+  margin-bottom: 32px;
+}
+
+.createBoardLink {
+  color: #667eea;
+  font-weight: 600;
+  cursor: pointer;
+  text-decoration: underline;
+  transition: all 0.2s ease;
+}
+
+.createBoardLink:hover {
+  color: #764ba2;
+  text-decoration-thickness: 2px;
+}
+
+.welcomeIcon {
+  font-size: clamp(2.5rem, 6vw, 4rem);
+  margin-top: 32px;
+  animation: bounce 2s infinite;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes bounce {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
 }
 
 /* Priority colors */
@@ -28,53 +105,69 @@
   background-color: #7d2d2d;
 }
 
-/* HeaderDashboard */
-.headerDashboard {
+/* Filters Wrapper */
+.filtersWrapper {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 16px;
+  padding: 16px 20px;
   background-color: var(--bg-primary);
   border-bottom: 1px solid var(--border-color);
+  flex-wrap: wrap;
+  gap: 12px;
 }
 
-.headerRight {
+.filtersWrapper h2 {
+  font-size: clamp(1.25rem, 3vw, 1.75rem);
+  margin: 0;
+}
+
+.btnFilters {
   display: flex;
-  justify-content: flex-end;
   align-items: center;
-  gap: 12px;
+  gap: 8px;
+  padding: 8px 16px;
+  background-color: var(--button-bg);
+  color: var(--button-text);
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-size: 14px;
+}
+
+.btnFilters:hover {
+  opacity: 0.9;
+  transform: translateY(-1px);
 }
 
 /* MainDashboard */
 .mainDashboard {
   flex: 1;
-  overflow: hidden; /* artık ana container overflow hidden */
+  overflow: hidden;
   padding: 16px;
   background-color: var(--bg-primary);
+  display: flex;
+  flex-direction: column;
 }
 
-/* Column Headers - başlıklar için üst satır (desktop için gizli) */
-.columnHeaders {
-  display: none;
-}
-
-/* Columns Wrapper - yatay kaydırma */
+/* Columns Wrapper - Responsive horizontal scroll */
 .columnsWrapper {
   display: flex;
   flex-direction: row;
   gap: 16px;
   padding-bottom: 12px;
-  min-height: 100%;
-
+  flex: 1;
   overflow-x: auto;
   overflow-y: auto;
   -webkit-overflow-scrolling: touch;
   scroll-behavior: smooth;
 }
 
-/* Modern yatay scroll stili */
+/* Modern scroll style */
 .columnsWrapper::-webkit-scrollbar {
   height: 8px;
+  width: 8px;
 }
 .columnsWrapper::-webkit-scrollbar-track {
   background: transparent;
@@ -779,4 +872,421 @@ body.theme-violet .columnAddBtn {
 body.theme-violet .columnAddBtn:hover {
   background-color: #e8e9fd;
   border-color: #5255bc;
+}
+
+/* ===== RESPONSIVE MEDIA QUERIES ===== */
+
+/* Large Desktop (1440px+) */
+@media (min-width: 1440px) {
+  .columnsWrapper {
+    gap: 24px;
+  }
+  
+  .columnContainer {
+    width: 320px;
+    max-height: 80vh;
+  }
+  
+  .mainDashboard {
+    padding: 24px;
+  }
+}
+
+/* Desktop (1024px - 1439px) */
+@media (min-width: 1024px) and (max-width: 1439px) {
+  .columnsWrapper {
+    gap: 20px;
+  }
+  
+  .columnContainer {
+    width: 300px;
+    max-height: 75vh;
+  }
+  
+  .mainDashboard {
+    padding: 20px;
+  }
+}
+
+/* Tablet Landscape (768px - 1023px) */
+@media (min-width: 768px) and (max-width: 1023px) {
+  .filtersWrapper {
+    padding: 12px 16px;
+  }
+  
+  .filtersWrapper h2 {
+    font-size: 1.5rem;
+  }
+  
+  .mainDashboard {
+    padding: 12px;
+  }
+  
+  .columnsWrapper {
+    gap: 16px;
+  }
+  
+  .columnContainer {
+    width: 280px;
+    max-height: 70vh;
+  }
+  
+  .columnAddBtn {
+    width: 200px;
+    min-width: 200px;
+  }
+  
+  .welcomeContainer {
+    padding: 30px;
+  }
+  
+  .welcomeTitle {
+    font-size: 2rem;
+  }
+  
+  .welcomeText {
+    font-size: 1.05rem;
+  }
+  
+  .modalContent {
+    width: 85%;
+    max-width: 500px;
+  }
+}
+
+/* Tablet Portrait (600px - 767px) */
+@media (min-width: 600px) and (max-width: 767px) {
+  .screensPage {
+    padding-top: 0;
+  }
+  
+  .filtersWrapper {
+    padding: 10px 12px;
+    gap: 8px;
+  }
+  
+  .filtersWrapper h2 {
+    font-size: 1.35rem;
+  }
+  
+  .btnFilters {
+    padding: 6px 12px;
+    font-size: 13px;
+  }
+  
+  .mainDashboard {
+    padding: 10px;
+  }
+  
+  .columnsWrapper {
+    gap: 12px;
+    padding-bottom: 8px;
+  }
+  
+  .columnContainer {
+    width: 260px;
+    max-height: 65vh;
+    padding: 12px;
+  }
+  
+  .columnTitle {
+    font-size: 1rem;
+  }
+  
+  .columnAddBtn {
+    width: 180px;
+    min-width: 180px;
+    padding: 12px;
+    font-size: 14px;
+  }
+  
+  .welcomeContainer {
+    padding: 25px 20px;
+  }
+  
+  .welcomeTitle {
+    font-size: 1.75rem;
+    margin-bottom: 20px;
+  }
+  
+  .welcomeText {
+    font-size: 1rem;
+    margin-bottom: 24px;
+  }
+  
+  .welcomeIcon {
+    font-size: 3rem;
+    margin-top: 24px;
+  }
+  
+  .modalContent {
+    width: 90%;
+    max-width: 450px;
+    padding: 18px;
+  }
+}
+
+/* Mobile Landscape & Small Tablet (480px - 599px) */
+@media (min-width: 480px) and (max-width: 599px) {
+  .filtersWrapper {
+    padding: 8px 10px;
+    flex-direction: row;
+    justify-content: space-between;
+  }
+  
+  .filtersWrapper h2 {
+    font-size: 1.2rem;
+  }
+  
+  .btnFilters {
+    padding: 6px 10px;
+    font-size: 12px;
+  }
+  
+  .mainDashboard {
+    padding: 8px;
+  }
+  
+  .columnsWrapper {
+    gap: 10px;
+    padding-bottom: 6px;
+  }
+  
+  .columnContainer {
+    width: 240px;
+    max-height: 60vh;
+    padding: 10px;
+  }
+  
+  .columnHeader {
+    margin-bottom: 12px;
+  }
+  
+  .columnTitle {
+    font-size: 0.95rem;
+  }
+  
+  .columnAddBtn {
+    width: 160px;
+    min-width: 160px;
+    padding: 10px;
+    font-size: 13px;
+  }
+  
+  .welcomeContainer {
+    padding: 20px 15px;
+  }
+  
+  .welcomeTitle {
+    font-size: 1.5rem;
+    margin-bottom: 16px;
+  }
+  
+  .welcomeText {
+    font-size: 0.95rem;
+    line-height: 1.6;
+    margin-bottom: 20px;
+  }
+  
+  .welcomeIcon {
+    font-size: 2.5rem;
+    margin-top: 20px;
+  }
+  
+  .modalContent {
+    width: 92%;
+    max-width: 400px;
+    padding: 16px;
+  }
+  
+  .loadingContainer {
+    gap: 12px;
+  }
+  
+  .loader {
+    width: 36px;
+    height: 36px;
+  }
+}
+
+/* Mobile Portrait (320px - 479px) */
+@media (max-width: 479px) {
+  .screensPage {
+    height: calc(100vh - env(safe-area-inset-bottom));
+  }
+  
+  .filtersWrapper {
+    padding: 8px;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+  
+  .filtersWrapper h2 {
+    font-size: 1.1rem;
+  }
+  
+  .btnFilters {
+    padding: 5px 10px;
+    font-size: 11px;
+    width: 100%;
+    justify-content: center;
+  }
+  
+  .mainDashboard {
+    padding: 6px;
+  }
+  
+  .columnsWrapper {
+    gap: 8px;
+    padding-bottom: 4px;
+  }
+  
+  .columnContainer {
+    width: 220px;
+    max-height: 55vh;
+    padding: 8px;
+  }
+  
+  .columnHeader {
+    margin-bottom: 10px;
+    padding-bottom: 6px;
+  }
+  
+  .columnTitle {
+    font-size: 0.9rem;
+  }
+  
+  .columnActions {
+    gap: 4px;
+  }
+  
+  .columnActionBtn {
+    padding: 4px;
+  }
+  
+  .cardList {
+    gap: 8px;
+  }
+  
+  .columnAddBtn {
+    width: 140px;
+    min-width: 140px;
+    padding: 8px;
+    font-size: 12px;
+  }
+  
+  .welcomeContainer {
+    padding: 16px 12px;
+  }
+  
+  .welcomeTitle {
+    font-size: 1.35rem;
+    margin-bottom: 12px;
+  }
+  
+  .welcomeText {
+    font-size: 0.9rem;
+    line-height: 1.5;
+    margin-bottom: 16px;
+  }
+  
+  .welcomeIcon {
+    font-size: 2rem;
+    margin-top: 16px;
+  }
+  
+  .modalOverlay {
+    padding: 10px;
+  }
+  
+  .modalContent {
+    width: 95%;
+    max-width: 340px;
+    padding: 14px;
+  }
+  
+  .modalTitle {
+    font-size: 1.1rem;
+    margin-bottom: 12px;
+  }
+  
+  .btnCloseModal {
+    padding: 8px 16px;
+    font-size: 13px;
+  }
+  
+  .loadingContainer {
+    height: 150px;
+    gap: 10px;
+  }
+  
+  .loader {
+    width: 32px;
+    height: 32px;
+    border-width: 3px;
+  }
+}
+
+/* Extra Small Mobile (< 360px) */
+@media (max-width: 359px) {
+  .columnContainer {
+    width: 200px;
+  }
+  
+  .filtersWrapper h2 {
+    font-size: 1rem;
+  }
+  
+  .columnAddBtn {
+    width: 120px;
+    min-width: 120px;
+    font-size: 11px;
+  }
+  
+  .welcomeTitle {
+    font-size: 1.2rem;
+  }
+  
+  .welcomeText {
+    font-size: 0.85rem;
+  }
+}
+
+/* Landscape mode on mobile */
+@media (max-height: 500px) and (orientation: landscape) {
+  .screensPage {
+    height: 100vh;
+  }
+  
+  .mainDashboard {
+    padding: 4px;
+  }
+  
+  .columnsWrapper {
+    gap: 8px;
+  }
+  
+  .columnContainer {
+    max-height: 85vh;
+  }
+  
+  .welcomeContainer {
+    padding: 10px;
+  }
+  
+  .welcomeTitle {
+    font-size: 1.3rem;
+    margin-bottom: 8px;
+  }
+  
+  .welcomeText {
+    font-size: 0.85rem;
+    margin-bottom: 12px;
+  }
+  
+  .welcomeIcon {
+    font-size: 1.8rem;
+    margin-top: 12px;
+  }
 }

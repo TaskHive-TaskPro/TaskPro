@@ -1,8 +1,8 @@
 // client/src/redux/boards/boardsApi.js
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 
-const HOST = (import.meta.env.VITE_API_URL || '').replace(/\/+$/, ''); // http://localhost:5001
-const API_BASE = `${HOST}/api`; // http://localhost:5001/api
+// VITE_API_URL zaten /api içeriyor (örn: http://localhost:5001/api)
+const API_BASE = (import.meta.env.VITE_API_URL || 'http://localhost:5001/api').replace(/\/+$/, '');
 
 export const boardsApi = createApi({
   reducerPath: 'boardsApi',

@@ -1,8 +1,7 @@
 import axios from "axios";
 
-const API_URL = import.meta.env.VITE_API_URL
-  ? `${import.meta.env.VITE_API_URL}/api/auth`
-  : "http://localhost:5001/api/auth";
+const BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:5001/api";
+const API_URL = `${BASE_URL}/auth`;
 
 const axiosInstance = axios.create({
   baseURL: API_URL,
@@ -13,19 +12,14 @@ const axiosInstance = axios.create({
 
 const register = async (userData) => {
   console.log("Register attempt:", userData);
-  console.log("API URL:", API_URL);
+  console.log("Register URL:", `${API_URL}/register`);
 
   try {
-
-    const response = await axios.post(`${API_URL}/register`, userData, {
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
+    const response = await axiosInstance.post("/register", userData);
     console.log("auth.js - Register response:", response.data);
     return response.data.message;
   } catch (error) {
-
+    console.error("Register error:", error.response?.data);
     throw error.response?.data?.message || "Kayıt başarısız oldu.";
   }
 };

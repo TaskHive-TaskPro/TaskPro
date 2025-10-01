@@ -2,14 +2,16 @@ import axios from "axios";
 
 const API_URL = "http://localhost:5001/api/cards";
 
-export const getCards = async (token) => { // token parametresi al
-  console.log("getCards fonksiyonu çağrıldı", token); // token'ı konsola yazdır
+export const getCards = async (token, boardId) => {
+  console.log("getCards fonksiyonu çağrıldı", { token, boardId });
+  const params = boardId ? { boardId } : {};
   const res = await axios.get(API_URL, {
     headers: {
-      Authorization: `Bearer ${token}` // token'ı header'a ekle
-    }
+      Authorization: `Bearer ${token}`
+    },
+    params
   });
-  console.log("getCards yanıtı:", res.data); // yanıtı konsola yazdır
+  console.log("getCards yanıtı:", res.data);
   return res.data;
 };
 

@@ -52,75 +52,71 @@ const FiltersModal = ({ onClose, onSelectPriority, selectedPriority }) => {
   );
 };
 
-const MainDashboard = () => {
+const MainDashboard = ({ boardId }) => {
   const { token } = useAuth();
-  const [columns, setColumns] = useState([
-    {
-      id: "1",
-      title: "To do",
-      cards: [],
-    },
-    {
-      id: "2",
-      title: "In progress",
-      cards: [],
-    },
-    {
-      id: "3",
-      title: "Done",
-      cards: [],
-    },
-  ]);
-
+  const [columns, setColumns] = useState([]);
   const [selectedPriority, setSelectedPriority] = useState("none");
   const [showAddColumn, setShowAddColumn] = useState(false);
   const [showFilters, setShowFilters] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [board, setBoard] = useState(null);
 
-  // Cards'ları API'den yükle
+  // Board ve kartları yükle
   useEffect(() => {
-    const fetchCards = async () => {
-      if (!token) return;
+    const fetchBoardAndCards = async () => {
+      if (!token || !boardId) {
+        setLoading(false);
+        return;
+      }
       
       try {
         setLoading(true);
-        const cards = await getCards(token);
-        console.log('Fetched cards:', cards);
         
-        // Kartları üç ayrı kolona eşit olarak dağıt
-        if (cards && cards.length > 0) {
-          const chunkSize = Math.ceil(cards.length / 3);
-          const todoCards = cards.slice(0, chunkSize);
-          const inProgressCards = cards.slice(chunkSize, chunkSize * 2);
-          const doneCards = cards.slice(chunkSize * 2);
-          
-          setColumns([
-            {
-              id: "1",
-              title: "To do",
-              cards: todoCards,
-            },
-            {
-              id: "2",
-              title: "In progress",
-              cards: inProgressCards,
-            },
-            {
-              id: "3",
-              title: "Done",
-              cards: doneCards,
-            },
-          ]);
+        // Board'u getir
+        const boardRes = await fetch(`http://localhost:5001/api/boards/${boardId}`);
+        const boardData = await boardRes.json();
+        setBoard(boardData);
+        
+        // Kartları boardId ile getir
+        const cards = await getCards(token, boardId);
+        console.log('Fetched cards for board:', { boardId, cards });
+        
+        // Board'dan kolonları al - hem eski hem yeni formatı destekle
+        let boardColumns = boardData.columns || [];
+        
+        // Eğer columns yoksa veya boşsa, default kolonları kullan
+        if (!boardColumns || boardColumns.length === 0) {
+          boardColumns = [
+            { _id: 'todo', title: 'To Do' },
+            { _id: 'inprogress', title: 'In Progress' },
+            { _id: 'done', title: 'Done' }
+          ];
         }
+        
+        // Her kolona ait kartları grupla
+        const columnsWithCards = boardColumns.map(col => {
+          // Hem eski format (_id: ObjectId) hem yeni format (_id: string) için destek
+          const columnId = col._id?.toString() || col._id;
+          return {
+            id: columnId,
+            title: col.title,
+            cards: cards.filter(card => {
+              const cardColumnId = card.columnId?.toString() || card.columnId;
+              return cardColumnId === columnId;
+            })
+          };
+        });
+        
+        setColumns(columnsWithCards);
       } catch (error) {
-        console.error('Error fetching cards:', error);
+        console.error('Error fetching board and cards:', error);
       } finally {
         setLoading(false);
       }
     };
 
-    fetchCards();
-  }, [token]);
+    fetchBoardAndCards();
+  }, [token, boardId]);
 
   const addColumn = (newCol) => setColumns([...columns, newCol]);
 
@@ -137,8 +133,18 @@ const MainDashboard = () => {
   };
 
   const addCard = async (columnId, card) => {
+    if (!boardId) {
+      alert('Please select a board first');
+      return;
+    }
+    
     try {
-      const newCard = await createCard(card, token);
+      const cardWithBoardAndColumn = {
+        ...card,
+        boardId,
+        columnId
+      };
+      const newCard = await createCard(cardWithBoardAndColumn, token);
       setColumns(
         columns.map((col) =>
           col.id === columnId ? { ...col, cards: [...col.cards, newCard] } : col
@@ -229,10 +235,42 @@ const MainDashboard = () => {
     });
   };
 
+  // Eğer boardId yoksa hoş geldiniz mesajı göster
+  if (!boardId) {
+    return (
+      <div className={Styles.screensPage}>
+        <div className={Styles.welcomeContainer}>
+          <div className={Styles.welcomeContent}>
+            <h1 className={Styles.welcomeTitle}>Welcome to TaskPro! 🎯</h1>
+            <p className={Styles.welcomeText}>
+              Before starting your project, it is essential to{' '}
+              <span 
+                className={Styles.createBoardLink}
+                onClick={() => {
+                  // Sidebar'daki "Create a new board" butonuna odaklan
+                  const createBoardBtn = document.querySelector('[data-create-board]');
+                  if (createBoardBtn) {
+                    createBoardBtn.click();
+                  }
+                }}
+              >
+                create a board
+              </span>
+              {' '}to visualize and track all the necessary tasks and milestones. 
+              This board serves as a powerful tool to organize the workflow and ensure 
+              effective collaboration among team members.
+            </p>
+            <div className={Styles.welcomeIcon}>📋</div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className={Styles.screensPage}>
       <div className={Styles.filtersWrapper}>
-        <h2>Project Office</h2>
+        <h2>{board?.title || 'Project Office'}</h2>
         <button
           className={Styles.btnFilters}
           onClick={() => setShowFilters(true)}
