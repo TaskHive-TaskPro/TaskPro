@@ -54,13 +54,15 @@ const EditCardModal = ({ card, onClose, onUpdate }) => {
           <option value="medium">Medium</option>
           <option value="high">High</option>
         </select>
+
         <input
           type="date"
           value={deadline}
-          min={today} // geçmiş tarih seçilemez
+          min={today}
           onChange={(e) => setDeadline(e.target.value)}
           className={styles.dateInput}
         />
+
         <button type="submit" className={styles.saveButton}>
           Save Changes
         </button>

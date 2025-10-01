@@ -9,7 +9,8 @@ dotenv.config();
 const app = express();
 const PORT = process.env.PORT || 5000;
 
-// Middleware - CORS
+// Middleware
+
 app.use(
   cors({
     origin: [

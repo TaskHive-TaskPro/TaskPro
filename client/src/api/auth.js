@@ -16,7 +16,7 @@ const register = async (userData) => {
   console.log("API URL:", API_URL);
 
   try {
-    console.log("auth.js - Sending register data:", userData);
+    // Basit axios.post kullanımı
     const response = await axios.post(`${API_URL}/register`, userData, {
       headers: {
         "Content-Type": "application/json",
@@ -25,8 +25,8 @@ const register = async (userData) => {
     console.log("auth.js - Register response:", response.data);
     return response.data.message;
   } catch (error) {
-    console.error("auth.js - Register error:", error.response?.data);
-    console.error("auth.js - Full error:", error);
+    console.error("Register error:", error.response?.data || error.message);
+
     throw error.response?.data?.message || "Kayıt başarısız oldu.";
   }
 };
