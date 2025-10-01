@@ -53,6 +53,17 @@ export const AuthProvider = ({ children }) => {
     localStorage.removeItem('user');
   };
 
+  const updateUser = (updatedUserData) => {
+    // Mevcut user ve token'ı koru, sadece gelen verileri güncelle
+    const updatedUser = {
+      ...user,
+      ...updatedUserData,
+      token: token // Token'ı koru
+    };
+    setUser(updatedUser);
+    localStorage.setItem('user', JSON.stringify(updatedUser));
+  };
+
   const value = {
     user,
     token,
@@ -60,6 +71,7 @@ export const AuthProvider = ({ children }) => {
     login,
     register,
     logout,
+    updateUser,
     isAuthenticated: !!user && !!token,
   };
 

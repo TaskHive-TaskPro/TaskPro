@@ -8,44 +8,81 @@ import { useAuth } from '../../hooks/useAuth';
 
 import { toast } from 'react-toastify';
 
-// Kullanıcı profili düzenleme şeması
+// Kullanıcı profili düzenleme şeması - TÜM ALANLAR OPSİYONEL
 const profileSchema = yup.object({
   name: yup
     .string()
-    .required('İsim zorunludur')
-    .min(2, 'İsim en az 2 karakter olmalıdır')
-    .max(32, 'İsim en fazla 32 karakter olabilir')
-    .matches(/^[a-zA-ZğüşıöçĞÜŞİÖÇ\s]+$/, 'İsim sadece harf içerebilir'),
+    .nullable()
+    .transform((value) => value || null)
+    .test('name-validation', '', function(value) {
+      if (!value) return true; // Boşsa sorun yok
+      
+      if (value.length < 2) {
+        return this.createError({ message: 'İsim en az 2 karakter olmalıdır' });
+      }
+      if (value.length > 32) {
+        return this.createError({ message: 'İsim en fazla 32 karakter olabilir' });
+      }
+      if (!/^[a-zA-ZğüşıöçĞÜŞİÖÇ\s]+$/.test(value)) {
+        return this.createError({ message: 'İsim sadece harf içerebilir' });
+      }
+      return true;
+    }),
   email: yup
     .string()
-    .required('Email zorunludur')
-    .email('Geçerli bir email adresi giriniz')
-    .matches(
-      /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
-      'Geçerli bir email formatı kullanınız'
-    ),
+    .nullable()
+    .transform((value) => value || null)
+    .test('email-validation', '', function(value) {
+      if (!value) return true; // Boşsa sorun yok
+      
+      if (!/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(value)) {
+        return this.createError({ message: 'Geçerli bir email formatı kullanınız' });
+      }
+      return true;
+    }),
   currentPassword: yup
     .string()
+    .nullable()
+    .transform((value) => value || null)
     .when(['newPassword'], {
       is: (newPassword) => newPassword && newPassword.length > 0,
-      then: (schema) => schema.required('Mevcut şifrenizi giriniz'),
-      otherwise: (schema) => schema.notRequired()
+      then: (schema) => schema.required('Yeni şifre girdiğinizde mevcut şifre zorunludur'),
+      otherwise: (schema) => schema.nullable()
     }),
   newPassword: yup
     .string()
-    .min(8, 'Şifre en az 8 karakter olmalıdır')
-    .max(64, 'Şifre en fazla 64 karakter olabilir')
-    .matches(/^\S*$/, 'Şifre boşluk içeremez')
-    .matches(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/, 'Şifre en az 1 büyük harf, 1 küçük harf ve 1 rakam içermelidir'),
+    .nullable()
+    .transform((value) => value || null)
+    .test('password-validation', '', function(value) {
+      if (!value) return true; // Boşsa sorun yok
+      
+      if (value.length < 8) {
+        return this.createError({ message: 'Şifre en az 8 karakter olmalıdır' });
+      }
+      if (value.length > 64) {
+        return this.createError({ message: 'Şifre en fazla 64 karakter olabilir' });
+      }
+      if (/\s/.test(value)) {
+        return this.createError({ message: 'Şifre boşluk içeremez' });
+      }
+      if (!/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/.test(value)) {
+        return this.createError({ 
+          message: 'Şifre en az 1 büyük harf, 1 küçük harf ve 1 rakam içermelidir' 
+        });
+      }
+      return true;
+    }),
   confirmPassword: yup
     .string()
+    .nullable()
+    .transform((value) => value || null)
     .when(['newPassword'], {
       is: (newPassword) => newPassword && newPassword.length > 0,
       then: (schema) => 
         schema
           .required('Şifre onayı zorunludur')
           .oneOf([yup.ref('newPassword')], 'Şifreler eşleşmiyor'),
-      otherwise: (schema) => schema.notRequired()
+      otherwise: (schema) => schema.nullable()
     })
 });
 
@@ -82,9 +119,10 @@ const UserInfo = () => {
 
   useEffect(() => {
     if (isModalOpen && user) {
+      // Form'u tamamen boş başlat - sadece değiştirmek istedikleri alanları doldursunlar
       reset({
-        name: user.name || '',
-        email: user.email || '',
+        name: '',
+        email: '',
         currentPassword: '',
         newPassword: '',
         confirmPassword: ''
@@ -100,16 +138,46 @@ const UserInfo = () => {
 
     try {
       const formData = new FormData();
-      formData.append('name', data.name);
-      formData.append('email', data.email);
-      
-      if (data.newPassword) {
-        formData.append('currentPassword', data.currentPassword);
-        formData.append('newPassword', data.newPassword);
-      }
+      let hasChanges = false;
 
+      // Avatar varsa ekle
       if (avatarPreview) {
         formData.append('avatar', avatarPreview);
+        hasChanges = true;
+      }
+
+      // Name değişmişse ekle
+      if (data.name && data.name.trim() && data.name.trim() !== user.name) {
+        formData.append('name', data.name.trim());
+        hasChanges = true;
+      }
+
+      // Email değişmişse ekle
+      if (data.email && data.email.trim() && data.email !== user.email) {
+        formData.append('email', data.email.trim());
+        hasChanges = true;
+      }
+      
+      // Şifre değişikliği varsa ekle
+      if (data.newPassword && data.newPassword.trim()) {
+        if (!data.currentPassword) {
+          setError('currentPassword', {
+            type: 'manual',
+            message: 'Mevcut şifrenizi giriniz'
+          });
+          setLoading(false);
+          return;
+        }
+        formData.append('currentPassword', data.currentPassword);
+        formData.append('newPassword', data.newPassword);
+        hasChanges = true;
+      }
+
+      // Hiçbir değişiklik yoksa uyar
+      if (!hasChanges) {
+        toast.info('Hiçbir değişiklik yapılmadı');
+        setLoading(false);
+        return;
       }
 
       const response = await fetch(`${import.meta.env.VITE_API_URL}/api/user/profile`, {
@@ -283,14 +351,14 @@ const UserInfo = () => {
 
               {/* Name Field */}
               <div className="form-group">
-                <label htmlFor="name">İsim *</label>
+                <label htmlFor="name">İsim (opsiyonel)</label>
                 <input
                   {...register('name')}
                   id="name"
                   type="text"
                   className={`form-input ${errors.name ? 'error' : ''}`}
                   disabled={loading}
-                  placeholder="Adınızı giriniz"
+                  placeholder={`Mevcut: ${user.name} - Değiştirmek için yeni isim girin`}
                 />
                 {errors.name && (
                   <span className="error-message">{errors.name.message}</span>
@@ -299,14 +367,14 @@ const UserInfo = () => {
 
               {/* Email Field */}
               <div className="form-group">
-                <label htmlFor="email">Email *</label>
+                <label htmlFor="email">Email (opsiyonel)</label>
                 <input
                   {...register('email')}
                   id="email"
                   type="email"
                   className={`form-input ${errors.email ? 'error' : ''}`}
                   disabled={loading}
-                  placeholder="Email adresinizi giriniz"
+                  placeholder={`Mevcut: ${user.email} - Değiştirmek için yeni email girin`}
                 />
                 {errors.email && (
                   <span className="error-message">{errors.email.message}</span>
