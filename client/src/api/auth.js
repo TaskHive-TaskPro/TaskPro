@@ -2,7 +2,7 @@ import axios from "axios";
 
 const API_URL = import.meta.env.VITE_API_URL
   ? `${import.meta.env.VITE_API_URL}/api/auth`
-  : "http://localhost:5000/api/auth";
+  : "http://localhost:5001/api/auth";
 
 // Axios instance oluşturuldu, withCredentials kaldırıldı
 const axiosInstance = axios.create({
