@@ -83,18 +83,18 @@
 }
 
 .priority.low {
-  background-color: #2e7d32;
-  color: #e6f9ed;
+  background-color: #a88fddff;
+  color: #ffffff;
 }
 
 .priority.medium {
-  background-color: #ef6c00;
+  background-color: #d28dd5ff;
   color: #fff4e6;
 }
 
 .priority.high {
-  background-color: #c62828;
-  color: #fdecea;
+  background-color: #6cb98eff;
+  color: #ffffff;
 }
 
 .priority.none {
