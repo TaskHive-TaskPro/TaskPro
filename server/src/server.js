@@ -7,13 +7,11 @@ import cardRoutes from './routes/cards.js';
 import authRoutes from './routes/authRoutes.js';
 import boards from "./routes/boards.js";
 
-
 dotenv.config();
 const app = express();
 const PORT = process.env.PORT || 5000;
 
-
-
+// CORS middleware - en başta
 app.use(
   cors({
     origin: [
@@ -29,32 +27,32 @@ app.use(
   }),
 );
 
-
+// Body parser
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
-// MongoDB bağlan
-connectDB();
+// Test route
+app.get('/', (req, res) => res.send('Server çalışıyor'));
 
 // Routes
 app.use('/api/auth', authRoutes);
 app.use('/api/cards', cardRoutes);
 app.use("/api/boards", boards);
-app.use('/api/feedback', feedbackRoutes);
-
-// Test route
-app.get('/', (req, res) => res.send('Server çalışıyor'));
 
 // Server başlat
-//app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
 const start = async () => {
   try {
     await connectDB();
-    app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+    app.listen(PORT, () => {
+      console.log(`✅ Server running on port ${PORT}`);
+      console.log(`✅ CORS enabled for: http://localhost:5173`);
+    });
   } catch (err) {
-    console.error("DB connection failed:", err);
+    console.error("❌ DB connection failed:", err);
     process.exit(1);
   }
 };
+
 start();
 
 export default app;

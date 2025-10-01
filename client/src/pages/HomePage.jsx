@@ -76,8 +76,9 @@ const HomePage = () => {
 
         <Header onSidebarToggle={() => setSidebarOpen(!sidebarOpen)} />
         
-       <div className="home-content">
-          <main className="main-content">
+
+       <div className="home-content" style={{ marginLeft: '260px' }}>
+          <main className={`main-content ${!sidebarOpen ? 'sidebar-collapsed' : ''}`}>
             <MainDashboard boardId={boardId} />
           </main>
         </div>

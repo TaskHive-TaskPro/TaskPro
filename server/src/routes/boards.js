@@ -20,9 +20,11 @@ const normalizeBg = (bg) => {
 // CREATE  POST /api/boards
 router.post('/', /*auth,*/ async (req, res) => {
   try {
+    console.log('🔵 POST /api/boards - Request body:', req.body);
     const { title, icon, background } = req.body;
 
     if (!title || typeof title !== 'string' || title.trim().length < 3) {
+      console.log('❌ Invalid title:', title);
       return res.status(400).json({ message: 'Title min 3 characters' });
     }
 
@@ -33,9 +35,10 @@ router.post('/', /*auth,*/ async (req, res) => {
       ...(req.user?.id ? { owner: req.user.id } : {}),
     });
 
+    console.log('✅ Board created:', doc._id);
     return res.status(201).json(doc);
   } catch (err) {
-    console.error('POST /api/boards error:', err);
+    console.error('❌ POST /api/boards error:', err);
     return res.status(500).json({ message: 'Server error', error: err?.message });
   }
 });

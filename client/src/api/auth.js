@@ -1,22 +1,11 @@
-import axios from "axios";
-
-const BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:5001/api";
-const API_URL = `${BASE_URL}/auth`;
-
-const axiosInstance = axios.create({
-  baseURL: API_URL,
-  headers: {
-    "Content-Type": "application/json",
-  },
-});
+import axiosInstance from "./axiosInstance";
 
 const register = async (userData) => {
   console.log("Register attempt:", userData);
-  console.log("Register URL:", `${API_URL}/register`);
-
+  
   try {
-    const response = await axiosInstance.post("/register", userData);
-    console.log("auth.js - Register response:", response.data);
+    const response = await axiosInstance.post("/api/auth/register", userData);
+    console.log("Register success:", response.data);
     return response.data.message;
   } catch (error) {
     console.error("Register error:", error.response?.data);
@@ -28,11 +17,11 @@ const login = async (userData) => {
   console.log("Login attempt:", userData);
 
   try {
-    const response = await axiosInstance.post("/login", userData);
+    const response = await axiosInstance.post("/api/auth/login", userData);
     console.log("Login success:", response.data);
 
     if (response.data.token) {
-      localStorage.setItem("user", JSON.stringify(response.data));
+      localStorage.setItem("user", JSON.stringify(response.data.user));
       localStorage.setItem("token", response.data.token);
     }
     return response.data;
@@ -48,10 +37,18 @@ const login = async (userData) => {
 
 const verifyEmail = async (token) => {
   try {
-    const response = await axiosInstance.get(`/verify/${token}`);
+    const response = await axiosInstance.get(`/api/auth/verify/${token}`);
+    console.log("Verify email success:", response.data);
+    
+    // Token varsa kaydet
+    if (response.data.token) {
+      localStorage.setItem("token", response.data.token);
+      localStorage.setItem("user", JSON.stringify(response.data.user));
+    }
+    
     return response.data;
   } catch (error) {
-    console.error("Verify error:", error.response?.data);
+    console.error("Verify email error:", error.response?.data);
     throw error.response?.data?.message || "Doğrulama başarısız oldu.";
   }
 };
