@@ -19,6 +19,22 @@ router.post("/register", registerUser);
 // Login route
 router.post("/login", loginUser);
 
+// TEMPORARY: Verify all users (ONLY FOR DEVELOPMENT)
+router.get("/verify-all-dev", async (req, res) => {
+  try {
+    const result = await User.updateMany(
+      { verified: false },
+      { $set: { verified: true, verificationToken: undefined } }
+    );
+    res.json({
+      message: "Tüm kullanıcılar doğrulandı",
+      modifiedCount: result.modifiedCount,
+    });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+});
+
 // Verify email route
 router.get("/verify/:token", async (req, res) => {
   try {
@@ -26,11 +42,15 @@ router.get("/verify/:token", async (req, res) => {
     const user = await User.findOne({ verificationToken: token });
 
     if (!user) {
-      return res.status(400).json({ message: "Token geçersiz veya süresi dolmuş" });
+      return res
+        .status(400)
+        .json({ message: "Token geçersiz veya süresi dolmuş" });
     }
 
     if (user.verified) {
-      return res.status(400).json({ message: "Kullanıcı zaten doğrulanmış. Lütfen giriş yapın." });
+      return res
+        .status(400)
+        .json({ message: "Kullanıcı zaten doğrulanmış. Lütfen giriş yapın." });
     }
 
     // Doğrulama başarılı
