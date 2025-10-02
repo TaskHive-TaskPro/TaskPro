@@ -91,9 +91,9 @@ export const verifyEmail = asyncHandler(async (req, res) => {
 // Giriş
 export const loginUser = asyncHandler(async (req, res) => {
   const { email, password } = req.body;
-  
+
   console.log('🔵 Login attempt for:', email);
-  
+
   const user = await User.findOne({ email });
 
   if (!user) {
@@ -104,11 +104,15 @@ export const loginUser = asyncHandler(async (req, res) => {
   console.log('✅ User found, verified status:', user.verified);
 
   // Email doğrulama kontrolü
-  if (!user.verified) {
+  if (!user.verified && process.env.NODE_ENV === 'production') {
     console.log('⚠️ User not verified:', email);
-    return res.status(403).json({ 
-      message: "Lütfen önce email adresinizi doğrulayın. Doğrulama linki email adresinize gönderildi." 
+    return res.status(403).json({
+      message: "Lütfen önce email adresinizi doğrulayın. Doğrulama linki email adresinize gönderildi."
     });
+  }
+
+  if (!user.verified) {
+    console.log('⚠️ User not verified but allowing login (development mode):', email);
   }
 
   const isMatch = await bcrypt.compare(password, user.password);
