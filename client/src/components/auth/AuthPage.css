@@ -7,11 +7,11 @@
   align-items: center;
   min-height: 100vh;
   background-image: linear-gradient(
-    var(--darkreader-background-ffffff, #000000) 0%,
-    var(--darkreader-background-d4e2c7, #3c570f) 100%
+    var(--darkreader-background-ffffff, #fff) 0%,
+    var(--darkreader-background-d4e2c7, #9DC888) 100%
   );
   background-color: initial;
-  color: #fff;
+  /* color: #fff; */
   font-family: "Poppins", sans-serif;
 }
 
@@ -39,7 +39,7 @@
   object-fit: cover;
 }
 
-@media (max-width: 474px) {
+@media (max-width: 475px) {
   .auth-avatar-main {
     width: 124px; 
     height: 124px;
@@ -70,7 +70,7 @@
   font-size: 40px;
   line-height: 100%;
   letter-spacing: -0.04em;
-  color: #fff;
+  color: #161616;
   margin: 0;
 }
 
@@ -80,7 +80,7 @@
   font-size: 14px;
   line-height: 18px;
   letter-spacing: -0.02em;
-  color: #fff;
+  color: #161616;
   text-align: center;
   width: 344px;
   margin-bottom: 40px;
@@ -105,15 +105,15 @@
 }
 
 .register-btn {
-  background-color: #000000;
+  background-color: #161616;
   color: #ffffff;
   border: none;
 }
 
 .login-btn {
   background-color: transparent;
-  color: #fff;
-  border: 1px solid #ffffff;
+  color: #161616;
+  border: none;
 }
 
 .register-btn:hover,
