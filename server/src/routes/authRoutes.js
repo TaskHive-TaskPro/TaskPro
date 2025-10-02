@@ -3,7 +3,6 @@ import express from "express";
 import {
   registerUser,
   loginUser,
-  verifyEmail as verifyEmailController,
   forgotPassword,
   resetPassword,
 } from "../controllers/authController.js";
