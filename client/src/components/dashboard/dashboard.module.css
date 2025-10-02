@@ -71,7 +71,8 @@
 }
 
 @keyframes bounce {
-  0%, 100% {
+  0%,
+  100% {
     transform: translateY(0);
   }
   50% {
@@ -123,7 +124,7 @@
   padding: 16px;
   background-color: var(--bg-primary);
   overflow-x: auto;
-  overflow-y: hidden; 
+  overflow-y: hidden;
   height: calc(100dvh - 64px);
 }
 
@@ -142,8 +143,8 @@
   overflow-y: hidden;
   scroll-behavior: smooth;
   align-items: flex-start;
-  flex-wrap: nowrap; 
-  min-width: max-content; 
+  flex-wrap: nowrap;
+  min-width: max-content;
 }
 
 /* Modern yatay scroll stili */
@@ -161,7 +162,7 @@
 /* Column */
 
 .columnContainer {
-  flex: 0 0 288px; 
+  flex: 0 0 288px;
   min-width: 288px;
   max-width: 288px;
   background-color: var(--bg-secondary);
@@ -184,14 +185,13 @@
 }
 
 .columnContainer {
-  -ms-overflow-style: none; 
-  scrollbar-width: none; 
+  -ms-overflow-style: none;
+  scrollbar-width: none;
 }
 
 .columnContainer::-webkit-scrollbar-track {
   background: transparent;
 }
-
 
 .columnTitle {
   font-size: 1.125rem;
@@ -333,9 +333,12 @@
 
 /* Filters Button */
 .filtersWrapper {
+  display: flex !important;
   display: flex;
   justify-content: space-between;
-  padding: 16px 16px 0 16px;  
+
+  padding: 50px 16px 16px 16px;
+  border-bottom: 1px solid var(--border-color);
   background-color: var(--bg-primary);
 }
 
@@ -558,7 +561,7 @@
   .columnContainer {
     width: 240px;
     padding: 12px;
-     max-height: calc(100dvh - 80px);
+    max-height: calc(100dvh - 80px);
   }
 
   .columnTitle {
@@ -600,7 +603,7 @@
 /* Mobile */
 @media (max-width: 480px) {
   .screensPage {
-    height: 100dvh; 
+    height: 100dvh;
   }
 
   .mainDashboard {
@@ -608,7 +611,7 @@
     overflow: hidden;
     display: flex;
     flex-direction: column;
-    height: calc(100dvh - 60px); 
+    height: calc(100dvh - 60px);
   }
 
   .filtersWrapper {
@@ -647,13 +650,13 @@
     display: flex;
     flex: 1;
     height: 100%;
-    
-    scrollbar-width: none; 
-    -ms-overflow-style: none; 
+
+    scrollbar-width: none;
+    -ms-overflow-style: none;
   }
 
   .columnsWrapper::-webkit-scrollbar {
-    display: none; 
+    display: none;
   }
 
   .columnContainer {
@@ -706,7 +709,7 @@
     flex: 1;
     overflow-y: auto;
     margin-bottom: 12px;
-   
+
     scrollbar-width: none;
     -ms-overflow-style: none;
   }
@@ -723,7 +726,7 @@
   }
 
   .columnAddBtn {
-    display: none; 
+    display: none;
   }
 
   /* Modal adjustments for mobile */
@@ -819,7 +822,7 @@
     flex: 0 0 288px;
     max-height: calc(100dvh - 100px);
   }
-  
+
   .modalContent {
     width: 400px;
   }
