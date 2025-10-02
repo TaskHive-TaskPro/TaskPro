@@ -1,20 +1,33 @@
-import icon from '../../../images/icons.svg';
+// src/components/buttons/btn/buttonAdd/index.jsx
 import { Container, PlusIcon, TitleButton } from './buttonAdd.styled';
 import { ButtonPlus } from '../buttons.styled';
 import { useTheme } from '@mui/material';
 
-const BtnAdd = ({ data, btnTitle, btnColor, onClick, isDisabled = false }) => {
-  
+const SPRITE = import.meta.env.BASE_URL + 'sprite.svg';
+
+const BtnAdd = ({ btnTitle, onClick, isDisabled = false }) => {
   const theme = useTheme();
-  
+
   return (
-    <Container theme={theme} onClick={onClick} disabled={isDisabled}>
-      <ButtonPlus theme={theme}>
-        <PlusIcon theme={theme}>
-          <use href={icon + '#icon-plus-1'}></use>
+    <Container
+      theme={theme}
+      as="button"
+      type="submit"
+      disabled={isDisabled}
+      onClick={onClick}
+      aria-disabled={isDisabled}
+    >
+      <ButtonPlus as="span" theme={theme}>
+        <PlusIcon theme={theme} role="img" aria-hidden="true">
+          <use
+            href={`${SPRITE}#icon-plus`}
+            xlinkHref={`${SPRITE}#icon-plus`}
+          />
         </PlusIcon>
       </ButtonPlus>
-      <TitleButton theme={theme}>{btnTitle}</TitleButton>
+      <TitleButton as="span" theme={theme}>
+        {btnTitle}
+      </TitleButton>
     </Container>
   );
 };

@@ -1,3 +1,4 @@
+// src/components/sideBar/Sidebar.styled.jsx
 import styled from 'styled-components';
 import { NavLink } from 'react-router-dom';
 import { Box } from '@mui/material';
@@ -10,14 +11,12 @@ export const SideBarStyled = styled(Box)`
   flex-direction: column;
   justify-content: space-between;
   gap: 10px;
-
   padding: 14px;
 
   @media screen and (min-width: 768px) {
     width: 100%;
     max-width: 260px;
-    padding: 24px 24px 24px 24px;
-
+    padding: 24px;
     overflow-x: hidden;
   }
 `;
@@ -37,30 +36,41 @@ export const Picture = styled.picture`
   height: 75px;
 `;
 
+/* ===== SVG'ler: currentColor kullan ===== */
 export const LogoIcon = styled.svg`
   width: 32px;
   height: 32px;
+  display: inline-block;
+  fill: currentColor;
+  stroke: currentColor;
+  color: ${p => p.theme.palette.text.primary};
 `;
 
 export const PlusIcon = styled.svg`
   width: 20px;
   height: 20px;
-  background-color: transparent;
-  stroke: ${props => {
-    return props.theme.palette.secondary.info;
-  }};
+  display: inline-block;
+  fill: currentColor;
+  stroke: currentColor;
+  color: ${p => p.theme.palette.secondary.info};
 `;
 
 export const HelpIcon = styled.svg`
   width: 20px;
   height: 20px;
-  fill: transparent;
-  stroke: ${props => props.theme.palette.text.primary};
+  display: inline-block;
+  fill: currentColor;
+  stroke: currentColor;
+  color: ${p => p.theme.palette.text.primary};
 `;
 
 export const LogoutIcon = styled.svg`
   width: 32px;
   height: 32px;
+  display: inline-block;
+  fill: currentColor;
+  stroke: currentColor;
+  color: ${p => p.theme.palette.text.primary};
 `;
 
 export const BoardsContainer = styled.div`
@@ -81,18 +91,16 @@ export const BoardsList = styled.ul`
   max-height: 122px;
   overflow-y: auto;
 
+  /* scrollbar'ı sağda göstermek için rtl hilesi */
   direction: rtl;
 
   &::-webkit-scrollbar {
-    background-color: ${props => props.theme.palette.background.disabled};
+    background-color: ${p => p.theme.palette.background.disabled};
     width: 8px;
-    border-radius: 0;
-    left: 0;
   }
 
   &::-webkit-scrollbar-thumb {
-    background-color: ${props => props.theme.palette.background.hint};
-    border-radius: 0;
+    background-color: ${p => p.theme.palette.background.hint};
   }
 
   @media screen and (min-width: 768px) {
@@ -111,10 +119,11 @@ export const BoardItem = styled.li`
 export const IconTitle = styled.svg`
   width: 18px;
   height: 18px;
-  stroke: ${props => {
-    return props.theme.palette.text.disabled;
-  }};
   margin-right: 8px;
+  display: inline-block;
+  fill: currentColor;
+  stroke: currentColor;
+  color: ${p => p.theme.palette.text.disabled};
 `;
 
 export const Title = styled.div`
@@ -122,7 +131,6 @@ export const Title = styled.div`
   text-align: left;
   font-family: Poppins;
   font-size: 14px;
-  font-style: normal;
   font-weight: 500;
   line-height: normal;
 `;
@@ -130,14 +138,20 @@ export const Title = styled.div`
 export const Edit = styled.svg`
   width: 16px;
   height: 16px;
-  stroke: inherit;
   margin-right: 8px;
+  display: inline-block;
+  fill: currentColor;
+  stroke: currentColor;
+  color: inherit;
 `;
 
 export const Delete = styled.svg`
   width: 16px;
   height: 16px;
-  stroke: inherit;
+  display: inline-block;
+  fill: currentColor;
+  stroke: currentColor;
+  color: inherit;
 `;
 
 export const BoardLink = styled(NavLink)`
@@ -147,11 +161,8 @@ export const BoardLink = styled(NavLink)`
   padding: 24px 20px;
 
   font-size: 14px;
-  color: ${props => {
-    return props.theme.palette.text.disabled;
-  }};
+  color: ${p => p.theme.palette.text.disabled};
   transition: color 200ms linear, background-color 200ms linear;
-
   text-decoration: none;
 
   display: flex;
@@ -160,24 +171,20 @@ export const BoardLink = styled(NavLink)`
 
   &:hover,
   &:focus {
-    background-color: ${props => {
-      return props.theme.palette.primary.contrastText;
-    }};
+    background-color: ${p => p.theme.palette.primary.contrastText};
   }
 
   &.active {
     pointer-events: none;
-    background-color: ${props => {
-      return props.theme.palette.primary.contrastText;
-    }};
+    background-color: ${p => p.theme.palette.primary.contrastText};
+
     ${Title} {
       width: 140px;
-      color: ${props => {
-        return props.theme.palette.secondary.dark;
-      }};
+      color: ${p => p.theme.palette.secondary.dark};
     }
+    /* currentColor kullandığımız için color'ı değiştiriyoruz */
     ${IconTitle} {
-      stroke: ${props => props.theme.palette.secondary.dark};
+      color: ${p => p.theme.palette.secondary.dark};
     }
     ${Edit}, ${Delete} {
       pointer-events: auto;
@@ -191,8 +198,8 @@ export const BoardLink = styled(NavLink)`
     content: '';
     width: 4px;
     height: 100%;
-    border-radius: 4px 0px 0px 4px;
-    background: ${props => props.theme.palette.text.warning};
+    border-radius: 4px 0 0 4px;
+    background: ${p => p.theme.palette.text.warning};
   }
 `;
 
@@ -204,24 +211,44 @@ export const IconsBox = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  stroke: ${props => {
-    return props.theme.palette.text.disabled;
-  }};
+  color: ${p => p.theme.palette.text.disabled};
 `;
+
 export const TitleBox = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
 `;
 
-export const IconButton = styled.button`
+/* button reset + type güvenliği */
+export const IconButton = styled.button.attrs({ type: 'button' })`
   display: flex;
   align-items: center;
   justify-content: center;
+  background: transparent;
+  border: 0;
+  padding: 0;
+  cursor: pointer;
+
+  &:focus-visible {
+    outline: 2px solid ${p => p.theme.palette.primary.main};
+    outline-offset: 2px;
+    border-radius: 4px;
+  }
 `;
 
-export const IconLink = styled.button`
+export const IconLink = styled.button.attrs({ type: 'button' })`
   display: flex;
   align-items: center;
   justify-content: center;
+  background: transparent;
+  border: 0;
+  padding: 0;
+  cursor: pointer;
+
+  &:focus-visible {
+    outline: 2px solid ${p => p.theme.palette.primary.main};
+    outline-offset: 2px;
+    border-radius: 4px;
+  }
 `;

@@ -1,53 +1,64 @@
+// client/src/redux/boards/boardsApi.js
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 
-const BASE = import.meta.env.VITE_API_URL || 'burayarenderadresiniyaz.com';
+const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:5001';
 
 export const boardsApi = createApi({
   reducerPath: 'boardsApi',
   baseQuery: fetchBaseQuery({
-    baseUrl: BASE,
+    baseUrl: API_BASE,
     prepareHeaders: (headers, { getState }) => {
-      const token = getState()?.auth?.token;
-      if (token) headers.set('authorization', `Bearer ${token}`);
+      const token = getState()?.auth?.token || localStorage.getItem('token');
+      if (token) {
+        headers.set('Authorization', `Bearer ${token}`);
+      }
+      console.log('🔵 RTK Query request with token:', !!token);
       return headers;
     },
   }),
   tagTypes: ['Board'],
   endpoints: (builder) => ({
     getBoards: builder.query({
-      query: () => 'board',
-      providesTags: ['Board'],
+      query: () => '/api/boards', // GET /api/boards
+      providesTags: (result) => {
+        const list = Array.isArray(result) ? result : result?.data ?? [];
+        return list.length
+          ? [...list.map((b) => ({ type: 'Board', id: b._id || b.id })), { type: 'Board', id: 'LIST' }]
+          : [{ type: 'Board', id: 'LIST' }];
+      },
     }),
-
     addBoard: builder.mutation({
-      query: ({ data }) => ({
-        url: 'board',
-        method: 'POST',
-        body: data,
-      }),
-      invalidatesTags: ['Board'],
+      query: ({ data }) => {
+        console.log('🔵 RTK addBoard mutation:', data);
+        return {
+          url: '/api/boards',   // POST /api/boards
+          method: 'POST',
+          body: data,
+        };
+      },
+      invalidatesTags: [{ type: 'Board', id: 'LIST' }],
     }),
-
     updateBoard: builder.mutation({
       query: ({ boardId, data }) => ({
-        url: `board/${boardId}`,
+        url: `/api/boards/${boardId}`, // PUT /api/boards/:id
         method: 'PUT',
         body: data,
       }),
-      invalidatesTags: ['Board'],
+      invalidatesTags: (_r, _e, { boardId }) => [
+        { type: 'Board', id: boardId },
+        { type: 'Board', id: 'LIST' },
+      ],
     }),
-
     deleteBoard: builder.mutation({
       query: ({ boardId }) => ({
-        url: `board/${boardId}`,
+        url: `/api/boards/${boardId}`, // DELETE /api/boards/:id
         method: 'DELETE',
       }),
-      invalidatesTags: ['Board'],
+      invalidatesTags: [{ type: 'Board', id: 'LIST' }],
     }),
-
     getBoardById: builder.query({
-      query: (boardId) => `board/${boardId}`,
-      providesTags: ['Board'],
+      query: (boardId) => `/api/boards/${boardId}`, // GET /api/boards/:id
+      providesTags: (_r, _e, boardId) => [{ type: 'Board', id: boardId }],
     }),
   }),
 });

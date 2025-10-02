@@ -7,10 +7,13 @@ const MainModal = ({ modalIsOpen, closeModal, children, titleId = 'modal-title' 
       onClose={closeModal}
       aria-labelledby={titleId}
       keepMounted
+     disableEnforceFocus
+     disableAutoFocus
       sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}
       slotProps={{ backdrop: { sx: { backgroundColor: 'rgba(0,0,0,0.5)' } } }}
     >
       <Box
+       onClick={(e) => e.stopPropagation()}
         sx={{
           bgcolor: 'background.paper',
           color: 'text.primary',

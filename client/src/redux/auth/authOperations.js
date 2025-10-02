@@ -1,30 +1,45 @@
+// src/redux/auth/authOperations.js
 import axios from 'axios';
 import { createAsyncThunk } from '@reduxjs/toolkit';
+import { logOut as logOutAction } from './authSlice';
+
+export const api = axios.create({
+  baseURL: import.meta.env.VITE_API_URL || '/api',
+});
+
+const setAuthHeader = (t) => t && (api.defaults.headers.common.Authorization = `Bearer ${t}`);
+const clearAuthHeader = () => delete api.defaults.headers.common.Authorization;
 
 export const logOut = createAsyncThunk('auth/logout', async (_, thunkAPI) => {
   try {
-    await axios.post('/auth/logout');
-      console.log('logout successfully')
+    const token = thunkAPI.getState()?.auth?.token;
+    if (token) setAuthHeader(token);
+
+    try {
+      await api.post('/auth/logout'); // -> /api/auth/logout (proxy ile)
+    } catch (err) {
+      // Backend'te logout endpoint yoksa 404'i yut
+      if (err?.response?.status !== 404) throw err;
+    }
+
     clearAuthHeader();
+    thunkAPI.dispatch(logOutAction()); // state temizle
+    return { success: true };
   } catch (error) {
-    return thunkAPI.rejectWithValue(error.message);
+    const msg = error?.response?.data?.message || error.message || 'Logout failed';
+    return thunkAPI.rejectWithValue(msg);
   }
 });
 
-export const needHelp = createAsyncThunk(
-  "auth/feedback", async (credentials, thunkAPI) => {
-    const state = thunkAPI.getState();
-    const persistedToken = state.auth.token;
-
-    if (persistedToken === null) {
-      return thunkAPI.rejectWithValue('Unable to fetch user');
-    }
-    try {
-      setAuthHeader(persistedToken);
-      const res = await axios.post('/feedback/sendFeedback', credentials);
-      return res.data;
-    } catch (error) {
-      return thunkAPI.rejectWithValue(error.message);
-    }
+export const needHelp = createAsyncThunk('auth/feedback', async (credentials, thunkAPI) => {
+  try {
+    const token = thunkAPI.getState()?.auth?.token;
+    if (!token) return thunkAPI.rejectWithValue('Unable to fetch user (no token)');
+    setAuthHeader(token);
+    const res = await api.post('/feedback/sendFeedback', credentials); // -> /api/feedback/...
+    return res.data;
+  } catch (error) {
+    const msg = error?.response?.data?.message || error.message || 'Feedback failed';
+    return thunkAPI.rejectWithValue(msg);
   }
-);
+});

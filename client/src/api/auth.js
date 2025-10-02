@@ -1,44 +1,61 @@
-import axios from "axios";
-
-const API_URL = "http://localhost:5001/api/auth";
+import axiosInstance from "./axiosInstance";
 
 const register = async (userData) => {
+  console.log("Register attempt:", userData);
+  
   try {
-    console.log('auth.js - Sending register data:', userData);
-    const response = await axios.post(`${API_URL}/register`, userData);
-    console.log('auth.js - Register response:', response.data);
+    const response = await axiosInstance.post("/api/auth/register", userData);
+    console.log("Register success:", response.data);
     return response.data.message;
   } catch (error) {
-    console.error('auth.js - Register error:', error.response?.data);
-    console.error('auth.js - Full error:', error);
+    console.error("Register error:", error.response?.data);
     throw error.response?.data?.message || "Kayıt başarısız oldu.";
   }
 };
 
 const login = async (userData) => {
+  console.log("Login attempt:", userData);
+
   try {
-    const response = await axios.post(`${API_URL}/login`, userData);
+    const response = await axiosInstance.post("/api/auth/login", userData);
+    console.log("Login success:", response.data);
+
     if (response.data.token) {
-      localStorage.setItem("user", JSON.stringify(response.data));
+      localStorage.setItem("user", JSON.stringify(response.data.user));
+      localStorage.setItem("token", response.data.token);
     }
     return response.data;
   } catch (error) {
-    throw error.response?.data?.message || "Giriş başarısız oldu.";
+    console.error("Login error:", error.response?.data);
+    throw (
+      error.response?.data?.message ||
+      error.response?.data?.error ||
+      "Giriş başarısız oldu."
+    );
   }
 };
 
-
 const verifyEmail = async (token) => {
   try {
-    const response = await axios.get(`${API_URL}/verify/${token}`);
-    return response.data; // artık { message, token, user } döner
+    const response = await axiosInstance.get(`/api/auth/verify/${token}`);
+    console.log("Verify email success:", response.data);
+    
+    // Token varsa kaydet
+    if (response.data.token) {
+      localStorage.setItem("token", response.data.token);
+      localStorage.setItem("user", JSON.stringify(response.data.user));
+    }
+    
+    return response.data;
   } catch (error) {
+    console.error("Verify email error:", error.response?.data);
     throw error.response?.data?.message || "Doğrulama başarısız oldu.";
   }
 };
 
 const logout = () => {
   localStorage.removeItem("user");
+  localStorage.removeItem("token");
 };
 
 export default { register, login, logout, verifyEmail };

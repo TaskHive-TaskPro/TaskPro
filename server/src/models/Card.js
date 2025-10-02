@@ -16,7 +16,16 @@ const cardSchema = new mongoose.Schema({
     default: "none",
   },
   deadline: {
-    type: String, // YYYY-MM-DD formatında string, dilersen Date tipi de kullanabilirsin
+    type: String, // YYYY-MM-DD formatında string
+    required: true,
+  },
+  boardId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Board',
+    required: true,
+  },
+  columnId: {
+    type: String,
     required: true,
   },
 }, { timestamps: true });

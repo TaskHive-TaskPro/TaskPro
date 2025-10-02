@@ -1,19 +1,25 @@
 import React from "react";
 import styles from "./cards.module.css";
-import BellIcon from "../../assets/icons/bell-light.svg";
+import BellLightIcon from "../../assets/icons/bell-light.svg";
+import BellDarkIcon from "../../assets/icons/bell-01.svg";
+import BellVioletIcon from "../../assets/icons/bell-violet.svg";
 import ArrowIcon from "../../assets/icons/arrow.svg";
 import EditIcon from "../../assets/icons/pencil-01.svg";
 import TrashIcon from "../../assets/icons/trash-04.svg";
+import { useContext } from "react";
+import { ThemeContext } from "../../context/ThemeContext";
 
 // Priority renkleri
 const priorityColors = {
-  none: "#bdc3c7",
-  low: "#2ecc71",
-  medium: "#f1c40f",
-  high: "#e74c3c",
+  none: "grey",
+  low: "#a88fddff",
+  medium: "#d28dd5ff",
+  high: "#6cb98eff",
 };
 
 const Card = ({ card, onEdit, onDelete, onMove }) => {
+  const themeContext = useContext(ThemeContext);
+  const theme = themeContext?.theme || 'light';
   const { title, description, priority, deadline } = card;
   const today = new Date().toISOString().split("T")[0];
   const isDeadlineToday = deadline === today;
@@ -23,6 +29,19 @@ const Card = ({ card, onEdit, onDelete, onMove }) => {
     if (isOverdue) return 'overdue';
     if (isDeadlineToday) return 'today';
     return '';
+  };
+
+  const getBellIcon = () => {
+    switch (theme) {
+      case 'dark':
+        return BellDarkIcon; // Dark tema için bell-01.svg
+      case 'light':
+        return BellLightIcon; // Light tema için bell-light.svg
+      case 'violet':
+        return BellVioletIcon; // Violet tema için bell-violet.svg
+      default:
+        return BellLightIcon;
+    }
   };
 
   return (
@@ -39,7 +58,7 @@ const Card = ({ card, onEdit, onDelete, onMove }) => {
           <div className={styles["card-actions"]}>
             {isDeadlineToday && (
               <button className={styles["icon-btn"]}>
-                <img src={BellIcon} alt="Deadline Today" />
+                <img src={getBellIcon()} alt="Deadline Today" className={styles["bell-icon"]} />
               </button>
             )}
             <button className={styles["icon-btn"]} onClick={() => {
