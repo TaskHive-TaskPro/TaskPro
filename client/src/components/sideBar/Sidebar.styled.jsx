@@ -3,6 +3,16 @@ import styled from 'styled-components';
 import { NavLink } from 'react-router-dom';
 import { Box } from '@mui/material';
 
+/* Sabit palet */
+const TEXT = '#161616';
+const TEXT_DISABLED = '#9AA4B2';
+const PAPER = '#FCFCFC';
+const HOVER_BG = 'rgba(22,22,22,0.06)';
+const SCROLL_TRACK = 'rgba(0,0,0,0.06)';
+const SCROLL_THUMB = '#BEDBB0';
+const ACCENT = '#BEDBB0';    // active sağ şerit
+const MINT = '#BEDBB0';
+
 export const SideBarStyled = styled(Box)`
   position: fixed;
   height: 100%;
@@ -43,16 +53,16 @@ export const LogoIcon = styled.svg`
   display: inline-block;
   fill: currentColor;
   stroke: currentColor;
-  color: ${p => p.theme.palette.text.primary};
+  color: ${TEXT};
 `;
 
 export const PlusIcon = styled.svg`
   width: 20px;
   height: 20px;
   display: inline-block;
-  fill: currentColor;
-  stroke: currentColor;
-  color: ${p => p.theme.palette.secondary.info};
+  fill: #FCFCFC;
+  stroke: #FCFCFC;
+  color: ${MINT};
 `;
 
 export const HelpIcon = styled.svg`
@@ -61,7 +71,7 @@ export const HelpIcon = styled.svg`
   display: inline-block;
   fill: currentColor;
   stroke: currentColor;
-  color: ${p => p.theme.palette.text.primary};
+  color: ${TEXT};
 `;
 
 export const LogoutIcon = styled.svg`
@@ -70,7 +80,7 @@ export const LogoutIcon = styled.svg`
   display: inline-block;
   fill: currentColor;
   stroke: currentColor;
-  color: ${p => p.theme.palette.text.primary};
+  color: ${TEXT};
 `;
 
 export const BoardsContainer = styled.div`
@@ -91,16 +101,15 @@ export const BoardsList = styled.ul`
   max-height: 122px;
   overflow-y: auto;
 
-  /* scrollbar'ı sağda göstermek için rtl hilesi */
   direction: rtl;
 
   &::-webkit-scrollbar {
-    background-color: ${p => p.theme.palette.background.disabled};
+    background-color: ${SCROLL_TRACK};
     width: 8px;
   }
 
   &::-webkit-scrollbar-thumb {
-    background-color: ${p => p.theme.palette.background.hint};
+    background-color: ${SCROLL_THUMB};
   }
 
   @media screen and (min-width: 768px) {
@@ -123,7 +132,7 @@ export const IconTitle = styled.svg`
   display: inline-block;
   fill: currentColor;
   stroke: currentColor;
-  color: ${p => p.theme.palette.text.disabled};
+  color: ${TEXT_DISABLED};
 `;
 
 export const Title = styled.div`
@@ -161,7 +170,7 @@ export const BoardLink = styled(NavLink)`
   padding: 24px 20px;
 
   font-size: 14px;
-  color: ${p => p.theme.palette.text.disabled};
+  color: ${TEXT_DISABLED};
   transition: color 200ms linear, background-color 200ms linear;
   text-decoration: none;
 
@@ -171,20 +180,19 @@ export const BoardLink = styled(NavLink)`
 
   &:hover,
   &:focus {
-    background-color: ${p => p.theme.palette.primary.contrastText};
+    background-color: ${HOVER_BG};
   }
 
   &.active {
     pointer-events: none;
-    background-color: ${p => p.theme.palette.primary.contrastText};
+    background-color: ${HOVER_BG};
 
     ${Title} {
       width: 140px;
-      color: ${p => p.theme.palette.secondary.dark};
+      color: ${TEXT};
     }
-    /* currentColor kullandığımız için color'ı değiştiriyoruz */
     ${IconTitle} {
-      color: ${p => p.theme.palette.secondary.dark};
+      color: ${TEXT};
     }
     ${Edit}, ${Delete} {
       pointer-events: auto;
@@ -199,7 +207,7 @@ export const BoardLink = styled(NavLink)`
     width: 4px;
     height: 100%;
     border-radius: 4px 0 0 4px;
-    background: ${p => p.theme.palette.text.warning};
+    background: ${ACCENT};
   }
 `;
 
@@ -211,7 +219,7 @@ export const IconsBox = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  color: ${p => p.theme.palette.text.disabled};
+  color: #161616;
 `;
 
 export const TitleBox = styled.div`
@@ -231,7 +239,7 @@ export const IconButton = styled.button.attrs({ type: 'button' })`
   cursor: pointer;
 
   &:focus-visible {
-    outline: 2px solid ${p => p.theme.palette.primary.main};
+    outline: 2px solid ${TEXT};
     outline-offset: 2px;
     border-radius: 4px;
   }
@@ -247,7 +255,7 @@ export const IconLink = styled.button.attrs({ type: 'button' })`
   cursor: pointer;
 
   &:focus-visible {
-    outline: 2px solid ${p => p.theme.palette.primary.main};
+    outline: 2px solid ${TEXT};
     outline-offset: 2px;
     border-radius: 4px;
   }
