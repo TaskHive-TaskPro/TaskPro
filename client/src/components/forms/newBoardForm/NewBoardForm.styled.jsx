@@ -33,8 +33,10 @@ const FormContainer = styled.div`
   background: #FCFCFC;
   color: rgba(22,22,22,0.8);
   border-radius: 8px;
-  width: 100vw;
-  max-width: 350px;
+  width: 100%;
+  max-width: 360px;  
+  box-sizing: border-box;
+  margin: 0 auto;
 `;
 
 const Title = styled.h2`
@@ -52,6 +54,7 @@ const FormikContainer = styled(Form)`
   display: flex;
   flex-direction: column;
   gap: 24px;
+  
 `;
 
 const Container = styled.div`
@@ -60,6 +63,7 @@ const Container = styled.div`
   display: block;
   width: 100%;
   margin-bottom: 0;
+  
 `;
 
 const Input = styled(Field)`
@@ -111,7 +115,7 @@ const Icon = styled.svg`
   display: inline-block;
   overflow: visible;
 
-  color: #161616;   /* her zaman görünür */
+  border: 1.5px solid #16161680
   fill: currentColor;
   stroke: currentColor;
 
@@ -126,12 +130,18 @@ const IconList = styled.ul`
   margin: 0;
   align-items: center;
   gap: 8px;
+   width: 18px;
+  height: 18px;
+  top: 696px;
+  left: 904px;
+  transform: rotate(0deg);
+  opacity: 1;
 
   & > li > label {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    padding: 8px;
+    padding: 2px;
     border-radius: 8px;
     cursor: pointer;
     transition: background-color .15s ease, box-shadow .15s ease, transform .15s ease;
@@ -175,6 +185,13 @@ const Img = styled.img`
   border-radius: 6px;
   display: block;
   transition: transform .18s ease, outline-color .18s ease;
+   width: 28px;
+  height: 28px;
+  border-radius: 6px;
+  transform: rotate(0deg);
+  opacity: 1;
+  top: 292px;
+  left: 120px;
 `;
 
 const BgColor = styled.li`
@@ -185,6 +202,7 @@ const BgColor = styled.li`
   margin: 2px;
   border-radius: 6px;
   border: none;
+  
 `;
 
 const RadioField = styled(Field)`

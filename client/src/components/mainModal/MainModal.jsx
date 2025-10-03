@@ -10,7 +10,7 @@ const MainModal = ({ modalIsOpen, closeModal, children, titleId = 'modal-title' 
      disableEnforceFocus
      disableAutoFocus
       sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}
-      slotProps={{ backdrop: { sx: { backgroundColor: 'rgba(0,0,0,0.5)' } } }}
+      slotProps={{ backdrop: { sx: { backgroundColor: 'background: #1515154D;' } } }}
     >
       <Box
        onClick={(e) => e.stopPropagation()}

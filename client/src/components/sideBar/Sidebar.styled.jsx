@@ -71,7 +71,7 @@ export const HelpIcon = styled.svg`
   display: inline-block;
   fill: currentColor;
   stroke: currentColor;
-  color: ${TEXT};
+  color: #161616;
 `;
 
 export const LogoutIcon = styled.svg`
