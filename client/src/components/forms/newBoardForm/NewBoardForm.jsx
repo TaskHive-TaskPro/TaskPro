@@ -4,7 +4,7 @@ import React, { useState } from 'react';
 import BtnAdd from '../../buttons/btn/buttonAdd';
 import bgImageLight from '../../../images/bgImage-light.svg';
 import bgImageDark from '../../../images/bgImage-dark.jpg';
-import sprite from '../../../../../public/icons.svg';
+// import sprite from '../../../images/icons.svg'; // <-- yerine aşağıda mutlak URL kullandık
 import { toast } from 'react-hot-toast';
 import { Formik } from 'formik';
 import { BtnCloseBlack } from '../../buttons/buttons';
@@ -25,9 +25,12 @@ import {
   BgList,
   RadioField,
   RadioFieldBg,
-  FormikContainer, // <== styled(Form) olmalı; styled dosyanda böyle tanımlıysa submit düzgün çalışır
+  FormikContainer,
   CloseButton,
 } from './NewBoardForm.styled.jsx';
+
+// Sprite yolunu mutlak yap: modal/portal içinde <use> ilk boyamada güvenilir olur
+const SPRITE = new URL('../../../images/icons.svg', import.meta.url).href;
 
 const NewBoardForm = ({
   formTitle,
@@ -37,25 +40,19 @@ const NewBoardForm = ({
   handleSubmit,
   closeModal,
 }) => {
-  // isimlendirme düzeltildi
-  const [background, setBackground] = useState(null);
+  const [background, setbackground] = useState();
+  const theme = useSelector(selectTheme);
+  const themeObj = useTheme();
 
-  // tema
-  const themeKey = useSelector(selectTheme);
-  const muiTheme = useTheme();
-
-  const formSubmit = (values, helpers) => {
-    const title = (values.title || '').trim();
+  const formSubmit = (values) => {
+    const title = values.title.trim();
 
     if (!title || title.length < 3) {
       toast.error('Title must be at least 3 characters long');
       return;
     }
-
-    // Formik values + seçilmiş background
     const data = { ...values, background };
-    // dışarı verilen submit handler
-    handleSubmit?.(data, formTitle);
+    handleSubmit(data, formTitle);
   };
 
   const validationSchema = Yup.object().shape({
@@ -67,118 +64,145 @@ const NewBoardForm = ({
   const initialValues = {
     title: boardTitle || '',
     icon: boardIcon,
-    background: null, // Formik alanı; gerçek görsel objesini local state'te tutuyoruz
+    background: null,
   };
 
-  const handleBgImageChange = (imgObj) => {
-    setBackground(imgObj);
+  const BgImageChangeHandler = (data) => {
+    setbackground(data);
   };
 
   return (
-    <FormContainer theme={muiTheme}>
-      <CloseButton type="button" onClick={closeModal} aria-label="Close">
+    <FormContainer theme={themeObj}>
+      <CloseButton type="button" onClick={closeModal}>
         <BtnCloseBlack />
       </CloseButton>
 
       <Title>{formTitle}</Title>
 
-      <Formik
-        initialValues={initialValues}
-        validationSchema={validationSchema}
-        onSubmit={formSubmit}
-        validateOnMount
-      >
+      <Formik initialValues={initialValues} validationSchema={validationSchema} onSubmit={formSubmit}>
         {(formik) => (
-          // DİKKAT: FormikContainer'ının styled(Form) olduğundan emin ol.
-          // Değilse, burada <form onSubmit={formik.handleSubmit}> kullan.
           <FormikContainer>
             <Container>
-              <Input
-                theme={muiTheme}
-                type="text"
-                placeholder="Title"
-                name="title"
-                autoFocus
-              />
+              <Input theme={themeObj} type="text" placeholder="Title" name="title" />
               <Error name="title" component="div" />
             </Container>
 
             <Text>Icons</Text>
             <IconList>
-              {[
-                '#icon-Project',
-                '#icon-star-04',
-                '#icon-loading-03',
-                '#icon-puzzle-piece-02',
-                '#icon-container',
-                '#icon-lightning-02',
-                '#icon-colors',
-                '#icon-hexagon-01',
-              ].map((val) => (
-                <li key={val}>
-                  <label>
-                    <RadioField
-                      theme={muiTheme}
-                      type="radio"
-                      name="icon"
-                      value={val}
+              <li>
+                <label>
+                  <RadioField theme={themeObj} type="radio" name="icon" value="#icon-Project" />
+                  <Icon theme={themeObj} aria-hidden="true" focusable="false">
+                    <use href={`${SPRITE}#icon-Project`} xlinkHref={`${SPRITE}#icon-Project`} />
+                  </Icon>
+                </label>
+              </li>
+
+              <li>
+                <label>
+                  <RadioField theme={themeObj} type="radio" name="icon" value="#icon-star-04" />
+                  <Icon theme={themeObj} aria-hidden="true" focusable="false">
+                    <use href={`${SPRITE}#icon-star-04`} xlinkHref={`${SPRITE}#icon-star-04`} />
+                  </Icon>
+                </label>
+              </li>
+
+              <li>
+                <label>
+                  <RadioField theme={themeObj} type="radio" name="icon" value="#icon-loading-03" />
+                  <Icon theme={themeObj} aria-hidden="true" focusable="false">
+                    <use href={`${SPRITE}#icon-loading-03`} xlinkHref={`${SPRITE}#icon-loading-03`} />
+                  </Icon>
+                </label>
+              </li>
+
+              <li>
+                <label>
+                  <RadioField theme={themeObj} type="radio" name="icon" value="#icon-puzzle-piece-02" />
+                  <Icon theme={themeObj} aria-hidden="true" focusable="false">
+                    <use
+                      href={`${SPRITE}#icon-puzzle-piece-02`}
+                      xlinkHref={`${SPRITE}#icon-puzzle-piece-02`}
                     />
-                    <Icon theme={muiTheme} role="img" aria-hidden="true">
-    <use href={`${sprite}${val}`} xlinkHref={`${sprite}${val}`} />
- </Icon>
-                  </label>
-                </li>
-              ))}
+                  </Icon>
+                </label>
+              </li>
+
+              <li>
+                <label>
+                  <RadioField theme={themeObj} type="radio" name="icon" value="#icon-container" />
+                  <Icon theme={themeObj} aria-hidden="true" focusable="false">
+                    <use href={`${SPRITE}#icon-container`} xlinkHref={`${SPRITE}#icon-container`} />
+                  </Icon>
+                </label>
+              </li>
+
+              <li>
+                <label>
+                  <RadioField theme={themeObj} type="radio" name="icon" value="#icon-lightning-02" />
+                  <Icon theme={themeObj} aria-hidden="true" focusable="false">
+                    <use
+                      href={`${SPRITE}#icon-lightning-02`}
+                      xlinkHref={`${SPRITE}#icon-lightning-02`}
+                    />
+                  </Icon>
+                </label>
+              </li>
+
+              <li>
+                <label>
+                  <RadioField theme={themeObj} type="radio" name="icon" value="#icon-colors" />
+                  <Icon theme={themeObj} aria-hidden="true" focusable="false">
+                    <use href={`${SPRITE}#icon-colors`} xlinkHref={`${SPRITE}#icon-colors`} />
+                  </Icon>
+                </label>
+              </li>
+
+              <li>
+                <label>
+                  <RadioField theme={themeObj} type="radio" name="icon" value="#icon-hexagon-01" />
+                  <Icon theme={themeObj} aria-hidden="true" focusable="false">
+                    <use href={`${SPRITE}#icon-hexagon-01`} xlinkHref={`${SPRITE}#icon-hexagon-01`} />
+                  </Icon>
+                </label>
+              </li>
             </IconList>
 
             <Text>Background</Text>
             <BgList>
-              {/* “Düz renk / boş arkaplan” seçeneği */}
               <BgColor>
                 <label>
                   <RadioFieldBg
                     type="radio"
                     name="background"
                     onChange={() =>
-                      handleBgImageChange({
-                        min: '',
-                        desktop: '',
-                        tablet: '',
-                        mobile: '',
+                      BgImageChangeHandler({
+                        min: ' ',
+                        desktop: ' ',
+                        tablet: ' ',
+                        mobile: ' ',
                       })
                     }
                   />
-                  {themeKey === 'dark' ? (
-                    <Img src={bgImageDark} alt="bgImage" />
-                  ) : (
-                    <Img src={bgImageLight} alt="bgImage" />
-                  )}
+                  {theme === 'dark' ? <Img src={bgImageDark} alt="bgImage" /> : <Img src={bgImageLight} alt="bgImage" />}
                 </label>
               </BgColor>
 
-              {/* Görsel arkaplanlar */}
-              {Array.isArray(images) &&
-                images.map((image) => (
-                  <BgColor key={image.min}>
-                    <label>
-                      <RadioFieldBg
-                        type="radio"
-                        name="background"
-                        onChange={() => handleBgImageChange(image)}
-                      />
-                      <Img src={image.min} alt="bgImage" />
-                    </label>
-                  </BgColor>
-                ))}
+              {images.map((image) => (
+                <BgColor key={image.min}>
+                  <label>
+                    <RadioFieldBg
+                      type="radio"
+                      name="background"
+                      onChange={() => BgImageChangeHandler(image)}
+                    />
+                    <Img src={image.min} alt="bgImage" />
+                  </label>
+                </BgColor>
+              ))}
             </BgList>
 
-            {/* Submit butonu: component prop'u ile disable kontrolü */}
-            <BtnAdd
-              btnTitle={btnText}
-              isDisabled={
-                formik.isSubmitting || !formik.isValid || !formik.dirty
-              }
-            />
+            <BtnAdd btnTitle={btnText} />
           </FormikContainer>
         )}
       </Formik>
