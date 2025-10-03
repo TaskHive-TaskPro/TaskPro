@@ -1,7 +1,7 @@
 /* Font */
 @import url("https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap");
 
-.auth-container {
+.authContainer {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -10,14 +10,12 @@
     var(--darkreader-background-ffffff, #fff) 0%,
     var(--darkreader-background-d4e2c7, #9DC888) 100%
   );
-  background-color: initial;
-  /* color: #fff; */
   font-family: "Poppins", sans-serif;
 }
 
-.auth-card {
-  width: 475px;
-  height: 440px;
+.authCard {
+  width: 473px;
+  height: 438px;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -26,45 +24,45 @@
   position: relative;
 }
 
-.auth-avatar-main {
+.authAvatarMain {
   width: 162px; 
   height: 162px;
   object-fit: cover;
   margin-bottom: 24px;
 }
 
-.logo-img {
+.logoImg {
   width: 48px; 
   height: 48px;
   object-fit: cover;
 }
 
 @media (max-width: 475px) {
-  .auth-avatar-main {
+  .authAvatarMain {
     width: 124px; 
     height: 124px;
   }
   
-  .logo-img {
+  .logoImg {
     width: 40px; 
     height: 40px;
   }
   
-  .auth-card {
+  .authCard {
     width: 100%;
     height: auto;
     padding: 20px;
   }
 }
 
-.logo-section {
+.logoSection {
   display: flex;
   align-items: center;
   gap: 12px;
   margin-bottom: 24px;
 }
 
-.auth-card h1 {
+.authCard h1 {
   font-family: "Poppins", sans-serif;
   font-weight: 600;
   font-size: 40px;
@@ -86,14 +84,14 @@
   margin-bottom: 40px;
 }
 
-.button-group {
+.buttonGroup {
   display: flex;
   flex-direction: column;
   gap: 16px;
 }
 
-.register-btn,
-.login-btn {
+.registerBtn,
+.loginBtn {
   width: 344px;
   height: 49px;
   border-radius: 8px;
@@ -104,41 +102,40 @@
   transition: background-color 0.3s ease, color 0.3s ease;
 }
 
-.register-btn {
+.registerBtn {
   background-color: #161616;
   color: #ffffff;
   border: none;
 }
 
-.login-btn {
+.loginBtn {
   background-color: transparent;
   color: #161616;
   border: none;
 }
 
-.register-btn:hover,
-.login-btn:hover {
+.registerBtn:hover,
+.loginBtn:hover {
   background-color: #ffffff;
   color: #1f1f1f;
   border: 1px solid #1f1f1f;
 }
 
-/* Modal Stilleri */
-.modal-overlay {
+/* Modal */
+.modalOverlay {
   position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0, 0, 0, 0.5);
+  
+  background-color: #151515;
   display: flex;
   justify-content: center;
   align-items: center;
   z-index: 1000;
 }
 
-.modal-content {
+.modalContent {
   width: 424px;
+  max-width: 90%;
+  height: auto; 
   background-color: #151515;
   border-radius: 8px;
   padding: 40px;
@@ -147,16 +144,15 @@
   box-sizing: border-box;
   position: relative;
   overflow-y: auto; 
-  max-height: 90vh; 
 }
 
-.modal-header {
+.modalHeader {
   display: flex;
   gap: 16px;
-  margin-bottom: 24px;
+  margin-bottom: 67px;
 }
 
-.modal-tab {
+.modalTab {
   font-family: "Poppins", sans-serif;
   font-weight: 500;
   font-size: 18px;
@@ -167,37 +163,39 @@
   transition: color 0.3s ease;
 }
 
-.modal-tab.active {
+.active {
   color: #ffffff;
 }
 
-.input-group {
+.inputGroup {
   margin-bottom: 14px;
   position: relative;
 }
 
-.input-group input {
+.inputGroup input {
   width: 100%;
   height: 49px;
   padding: 0 16px;
   border-radius: 8px;
-  background-color: #1f1f1f;
+  background-color: transparent;
   color: #ffffff;
-  border: 1px solid #1f1f1f;
+  border: 1px solid #BEDBB0;
+  
   opacity: 0.4;
   outline: none;
   box-sizing: border-box;
 }
-
-.input-group input::placeholder {
+.inputGroup input:focus{opacity: 1;
+border: 1px solid #9DC888;}
+.inputGroup input::placeholder {
   color: #ffffff;
 }
 
-.password-input {
+.passwordInput {
   position: relative;
 }
 
-.password-toggle {
+.passwordToggle {
   position: absolute;
   right: 16px;
   top: 50%;
@@ -206,30 +204,31 @@
   cursor: pointer;
 }
 
-.register-now-btn,
-.login-now-btn {
+.registerNowBtn,
+.loginNowBtn {
   width: 100%;
   height: 49px;
-  background: var(--darkreader-background-d4e2c7, #9dff00d3) 100%;
+  background: var(--darkreader-background-d4e2c7, #BEDBB0);
   border-radius: 8px;
   border: none;
   font-family: "Poppins", sans-serif;
   font-weight: 500;
   font-size: 14px;
-  color: #ffffff;
+  color: #161616;
   cursor: pointer;
   margin-top: 10px;
   transition: background-color 0.5s ease, color 0.3s ease;
 }
 
-.register-now-btn:hover,
-.login-now-btn:hover {
-  background-color: #ffffff;
+
+.registerNowBtn:hover,
+.loginNowBtn:hover {
+  background-color: #9DC888;
   color: #1f1f1f;
   border: 1px solid #1f1f1f;
 }
 
-.close-modal {
+.closeModal {
   position: absolute;
   top: 10px;
   right: 15px;
@@ -238,4 +237,10 @@
   font-size: 2rem;
   color: #ffffff;
   cursor: pointer;
+}
+
+.error {
+  color: #ff4d4f;
+  font-size: 12px;
+  margin-top: 4px;
 }
