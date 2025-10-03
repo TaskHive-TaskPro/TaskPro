@@ -6,6 +6,7 @@
   import MainDashboard from '../components/dashboard/MainDashboard';
   import { useAuth } from '../context/AuthContext';
   import { useParams } from 'react-router-dom';
+  import styles from "./HomePage.module.css";
 
   const SideBar = lazy(() => import('../components/sideBar/SideBar'));
 
@@ -26,7 +27,7 @@ const HomePage = () => {
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (window.innerWidth < 768 && sidebarOpen) {
-        const sidebar = document.querySelector('.sidebar-placeholder');
+        const sidebar = document.querySelector('.sidebarPlaceholder');
         if (sidebar && !sidebar.contains(event.target) && !event.target.closest('.sidebar-toggle-btn')) {
           setSidebarOpen(false);
         }
@@ -67,7 +68,7 @@ const HomePage = () => {
     }
 
     return (
-      <div className="home-page" data-theme="home">
+      <div className={styles.homePage} data-theme="home">
         <SidebarBoundary>
           <Suspense fallback={null}>
             <SideBar active={sidebarOpen} onClick={() => setSidebarOpen(false)} />
@@ -77,8 +78,8 @@ const HomePage = () => {
         <Header onSidebarToggle={() => setSidebarOpen(!sidebarOpen)} />
         
 
-       <div className="home-content" style={{ marginLeft: '260px' }}>
-          <main className={`main-content ${!sidebarOpen ? 'sidebar-collapsed' : ''}`}>
+       <div className={styles.homeContent} >
+          <main className={`${styles.mainContent} ${!sidebarOpen ? styles.mainContentSidebarCollapsed : ''}`}>
             <MainDashboard boardId={boardId} />
           </main>
         </div>

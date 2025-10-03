@@ -1,0 +1,212 @@
+/* ===== HEADER ===== */
+.header {
+  background-color: var(--bg-primary);
+  border-bottom: 1px solid var(--border-light);
+  position: fixed;
+  top: 0;
+  z-index: 100;
+  box-shadow: var(--shadow-sm);
+  left: 0;
+  width: 100%;
+}
+
+.headerContainer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 24px;
+  max-width: 100%;
+}
+
+.headerLeft {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.appBrand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  text-decoration: none;
+}
+
+.appLogo {
+  width: 32px;
+  height: 32px;
+  background-color: var(--icon-color);
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.appLogo img {
+  width: 24px;
+  height: 24px;
+  object-fit: contain;
+  filter: brightness(0) invert(1);
+}
+
+.appTitle {
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--text-primary);
+  letter-spacing: -0.5px;
+}
+
+.brandAccent {
+  color: var(--accent-primary);
+}
+
+.sidebarToggleBtn {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  background: none;
+  border: none;
+  color: var(--icon-color);
+  cursor: pointer;
+  border-radius: var(--radius-md);
+  transition: background-color 0.2s;
+}
+
+.sidebarToggleBtn:hover {
+  background-color: var(--btn-secondary-bg);
+}
+
+.headerRight {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+/* theme-selector, theme-button vs. burada da eklenebilir */
+.themeSelector {
+  position: relative;
+}
+
+.themeButton {
+  background: none;
+  border: 1px solid var(--border-light);
+  border-radius: 6px;
+  padding: 6px 12px;
+  cursor: pointer;
+  color: var(--text-primary);
+}
+
+.themeDropdown {
+  position: absolute;
+  top: 110%;
+  right: 0;
+  background: var(--bg-primary);
+  border: 1px solid var(--border-light);
+  border-radius: 6px;
+  box-shadow: var(--shadow-md);
+  display: flex;
+  flex-direction: column;
+  min-width: 120px;
+  z-index: 200;
+}
+
+.themeOption {
+  padding: 8px 12px;
+  cursor: pointer;
+  text-align: left;
+  border: none;
+  background: none;
+  color: var(--text-primary);
+}
+
+.themeOption:hover {
+  background: var(--btn-secondary-bg);
+}
+
+.active {
+  font-weight: bold;
+  color: var(--accent-primary);
+}
+
+
+/* ===== THEME SELECTOR ===== */
+.themeSelector {
+    position: relative;
+}
+
+.themeButton {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 16px;
+    background-color: transparent;
+    border: 1px solid var(--border-light);
+    color: var(--text-primary);
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+    border-radius: var(--radius-md);
+}
+
+.themeButton:hover {
+    background-color: var(--bg-secondary);
+    border-color: var(--accent-primary);
+}
+
+.themeText {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+.themeDropdown {
+    position: absolute;
+    top: calc(100% + 8px);
+    right: 0;
+    background-color: var(--bg-modal);
+    border: 1px solid var(--border-light);
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-lg);
+    z-index: 1000;
+    min-width: 120px;
+    overflow: hidden;
+    padding: 4px;
+}
+
+.themeOption {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    width: 100%;
+    padding: 10px 12px;
+    background: none;
+    border: none;
+    color: var(--text-primary);
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    text-align: left;
+    border-radius: var(--radius-sm);
+}
+
+.themeOption:hover {
+    background-color: var(--bg-secondary);
+}
+
+.themeOption.active {
+    background-color: var(--accent-primary);
+    color: var(--btn-primary-text);
+    font-weight: 600;
+}
+
+.activeIndicator {
+    width: 8px;
+    height: 8px;
+    background-color: currentColor;
+    border-radius: 50%;
+    flex-shrink: 0;
+}

@@ -1,0 +1,326 @@
+
+
+
+/* ===== RESPONSIVE ===== */
+/* Tablet ve Desktop - sidebar her zaman açık */
+@media (min-width: 769px) {
+    .sidebar-toggle-btn {
+        display: none !important; /* Tablet ve desktop'ta gizli */
+    }
+}
+
+/* Mobile - sidebar toggle görünür */
+@media (max-width: 768px) {
+    .header-container {
+        padding: 12px 16px;
+    }
+
+
+    .sidebar-toggle-btn {
+        display: flex;
+    }
+
+    .theme-text {
+        font-size: 13px;
+    }
+
+    .user-name {
+        display: none;
+    }
+
+    .modal-content {
+        max-width: none;
+        margin: 0;
+        border-radius: var(--radius-lg);
+        max-height: 95vh;
+    }
+
+    .modal-header {
+        padding: 16px 20px;
+    }
+
+    .modal-header h2 {
+        font-size: 16px;
+    }
+
+    .profile-form {
+        padding: 20px;
+    }
+
+    .form-actions {
+        flex-direction: column;
+    }
+
+    .btn {
+        width: 100%;
+    }
+
+    .sidebar-placeholder {
+
+        position: fixed;
+        top: 64px;
+        bottom: 0;
+        left: 0;
+        z-index: 999;
+        transform: translateX(-100%);
+        transition: transform 0.3s ease;
+        background-color: var(--bg-sidebar);
+        box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+        overflow-y: auto;
+    }
+
+    .sidebar-placeholder.open {
+        transform: translateX(0);
+    }
+
+    /* Overlay/backdrop when sidebar is open */
+    .sidebar-placeholder.open::before {
+        content: '';
+        position: fixed;
+        top: 64px;
+        left: 280px;
+        right: 0;
+        bottom: 0;
+        background-color: rgba(0, 0, 0, 0.5);
+        z-index: -1;
+        backdrop-filter: blur(2px);
+    }
+
+    .welcome-stats {
+        flex-direction: column;
+    }
+
+    .stat-card {
+        width: 100%;
+    }
+
+    .welcome-content h2 {
+        font-size: 24px;
+    }
+}
+
+@media (max-width: 480px) {
+    .header-container {
+        padding: 10px 12px;
+    }
+
+    .app-title {
+        font-size: 16px;
+    }
+
+    .header-right {
+        gap: 12px;
+    }
+
+    .user-avatar {
+        width: 32px;
+        height: 32px;
+        font-size: 12px;
+    }
+
+    .theme-button {
+        padding: 6px 12px;
+        font-size: 13px;
+    }
+
+    .modal-overlay {
+        padding: 10px;
+    }
+
+    .form-input {
+        font-size: 16px;
+        /* iOS zoom önleme */
+    }
+}
+
+/* ===== RESPONSIVE HOME PAGE LAYOUT ===== */
+
+/* Desktop (1024px+) */
+@media (min-width: 1024px) {
+    .home-page {
+        display: flex;
+        min-height: 100vh;
+    }
+
+    .home-content {
+        margin-left: 260px;
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        width: calc(100% - 260px);
+    }
+
+    .main-content {
+        flex: 1;
+        overflow: auto;
+    }
+}
+
+/* Tablet (768px - 1023px) */
+@media (min-width: 768px) and (max-width: 1023px) {
+    .home-page {
+        display: flex;
+        min-height: 100vh;
+    }
+
+    .home-content {
+        margin-left: 0;
+        flex: 1;
+        width: 100%;
+        transition: all 0.3s ease;
+    }
+
+    .main-content {
+        flex: 1;
+        overflow: auto;
+        padding: 0;
+    }
+}
+
+/* Mobile (< 768px) */
+@media (max-width: 767px) {
+    .home-page {
+        display: flex;
+        flex-direction: column;
+        min-height: 100vh;
+        min-height: -webkit-fill-available;
+    }
+
+    .home-content {
+        margin-left: 0;
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+    }
+
+    .main-content {
+        flex: 1;
+        overflow: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    /* Sidebar overlay on mobile */
+    .sidebar-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: rgba(0, 0, 0, 0.5);
+        z-index: 998;
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.3s ease;
+    }
+
+    .sidebar-overlay.active {
+        opacity: 1;
+        pointer-events: all;
+    }
+}
+
+/* Mobile landscape */
+@media (max-width: 767px) and (orientation: landscape) {
+    .home-page {
+        height: 100vh;
+    }
+
+    .main-content {
+        height: calc(100vh - 60px);
+    }
+}
+
+/* Safe area insets for mobile devices with notch */
+@supports (padding-top: env(safe-area-inset-top)) {
+    .home-page {
+        padding-top: env(safe-area-inset-top);
+        padding-bottom: env(safe-area-inset-bottom);
+    }
+}
+
+/* Touch device optimizations */
+@media (hover: none) and (pointer: coarse) {
+    button,
+    .clickable {
+        min-height: 44px;
+        min-width: 44px;
+    }
+
+    input,
+    textarea,
+    select {
+        font-size: 16px;
+        /* Prevent iOS zoom */
+    }
+}
+
+
+
+/* Aşağıdaki kısmı hiçbir componentte bulamadım */
+
+
+/* ===== WELCOME SCREEN ===== */
+.no-board-selected {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: calc(100vh - 64px);
+    padding: 40px 20px;
+}
+
+.welcome-content {
+    text-align: center;
+    max-width: 600px;
+}
+
+.welcome-content h2 {
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin-bottom: 12px;
+}
+
+.welcome-content p {
+    font-size: 15px;
+    color: var(--text-secondary);
+    margin-bottom: 32px;
+}
+
+.welcome-stats {
+    display: flex;
+    gap: 16px;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-bottom: 32px;
+}
+
+.stat-card {
+    background-color: var(--bg-card);
+    padding: 20px;
+    border-radius: var(--radius-lg);
+    text-align: center;
+    min-width: 130px;
+    box-shadow: var(--shadow-sm);
+    border: 1px solid var(--border-light);
+}
+
+.stat-number {
+    display: block;
+    font-size: 32px;
+    font-weight: 700;
+    color: var(--accent-primary);
+    margin-bottom: 8px;
+}
+
+.stat-label {
+    display: block;
+    font-size: 13px;
+    color: var(--text-secondary);
+}
+
+
+
+.quick-actions {
+    margin-top: 32px;
+}
