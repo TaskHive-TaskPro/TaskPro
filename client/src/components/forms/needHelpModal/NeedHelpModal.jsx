@@ -5,6 +5,7 @@ import { toast } from 'react-hot-toast';
 import { useDispatch } from 'react-redux';
 import { needHelp } from '../../../redux/auth/authOperations';
 import { BtnCloseBlack } from '../../buttons/buttons';
+import sprite from '../../../images/icons.svg';
 import { useTheme } from '@mui/material/styles';
 import {
   Section,
