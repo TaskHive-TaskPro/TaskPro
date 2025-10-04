@@ -9,6 +9,8 @@ import { useNavigate } from 'react-router-dom';
 import HeaderIcon from "./assets/headerIcon.png";
 import TextIcon from "./assets/icon.png";
 import LoadingOverlay from '../LoadingOverlay/LoadingOverlay'; 
+import { toast } from 'react-toastify';
+
 
 const Auth = ({ verificationStatus, showModalInitially = false }) => {
   const [showModal, setShowModal] = useState(showModalInitially);
@@ -31,33 +33,43 @@ const Auth = ({ verificationStatus, showModalInitially = false }) => {
   const { register, handleSubmit, formState: { errors }, reset } = useForm({
     resolver: yupResolver(isRegister ? registerSchema : loginSchema),
   });
-
-  const onSubmit = async (data) => {
-    setIsLoading(true);
-    try {
-      if (isRegister) {
-        const message = await registerUser(data);
-        alert(message);
+const onSubmit = async (data) => {
+  setIsLoading(true);
+  try {
+    if (isRegister) {
+      const message = await registerUser(data);
+      toast.success("New user created! Please verify your email."); 
+      reset();
+      setIsRegister(false);
+    } else {
+      const response = await login(data);
+      if (response && response.token) {
+         toast.success("Login successful!"); 
         reset();
-        setIsRegister(false); 
+        setShowModal(false);
+        navigate('/home');
       } else {
-        const response = await login(data);
-        if (response && response.token) {
-          reset();
-          setShowModal(false);
-          navigate('/home');
-        } else throw new Error('Login başarısız: Token alınamadı');
+        toast.error('Login failed: Failed to obtain token');
       }
-    } catch (err) {
-      alert(err.response?.data?.message || err.message || 'Bilinmeyen bir hata oluştu.');
-      if (err.response?.data?.message?.includes('doğrulayın')) {
-        setIsRegister(false);
-        setShowModal(true);
-      }
-    } finally {
-      setIsLoading(false);
     }
-  };
+  } catch (err) {
+    // Hata mesajını toast ile göster
+    const message = err.response?.data?.message || err.message || 'Email or password is incorrect';
+    if (message.toLowerCase().includes('email') || message.toLowerCase().includes('password')) {
+      toast.error('Email or password is incorrect');
+    } else {
+      toast.error(message);
+    }
+
+    // Email doğrulama gerekiyorsa modal aç
+    if (err.response?.data?.message?.includes('doğrulayın')) {
+      setIsRegister(false);
+      setShowModal(true);
+    }
+  } finally {
+    setIsLoading(false);
+  }
+};
 
   const RegistrationForm = () => (
     <form onSubmit={handleSubmit(onSubmit)}>
@@ -185,7 +197,10 @@ const Auth = ({ verificationStatus, showModalInitially = false }) => {
       )}
 
       {isLoading && <LoadingOverlay />} 
+
+
     </div>
+    
   );
 };
 
