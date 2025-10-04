@@ -9,9 +9,27 @@ import { useAuth } from "../../context/AuthContext";
 // Filters Modal component
 const FiltersModal = ({ onClose, onSelectPriority, selectedPriority }) => {
   const priorities = ["none", "low", "medium", "high"];
+  const handleOverlayClick = (e) => {
+    // Eğer overlaye tıklanmışsa, modalı kapat
+    if (e.target === e.currentTarget) {
+      onClose();
+    }
+  };
+    useEffect(() => {
+    const handleEsc = (e) => {
+      if (e.key === "Escape") {
+        onClose();
+      }
+    };
+      window.addEventListener("keydown", handleEsc);
+
+    return () => {
+      window.removeEventListener("keydown", handleEsc);
+    };
+  }, [onClose]);
 
   return (
-    <div className={Styles.modalOverlay}>
+    <div className={Styles.modalOverlay} onClick={handleOverlayClick}>
       <div className={Styles.modalContent}>
         <h3 className={Styles.modalTitle}>Select Priority</h3>
 
