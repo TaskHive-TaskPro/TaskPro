@@ -56,7 +56,7 @@ const SideBar = ({ active, onClick }) => {
   const { logout } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
-  const { boardName } = useParams();
+  const { boardId } = useParams();
 
   const [addBoard, result] = useAddBoardMutation();
   const [updateBoard] = useUpdateBoardMutation();
@@ -86,7 +86,7 @@ const SideBar = ({ active, onClick }) => {
   }, [newBoard, navigate, result.data]);
 
   const handleSubmit = async (formData, formTitle) => {
-    const boardId = boardName;
+    // boardId is already available from useParams()
 
     if (formTitle === 'New board') {
       try {
@@ -103,6 +103,8 @@ const SideBar = ({ active, onClick }) => {
       try {
         await updateBoard({ boardId, data: formData });
         closeEditModal();
+        // Sayfayı yenile ama aynı board'da kal
+        window.location.reload();
       } catch (e) {
         console.error('updateBoard failed:', e);
       }

@@ -18,9 +18,17 @@ const AppRouter = () => {
         <Route path="/auth/login" element={<LoginPage />} />
         <Route path="/auth/register" element={<RegisterPage />} />
 
-        {/* Private Route */}
+        {/* Private Routes */}
         <Route
           path="/home"
+          element={
+            <PrivateRoute>
+              <HomePage />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/home/:boardId"
           element={
             <PrivateRoute>
               <HomePage />
