@@ -7,6 +7,7 @@ import { User, X, Eye, EyeOff, Camera, AlertCircle } from 'lucide-react';
 import { useAuth } from '../../hooks/useAuth';
 
 import { toast } from 'react-toastify';
+import styles from './UserInfo.module.css';
 
 // Kullanıcı profili düzenleme şeması - TÜM ALANLAR OPSİYONEL
 const profileSchema = yup.object({
@@ -263,10 +264,10 @@ const UserInfo = () => {
     <>
       {/* User Info Button */}
       <button
-        className="user-info-button"
+        className={styles.userInfoButton}
         onClick={() => setIsModalOpen(true)}
       >
-        <div className="user-avatar">
+        <div className={styles.userAvatar}>
           {user.avatar ? (
             <img 
               src={getAvatarUrl(user.avatar)} 
@@ -278,23 +279,23 @@ const UserInfo = () => {
             />
           ) : null}
           <span 
-            className="user-initials" 
+            className={styles.userInitials}
             style={{ display: user.avatar ? 'none' : 'flex' }}
           >
             {getInitials(user.name)}
           </span>
         </div>
-        <span className="user-name">{user.name}</span>
+        <span className={styles.userName}>{user.name}</span>
       </button>
 
       {/* Profile Edit Modal */}
       {isModalOpen && (
-        <div className="modal-overlay" onClick={() => setIsModalOpen(false)}>
-          <div className="modal-content" onClick={(e) => e.stopPropagation()}>
-            <div className="modal-header">
+        <div className={styles.modalOverlay} onClick={() => setIsModalOpen(false)}>
+          <div className={styles.modalContent} onClick={(e) => e.stopPropagation()}>
+            <div className={styles.modalHeader}>
               <h2>Profili Düzenle</h2>
               <button
-                className="modal-close"
+                className={styles.modalClose}
                 onClick={() => setIsModalOpen(false)}
                 disabled={loading}
               >
@@ -303,17 +304,17 @@ const UserInfo = () => {
             </div>
 
             {apiError && (
-              <div className="api-error">
+              <div className={styles.apiError}>
                 <AlertCircle size={16} />
                 <span>{apiError}</span>
               </div>
             )}
 
-            <form onSubmit={handleSubmit(onSubmit)} className="profile-form">
+            <form onSubmit={handleSubmit(onSubmit)} className={styles.profileForm}>
               {/* Avatar Upload */}
-              <div className="form-group avatar-group">
-                <div className="avatar-container">
-                  <div className="avatar-preview">
+              <div className={`${styles.formGroup} ${styles.avatarGroup}`}>
+                <div className={styles.avatarContainer}>
+                  <div className={styles.avatarPreview}>
                     {avatarPreview ? (
                       <img src={URL.createObjectURL(avatarPreview)} alt="Preview" />
                     ) : user.avatar ? (
@@ -327,7 +328,7 @@ const UserInfo = () => {
                       />
                     ) : null}
                     <div 
-                      className="avatar-placeholder"
+                      className={styles.avatarPlaceholder}
                       style={{ 
                         display: (avatarPreview || user.avatar) ? 'none' : 'flex' 
                       }}
@@ -335,12 +336,12 @@ const UserInfo = () => {
                       <User size={40} />
                     </div>
                   </div>
-                  <label className="avatar-upload-label">
+                  <label className={styles.avatarUploadLabel}>
                     <input
                       type="file"
                       accept="image/jpeg,image/jpg,image/png,image/webp"
                       onChange={handleAvatarChange}
-                      className="avatar-upload-input"
+                      className={styles.avatarUploadInput}
                       disabled={loading}
                     />
                     <Camera size={16} />
@@ -350,53 +351,53 @@ const UserInfo = () => {
               </div>
 
               {/* Name Field */}
-              <div className="form-group">
+              <div className={styles.formGroup}>
                 <label htmlFor="name">İsim (opsiyonel)</label>
                 <input
                   {...register('name')}
                   id="name"
                   type="text"
-                  className={`form-input ${errors.name ? 'error' : ''}`}
+                  className={`${styles.formInput} ${errors.name ? styles.error : ''}`}
                   disabled={loading}
                   placeholder={`Mevcut: ${user.name} - Değiştirmek için yeni isim girin`}
                 />
                 {errors.name && (
-                  <span className="error-message">{errors.name.message}</span>
+                  <span className={styles.errorMessage}>{errors.name.message}</span>
                 )}
               </div>
 
               {/* Email Field */}
-              <div className="form-group">
+              <div className={styles.formGroup}>
                 <label htmlFor="email">Email (opsiyonel)</label>
                 <input
                   {...register('email')}
                   id="email"
                   type="email"
-                  className={`form-input ${errors.email ? 'error' : ''}`}
+                  className={`${styles.formInput} ${errors.email ? styles.error : ''}`}
                   disabled={loading}
                   placeholder={`Mevcut: ${user.email} - Değiştirmek için yeni email girin`}
                 />
                 {errors.email && (
-                  <span className="error-message">{errors.email.message}</span>
+                  <span className={styles.errorMessage}>{errors.email.message}</span>
                 )}
               </div>
 
               {/* Current Password Field */}
               {newPassword && (
-                <div className="form-group">
+                <div className={styles.formGroup}>
                   <label htmlFor="currentPassword">Mevcut Şifre *</label>
-                  <div className="password-input-container">
+                  <div className={styles.passwordInputContainer}>
                     <input
                       {...register('currentPassword')}
                       id="currentPassword"
                       type={showCurrentPassword ? 'text' : 'password'}
-                      className={`form-input ${errors.currentPassword ? 'error' : ''}`}
+                      className={`${styles.formInput} ${errors.newPassword ? styles.error : ''}`}
                       disabled={loading}
                       placeholder="Mevcut şifrenizi giriniz"
                     />
                     <button
                       type="button"
-                      className="password-toggle"
+                      className={styles.passwordToggle}
                       onClick={() => setShowCurrentPassword(!showCurrentPassword)}
                       disabled={loading}
                     >
@@ -404,26 +405,26 @@ const UserInfo = () => {
                     </button>
                   </div>
                   {errors.currentPassword && (
-                    <span className="error-message">{errors.currentPassword.message}</span>
+                    <span className={styles.errorMessage}>{errors.currentPassword.message}</span>
                   )}
                 </div>
               )}
 
               {/* New Password Field */}
-              <div className="form-group">
+              <div className={styles.formGroup}>
                 <label htmlFor="newPassword">Yeni Şifre</label>
-                <div className="password-input-container">
+                <div className={styles.passwordInputContainer}>
                   <input
                     {...register('newPassword')}
                     id="newPassword"
                     type={showNewPassword ? 'text' : 'password'}
-                    className={`form-input ${errors.newPassword ? 'error' : ''}`}
+                    className={`${styles.formInput} ${errors.newPassword ? styles.error : ''}`}
                     disabled={loading}
                     placeholder="Yeni şifrenizi giriniz (opsiyonel)"
                   />
                   <button
                     type="button"
-                    className="password-toggle"
+                    className={styles.passwordToggle}
                     onClick={() => setShowNewPassword(!showNewPassword)}
                     disabled={loading}
                   >
@@ -431,29 +432,29 @@ const UserInfo = () => {
                   </button>
                 </div>
                 {errors.newPassword && (
-                  <span className="error-message">{errors.newPassword.message}</span>
+                  <span className={styles.errorMessage}>{errors.newPassword.message}</span>
                 )}
-                <small className="field-hint">
+                <small className={styles.fieldHint}>
                   En az 8 karakter, 1 büyük harf, 1 küçük harf ve 1 rakam içermelidir
                 </small>
               </div>
 
               {/* Confirm Password Field */}
               {newPassword && (
-                <div className="form-group">
+                <div className={styles.formGroup}>
                   <label htmlFor="confirmPassword">Şifre Onayı *</label>
-                  <div className="password-input-container">
+                  <div className={styles.passwordInputContainer}>
                     <input
                       {...register('confirmPassword')}
                       id="confirmPassword"
                       type={showConfirmPassword ? 'text' : 'password'}
-                      className={`form-input ${errors.confirmPassword ? 'error' : ''}`}
+                      className={`${styles.formInput} ${errors.confirmPassword ? styles.error : ''}`}
                       disabled={loading}
                       placeholder="Yeni şifrenizi tekrar giriniz"
                     />
                     <button
                       type="button"
-                      className="password-toggle"
+                      className={styles.passwordToggle}
                       onClick={() => setShowConfirmPassword(!showConfirmPassword)}
                       disabled={loading}
                     >
@@ -461,16 +462,16 @@ const UserInfo = () => {
                     </button>
                   </div>
                   {errors.confirmPassword && (
-                    <span className="error-message">{errors.confirmPassword.message}</span>
+                    <span className={styles.errorMessage}>{errors.confirmPassword.message}</span>
                   )}
                 </div>
               )}
 
               {/* Submit Button */}
-              <div className="form-actions">
+              <div className={styles.formActions}>
                 <button
                   type="button"
-                  className="btn btn-secondary"
+                  className={`${styles.btn} ${styles.btnSecondary}`}
                   onClick={() => setIsModalOpen(false)}
                   disabled={loading}
                 >
@@ -478,12 +479,12 @@ const UserInfo = () => {
                 </button>
                 <button
                   type="submit"
-                  className="btn btn-primary"
+                  className={`${styles.btn} ${styles.btnPrimary}`}
                   disabled={loading}
                 >
                   {loading ? (
                     <>
-                      <div className="spinner" />
+                      <div className={styles.spinner} />
                       Güncelleniyor...
                     </>
                   ) : (

@@ -1,52 +1,30 @@
+import React, { useState, useEffect, Suspense, lazy } from 'react';
+import { Navigate, useParams } from 'react-router-dom';
+import Header from '../components/layout/Header';
+import MainDashboard from '../components/dashboard/MainDashboard';
+import { useAuth } from '../context/AuthContext';
+import styles from "./HomePage.module.css";
 
+const SideBar = lazy(() => import('../components/sideBar/SideBar'));
 
- import React, { useState,useEffect, Suspense, lazy } from 'react';
-  import { Navigate } from 'react-router-dom';
-  import Header from '../components/layout/Header';
-  import MainDashboard from '../components/dashboard/MainDashboard';
-  import { useAuth } from '../context/AuthContext';
-  import { useParams } from 'react-router-dom';
-
-  const SideBar = lazy(() => import('../components/sideBar/SideBar'));
-
-  class SidebarBoundary extends React.Component {
-    constructor(props) { super(props); this.state = { hasError: false }; }
-    static getDerivedStateFromError() { return { hasError: true }; }
-    componentDidCatch(err, info) { console.error('SideBar crashed:', err, info); }
-    render() { return this.state.hasError ? null : this.props.children; }
-  }
-
+class SidebarBoundary extends React.Component {
+  constructor(props) { super(props); this.state = { hasError: false }; }
+  static getDerivedStateFromError() { return { hasError: true }; }
+  componentDidCatch(err, info) { console.error('SideBar crashed:', err, info); }
+  render() { return this.state.hasError ? null : this.props.children; }
+}
 
 const HomePage = () => {
   const { boardId } = useParams();
-  const { user, token, isLoading, isAuthenticated } = useAuth();
-  const [sidebarOpen, setSidebarOpen] = useState(window.innerWidth >= 768); // Mobilde kapalı, desktop'ta açık
+  const { isLoading, isAuthenticated } = useAuth();
 
-  // Mobilde sidebar dışına tıklayınca kapatma
-  useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (window.innerWidth < 768 && sidebarOpen) {
-        const sidebar = document.querySelector('.sidebar-placeholder');
-        if (sidebar && !sidebar.contains(event.target) && !event.target.closest('.sidebar-toggle-btn')) {
-          setSidebarOpen(false);
-        }
-      }
-    };
+  // Başlangıç: 768 üstünde açık, altında kapalı
+  const [sidebarOpen, setSidebarOpen] = useState(window.innerWidth > 768);
 
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
-    };
-  }, [sidebarOpen]);
-
-  // Ekran boyutu değiştiğinde sidebar durumunu güncelle
+  // Resize olduğunda durumu güncelle
   useEffect(() => {
     const handleResize = () => {
-      if (window.innerWidth >= 768) {
-        setSidebarOpen(true);
-      } else {
-        setSidebarOpen(false);
-      }
+      setSidebarOpen(window.innerWidth > 768);
     };
 
     window.addEventListener('resize', handleResize);
@@ -62,28 +40,28 @@ const HomePage = () => {
     );
   }
 
-    if (!isAuthenticated) {
-      return <Navigate to="/" replace />;
-    }
+  if (!isAuthenticated) {
+    return <Navigate to="/" replace />;
+  }
 
-    return (
-      <div className="home-page" data-theme="home">
-        <SidebarBoundary>
-          <Suspense fallback={null}>
-            <SideBar active={sidebarOpen} onClick={() => setSidebarOpen(false)} />
-          </Suspense>
-        </SidebarBoundary>
+  return (
+    <div className={styles.homePage} data-theme="home">
+      <SidebarBoundary>
+        <Suspense fallback={null}>
+          <SideBar active={sidebarOpen} onClick={() => setSidebarOpen(false)} />
+        </Suspense>
+      </SidebarBoundary>
 
-        <Header onSidebarToggle={() => setSidebarOpen(!sidebarOpen)} />
-        
+      {/* Header butonu sidebarOpen state'ini toggle eder */}
+      <Header onSidebarToggle={() => setSidebarOpen((prev) => !prev)} />
 
-       <div className="home-content" style={{ marginLeft: '260px' }}>
-          <main className={`main-content ${!sidebarOpen ? 'sidebar-collapsed' : ''}`}>
-            <MainDashboard boardId={boardId} />
-          </main>
+      <div className={styles.homeContent}>
+        <div className={`${styles.mainContent} ${!sidebarOpen ? styles.mainContentSidebarCollapsed : ''}`}>
+          <MainDashboard boardId={boardId} />
         </div>
       </div>
-    );
+    </div>
+  );
 };
 
 export default HomePage;
