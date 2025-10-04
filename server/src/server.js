@@ -22,6 +22,7 @@ const PORT = process.env.PORT || 5000;
 // CORS middleware - en başta
 const allowedOrigins = [
   'http://localhost:5173',
+  "https://taskpro-1.onrender.com",
   'http://127.0.0.1:5173',
   'http://localhost:5174',
   'http://127.0.0.1:5174',
@@ -53,8 +54,8 @@ app.use('/uploads', express.static(path.join(__dirname, '../uploads')));
 
 // Health check endpoint (Render ve UptimeRobot için)
 app.get('/health', (req, res) => {
-  res.status(200).json({ 
-    status: 'OK', 
+  res.status(200).json({
+    status: 'OK',
     timestamp: new Date().toISOString(),
     uptime: process.uptime()
   });
