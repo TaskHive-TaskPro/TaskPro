@@ -84,7 +84,7 @@ export const ThemeProvider = ({ children }) => {
           primary: { main: '#4f46e5', contrastText: '#111827', hint: '#4f46e5' },
           secondary: { main: '#22c55e', dark: '#ffffff', info: '#e5e7eb', warning: '#10b981', error: '#34d399' },
           text: { primary: '#ffffff', secondary: '#b3b3b3', disabled: '#9ca3af', hint: '#4f46e5', warning: '#22c55e', error: '#ef4444' },
-          background: { default: '#1a1a1a', paper: '#2d2d2d', error: '#3f1d1d', disabled: '#404040', hint: '#525252' },
+          background: { default: '#1a1a1a', paper: '#2d2d2d', error: 'rgba(31, 31, 31, 1)', disabled: '#404040', hint: '#525252' },
         },
       });
     }
@@ -93,8 +93,8 @@ export const ThemeProvider = ({ children }) => {
         palette: {
           mode: 'light',
           primary: { main: '#5255BC', contrastText: '#ECEDFD', hint: '#ffffff' },
-          secondary: { main: '#5255BC', dark: '#1f2937', info: '#111827', warning: '#A5B4FC', error: '#7C3AED' },
-          text: { primary: '#ffffff', secondary: '#e0e0ff', disabled: '#c7d2fe', hint: '#ffffff', warning: '#A5B4FC', error: '#EF4444' },
+          secondary: { main: '#5255BC', dark: '#161616', info: '#161616', warning: '#5255BC', error: '#7C3AED' },
+          text: { primary: '#ffffff', secondary: '#e0e0ff', disabled: '#b8bcfd', hint: '#ffffff', warning: '#5255BC', error: '#EF4444' },
           background: { default: 'rgba(82,85,188,1)', paper: '#ECEDFD', error: '#EDE9FE', disabled: '#E0E7FF', hint: '#C7D2FE' },
         },
       });
@@ -104,9 +104,9 @@ export const ThemeProvider = ({ children }) => {
       palette: {
         mode: 'light',
         primary: { main: '#3b82f6', contrastText: '#eef2ff', hint: '#3b82f6' },
-        secondary: { main: '#4ade80', dark: '#1f2937', info: '#98A2B3', warning: '#A3E635', error: '#10B981' },
+        secondary: { main: '#4ade80', dark: '#1f2937', info: '#98A2B3', warning: '#22c55e', error: '#10B981' },
         text: { primary: '#1f2937', secondary: '#6b7280', disabled: '#9ca3af', hint: '#3b82f6', warning: '#22c55e', error: '#ef4444' },
-        background: { default: '#ffffff', paper: '#f9fafb', error: '#fef2f2', disabled: '#f3f4f6', hint: '#e5e7eb' },
+        background: { default: '#ffffff', paper: '#f9fafb', error: 'rgba(246, 246, 247, 1)', disabled: '#f3f4f6', hint: '#e5e7eb' },
       },
     });
   }, [theme]);

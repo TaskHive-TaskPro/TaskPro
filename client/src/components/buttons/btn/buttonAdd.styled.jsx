@@ -16,6 +16,10 @@ export const Container = styled.button`
   height: 56px;
   border-radius: 8px;
   padding: 20px 18px;
+  border: none;
+  cursor: pointer;
+
+  display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
@@ -24,16 +28,31 @@ export const Container = styled.button`
   background-color: ${MINT};
   color: ${TEXT_DARK};
 
-  transition: background-color 200ms linear, transform 120ms ease, opacity 150ms ease;
+  transition: background-color 0.2s ease, transform 0.1s ease, opacity 0.15s ease;
 
-  &:hover,
-  &:focus {
-    background-color: ${MINT_HOVER};
+  background-color: ${props => {
+    // Violet tema için #B8BCFD
+    if (props.theme.palette.mode === 'light' && props.theme.palette.primary.main === '#5255BC') {
+      return '#B8BCFD';
+    }
+    // Light ve Dark tema için #BEDBB0
+    return '#BEDBB0';
+  }};
+
+  &:hover:not(:disabled) {
+    background-color: ${props => {
+      // Violet tema hover için #979CEA
+      if (props.theme.palette.mode === 'light' && props.theme.palette.primary.main === '#5255BC') {
+        return '#979CEA';
+      }
+      // Light ve Dark tema hover için #9DC888
+      return '#9DC888';
+    }};
+    transform: translateY(-1px);
   }
 
-  &:focus-visible {
-    outline: 2px solid ${FOCUS_RING};
-    outline-offset: 2px;
+  &:active:not(:disabled) {
+    transform: translateY(0);
   }
 
   &:disabled {
@@ -45,15 +64,25 @@ export const Container = styled.button`
 export const PlusIcon = styled.svg`
   width: 14px;
   height: 14px;
-  /* Container'daki color'ı kullanır */
-  color: #FCFCFC;
-  fill: #FCFCFC;
-  stroke: #FCFCFC;
+  stroke: ${props => {
+    // Violet temada koyu mor
+    if (props.theme.palette.mode === 'light' && props.theme.palette.primary.main === '#5255BC') {
+      return '#5255BC';
+    }
+    // Light ve Dark temalarda siyah
+    return '#000000';
+  }};
 `;
 
 export const TitleButton = styled.p`
-  margin-left: 8px;
-  color: ${TEXT_DARK};
+  color: ${props => {
+    // Violet temada koyu mor
+    if (props.theme.palette.mode === 'light' && props.theme.palette.primary.main === '#5255BC') {
+      return '#5255BC';
+    }
+    // Light ve Dark temalarda siyah
+    return '#000000';
+  }};
   font-family: Poppins;
   font-size: 14px;
   font-style: normal;
