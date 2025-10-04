@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const API_URL = "http://localhost:5001/api/cards";
+const API_URL = `${import.meta.env.VITE_API_URL || 'http://localhost:5001'}/api/cards`;
 
 export const getCards = async (token, boardId) => {
   console.log("getCards fonksiyonu çağrıldı", { token, boardId });
@@ -41,8 +41,11 @@ export const deleteCard = async (id, token) => {
   });
   return res.data;
 };
-export const moveCard = async (id, newColumnId) => {
-  // Backend'de taşıma işlemi için bir endpoint oluşturmalısın
-  const res = await axios.put(`${API_URL}/move/${id}`, { newColumnId });
+export const moveCard = async (id, newColumnId, token) => {
+  const res = await axios.put(`${API_URL}/move/${id}`, { newColumnId }, {
+    headers: {
+      Authorization: `Bearer ${token}`
+    }
+  });
   return res.data;
 };

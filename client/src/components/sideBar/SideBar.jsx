@@ -1,3 +1,4 @@
+// src/components/layout/SideBar.jsx
 import CssBaseline from '@mui/material/CssBaseline';
 import cactus from '../../images/cactus.png';
 import cactus2x from '../../images/cactus@2x.png';
@@ -8,14 +9,18 @@ import MainModal from '../mainModal/MainModal';
 import NeedHelpModal from '../forms/needHelpModal/NeedHelpModal';
 import sprite from '../../images/icons.svg';
 import { Box, Button, Typography, Drawer, Link } from '@mui/material';
+
 import { useDispatch, useSelector } from 'react-redux';
 import { logOut } from '../../redux/auth/authOperations';
 import { useTheme } from '@mui/material';
 import { selectUser } from '../../redux/auth/authSelectors';
 import { useGetBoardsQuery } from '../../redux/boards/boardsApi';
 import { useAuth } from '../../context/AuthContext';
+import { Dialog, DialogTitle, DialogContent, DialogActions } from '@mui/material';
 import { useLocation, useParams, useNavigate } from 'react-router-dom';
 import { useState, useEffect } from 'react';
+import "./LogoutDialog.css";
+
 import {
   SideBarStyled,
   LogoIcon,
@@ -37,12 +42,16 @@ import {
   Thumb,
   Picture,
   NeedHelpBox,
+  CreateBoardButton,
+  HelpButton,
+  LogoutButton,
 } from './Sidebar.styled';
 import {
    useAddBoardMutation,
    useUpdateBoardMutation,
    useDeleteBoardMutation
  } from "../../redux/boards/boardsApi";
+import { showToast } from '../../App'; // path ihtiyaca göre değişebilir
 
 const SideBar = ({ active, onClick }) => {
   const [openAddModal, setOpenAddModal] = useState(false);
@@ -50,6 +59,7 @@ const SideBar = ({ active, onClick }) => {
   const [openHelpModal, setOpenHelpModal] = useState(false);
   const [activeBoardTitle, setActiveBoardTitle] = useState('');
   const [activeBoardIcon, setActiveBoardIcon] = useState('');
+  const [activeBoardId, setActiveBoardId] = useState('');
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [newBoard, setNewBoard] = useState(true);
   const { data = [] } = useGetBoardsQuery();
@@ -68,7 +78,8 @@ const SideBar = ({ active, onClick }) => {
   const openModal = () => setIsModalOpen(true);
   const closeModal = () => setIsModalOpen(false);
 
-  const openEditModalHandler = (boardTitle, boardIcon) => {
+  const openEditModalHandler = (boardId, boardTitle, boardIcon) => {
+    setActiveBoardId(boardId);
     setActiveBoardTitle(boardTitle);
     setActiveBoardIcon(boardIcon);
     setOpenEditModal(true);
@@ -86,8 +97,6 @@ const SideBar = ({ active, onClick }) => {
   }, [newBoard, navigate, result.data]);
 
   const handleSubmit = async (formData, formTitle) => {
-    // boardId is already available from useParams()
-
     if (formTitle === 'New board') {
       try {
         await addBoard({ data: formData });
@@ -101,7 +110,7 @@ const SideBar = ({ active, onClick }) => {
 
     if (formTitle === 'Edit board') {
       try {
-        await updateBoard({ boardId, data: formData });
+        await updateBoard({ boardId: activeBoardId, data: formData });
         closeEditModal();
         // Sayfayı yenile ama aynı board'da kal
         window.location.reload();
@@ -120,18 +129,39 @@ const SideBar = ({ active, onClick }) => {
       console.error('deleteBoard failed:', e);
     }
   };
+
   // logout: redux + context + navigate
   const handleLogout = () => {
     dispatch(logOut());
     if (typeof logout === 'function') logout();
     navigate('/');
   };
-  // tema bazlı ikon id'leri (senin sprite id'lerinle aynı bırakıldı)
+
+  // Logout onay modal state & handlers
+  const [openLogoutModal, setOpenLogoutModal] = useState(false);
+  const openLogoutModalHandler = () => setOpenLogoutModal(true);
+  const closeLogoutModalHandler = () => setOpenLogoutModal(false);
+  const confirmLogout = () => {
+    // 1️⃣ Toast göster
+    showToast('info', 'Logging out...');
+
+    // 2️⃣ Logout işlemleri
+    handleLogout();
+
+    // 3️⃣ Modal kapatma
+    closeLogoutModalHandler();
+  };
+  // tema bazlı ikon id'leri
   const logoSvg = user.theme === 'violet' ? '#icon-logo-violet' : '#icon-icon-1';
   const needHelpSvg =
-    user.theme === 'violet' || user.theme === 'dark' ? '#icon-help-white' : '#icon-help';
+    user.theme === 'light' ? '#icon-help' : '#icon-help-white';
   const logOutSvg =
-    user.theme === 'dark' || user.theme === 'light' ? '#icon-login-green' : '#icon-login-white';
+    user.theme === 'light' ? '#icon-login-green' : '#icon-login-white';
+
+  // Debug: Console'a tema ve icon seçimlerini yazdır
+  console.log('Current theme:', user.theme);
+  console.log('needHelpSvg:', needHelpSvg);
+  console.log('logOutSvg:', logOutSvg);
 
   const drawerContent = (
     <SideBarStyled
@@ -207,21 +237,11 @@ const SideBar = ({ active, onClick }) => {
             Create a new board
           </Typography>
 
-          <Button
-            type="button"
-            onClick={() => setOpenAddModal(true)}
-            sx={{
-              backgroundColor: 'secondary.warning',
-              padding: '8px 10px',
-              minWidth: 0,
-              transition: 'background-color 200ms linear',
-              '&:hover': { backgroundColor: 'text.error' },
-            }}
-          >
+          <CreateBoardButton onClick={() => setOpenAddModal(true)}>
             <PlusIcon theme={theme}>
               <use href={icon + '#icon-plus-2'} xlinkHref={icon + '#icon-plus-2'} />
             </PlusIcon>
-          </Button>
+          </CreateBoardButton>
         </Box>
 
         <BoardsContainer>
@@ -231,7 +251,7 @@ const SideBar = ({ active, onClick }) => {
                 const isSelected = `/home/${board._id}` === location.pathname;
 
                 return (
-                  <BoardItem key={board._id}>
+                  <BoardItem key={board._id} className={isSelected ? 'active-board' : ''}>
                     <BoardLink
                       to={`/home/${board._id}`}
                       state={{ from: location }}
@@ -239,7 +259,6 @@ const SideBar = ({ active, onClick }) => {
                     >
                       <TitleBox>
                         <IconTitle theme={theme}>
-                          {/* board.icon sprite id değilse crash olmasın diye fallback */}
                           <use
                             href={(sprite + (board.icon || '#icon-Project'))}
                             xlinkHref={(sprite + (board.icon || '#icon-Project'))}
@@ -249,24 +268,22 @@ const SideBar = ({ active, onClick }) => {
                       </TitleBox>
                     </BoardLink>
 
-                    {isSelected && (
-                      <IconsBox theme={theme}>
-                        <IconButton
-                          type="button"
-                          onClick={() => openEditModalHandler(board.title, board.icon)}
-                          aria-label="Edit board"
-                        >
-                          <Edit>
-                            <use href={icon + '#icon-pencil-01'} xlinkHref={icon + '#icon-pencil-01'} />
-                          </Edit>
-                        </IconButton>
-                        <IconLink onClick={() => deleteBoardHandler(board._id)} aria-label="Delete board">
-                          <Delete>
-                            <use href={icon + '#icon-trash-04'} xlinkHref={icon + '#icon-trash-04'} />
-                          </Delete>
-                        </IconLink>
-                      </IconsBox>
-                    )}
+                    <IconsBox theme={theme}>
+                      <IconButton
+                        type="button"
+                        onClick={() => openEditModalHandler(board._id, board.title, board.icon)}
+                        aria-label="Edit board"
+                      >
+                        <Edit>
+                          <use href={icon + '#icon-pencil-01'} xlinkHref={icon + '#icon-pencil-01'} />
+                        </Edit>
+                      </IconButton>
+                      <IconLink onClick={() => deleteBoardHandler(board._id)} aria-label="Delete board">
+                        <Delete>
+                          <use href={icon + '#icon-trash-04'} xlinkHref={icon + '#icon-trash-04'} />
+                        </Delete>
+                      </IconLink>
+                    </IconsBox>
                   </BoardItem>
                 );
               })}
@@ -303,7 +320,9 @@ const SideBar = ({ active, onClick }) => {
                   fontSize: '14px',
                   lineHeight: '1.33',
                   letterSpacing: 0.7,
-                  color: 'primary.main',
+                  color: theme.palette.mode === 'light' && theme.palette.primary.main === '#5255BC'
+                    ? 'primary.main'
+                    : 'rgba(190, 219, 176, 1)',
                   textDecoration: 'none',
                 }}
                 onClick={openModal}
@@ -315,19 +334,7 @@ const SideBar = ({ active, onClick }) => {
             </Typography>
           </Box>
 
-          <Button
-            onClick={() => setOpenHelpModal(true)}
-            sx={{
-              display: 'flex',
-              alignItems: 'center',
-              gap: '8px',
-              padding: 0,
-              minWidth: 0,
-              border: 0,
-              '&:hover': { backgroundColor: 'inherit', border: 0 },
-            }}
-            type="button"
-          >
+          <HelpButton onClick={() => setOpenHelpModal(true)}>
             <HelpIcon theme={theme}>
               <use href={icon + `${needHelpSvg}`} xlinkHref={icon + `${needHelpSvg}`} />
             </HelpIcon>
@@ -344,14 +351,15 @@ const SideBar = ({ active, onClick }) => {
             >
               Need help?
             </Typography>
-          </Button>
+          </HelpButton>
 
-          {/* Help Modal #1 (NeedHelpModal) */}
+          {/* Help Modal */}
           <MainModal modalIsOpen={isModalOpen} closeModal={closeModal}>
             <NeedHelpModal closeModal={closeModal} />
           </MainModal>
         </NeedHelpBox>
 
+        {/* Log out bölümü (tek, burada) */}
         <Box
           sx={{
             marginTop: '24px',
@@ -361,9 +369,10 @@ const SideBar = ({ active, onClick }) => {
             letterSpacing: 0.7,
           }}
         >
+
           <Button
             type="button"
-            onClick={handleLogout}
+            onClick={openLogoutModalHandler}
             sx={{
               display: 'flex',
               alignItems: 'center',
@@ -374,6 +383,7 @@ const SideBar = ({ active, onClick }) => {
               '&:hover': { backgroundColor: 'inherit', border: 0 },
             }}
           >
+
             <LogoutIcon>
               <use href={icon + `${logOutSvg}`} xlinkHref={icon + `${logOutSvg}`} />
             </LogoutIcon>
@@ -390,7 +400,26 @@ const SideBar = ({ active, onClick }) => {
             >
               Log out
             </Typography>
+
           </Button>
+
+          {/* Logout onay dialogu */}
+          <Dialog open={openLogoutModal} onClose={closeLogoutModalHandler}>
+            <DialogTitle>Log Out</DialogTitle>
+            <DialogContent>
+              <Typography>Are you sure you want to log out?</Typography>
+            </DialogContent>
+            <DialogActions>
+              <Button onClick={closeLogoutModalHandler} color="secondary">
+                      Cancel
+
+              </Button>
+              <Button onClick={confirmLogout} color="primary" variant="contained">
+                 Yes, log out
+              </Button>
+            </DialogActions>
+          </Dialog>
+
         </Box>
       </Thumb>
     </SideBarStyled>
@@ -455,8 +484,8 @@ const SideBar = ({ active, onClick }) => {
 
         {/* Help Modal #2 (ModalHelp) */}
         <MainModal modalIsOpen={openHelpModal} closeModal={closeHelpModal}>
-  <NeedHelpModal closeModal={closeHelpModal} />
-</MainModal>
+          <NeedHelpModal closeModal={closeHelpModal} />
+        </MainModal>
       </Box>
     </>
   );
