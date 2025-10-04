@@ -3,8 +3,14 @@ import axios from 'axios';
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import { logOut as logOutAction } from './authSlice';
 
+// VITE_API_URL varsa onu kullan (ör: http://localhost:5001/api)
+// Yoksa sadece '/api' kullan (proxy üzerinden gider)
+const baseURL = import.meta.env.VITE_API_URL 
+  ? `${import.meta.env.VITE_API_URL}/api`
+  : '/api';
+
 export const api = axios.create({
-  baseURL: import.meta.env.VITE_API_URL || '/api',
+  baseURL,
 });
 
 const setAuthHeader = (t) => t && (api.defaults.headers.common.Authorization = `Bearer ${t}`);

@@ -10,6 +10,7 @@ import cardRoutes from './routes/cards.js';
 import authRoutes from './routes/authRoutes.js';
 import boards from "./routes/boards.js";
 import userRoutes from "./routes/userRoutes.js";
+import feedbackRoutes from "./routes/feedback.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -49,6 +50,7 @@ app.use('/api/auth', authRoutes);
 app.use('/api/cards', cardRoutes);
 app.use("/api/boards", boards);
 app.use("/api/user", userRoutes);
+app.use("/api/feedback", feedbackRoutes);
 
 // Server başlat
 const start = async () => {
