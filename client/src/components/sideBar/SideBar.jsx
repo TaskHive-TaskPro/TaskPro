@@ -130,9 +130,14 @@ const SideBar = ({ active, onClick }) => {
   // tema bazlı ikon id'leri (senin sprite id'lerinle aynı bırakıldı)
   const logoSvg = user.theme === 'violet' ? '#icon-logo-violet' : '#icon-icon-1';
   const needHelpSvg =
-    user.theme === 'violet' || user.theme === 'dark' ? '#icon-help-white' : '#icon-help';
+    user.theme === 'light' ? '#icon-help' : '#icon-help-white';
   const logOutSvg =
-    user.theme === 'dark' || user.theme === 'light' ? '#icon-login-green' : '#icon-login-white';
+    user.theme === 'light' ? '#icon-login-green' : '#icon-login-white';
+
+  // Debug: Console'a tema ve icon seçimlerini yazdır
+  console.log('Current theme:', user.theme);
+  console.log('needHelpSvg:', needHelpSvg);
+  console.log('logOutSvg:', logOutSvg);
 
   const drawerContent = (
     <SideBarStyled
