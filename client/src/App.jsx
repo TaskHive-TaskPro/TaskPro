@@ -27,7 +27,7 @@ export default function App() {
         />
 
         {/* /home altında layout + child routes */}
-        <Route >
+        <Route path="/home" element={<HomeLayout />}>
           <Route index element={<Home />} />
           <Route path=":boardId" element={<Home />} />
         </Route>
