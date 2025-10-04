@@ -56,9 +56,9 @@ const HomePage = () => {
       <Header onSidebarToggle={() => setSidebarOpen((prev) => !prev)} />
 
       <div className={styles.homeContent}>
-        <main className={`${styles.mainContent} ${!sidebarOpen ? styles.mainContentSidebarCollapsed : ''}`}>
+        <div className={`${styles.mainContent} ${!sidebarOpen ? styles.mainContentSidebarCollapsed : ''}`}>
           <MainDashboard boardId={boardId} />
-        </main>
+        </div>
       </div>
     </div>
   );
