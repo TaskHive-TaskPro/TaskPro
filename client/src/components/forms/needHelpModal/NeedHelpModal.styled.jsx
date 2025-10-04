@@ -77,9 +77,10 @@ export const TitleInput = styled.input`
 
   color: ${props => props.theme.palette.text.primary};
   background: inherit;
-  border: 1px solid ${props => props.theme.palette.text.info};
+  border: 1px solid ${props => props.theme.palette.text.disabled};
   border-radius: 8px;
   outline: none;
+  transition: border-color 0.2s ease;
 
   &::placeholder {
     color: ${props => props.theme.palette.text.secondary};
@@ -87,7 +88,11 @@ export const TitleInput = styled.input`
   }
 
   &:focus {
-    border-color: ${props => props.theme.palette.text.hint};
+    border-color: ${props => props.theme.palette.primary.main};
+  }
+
+  &:hover:not(:disabled) {
+    border-color: ${props => props.theme.palette.text.secondary};
   }
 `;
 
@@ -107,9 +112,10 @@ export const Textarea = styled.textarea`
 
   color: ${props => props.theme.palette.text.primary};
   background: inherit;
-  border: 1px solid ${props => props.theme.palette.text.info};
+  border: 1px solid ${props => props.theme.palette.text.disabled};
   outline: none;
   border-radius: 8px;
+  transition: border-color 0.2s ease;
 
   &::placeholder {
     color: ${props => props.theme.palette.text.secondary};
@@ -117,7 +123,11 @@ export const Textarea = styled.textarea`
   }
 
   &:focus {
-    border-color: ${props => props.theme.palette.text.hint};
+    border-color: ${props => props.theme.palette.primary.main};
+  }
+
+  &:hover:not(:disabled) {
+    border-color: ${props => props.theme.palette.text.secondary};
   }
 `;
 
@@ -133,17 +143,42 @@ export const AuthFormSubmitButton = styled.button`
   font-size: 14px;
   letter-spacing: -0.28px;
 
-  background-color: ${props => props.theme.palette.text.hint};
-  color: ${props => props.theme.palette.primary.hint};
+  background-color: ${props => {
+    // Violet tema için #B8BCFD
+    if (props.theme.palette.mode === 'light' && props.theme.palette.primary.main === '#5255BC') {
+      return '#B8BCFD';
+    }
+    // Light ve Dark tema için #BEDBB0
+    return '#BEDBB0';
+  }};
+  color: ${props => {
+    // Violet tema için beyaz
+    if (props.theme.palette.mode === 'light' && props.theme.palette.primary.main === '#5255BC') {
+      return props.theme.palette.primary.hint;
+    }
+    // Light ve Dark tema için siyah
+    return '#000000';
+  }};
   border-radius: 8px;
   border: none;
   cursor: pointer;
 
-  transition: background-color 200ms linear, opacity 150ms ease;
+  transition: background-color 0.2s ease, opacity 0.15s ease, transform 0.1s ease;
 
-  &:hover,
-  &:focus {
-    background-color: ${props => props.theme.palette.text.error};
+  &:hover:not(:disabled) {
+    background-color: ${props => {
+      // Violet tema hover için #979CEA
+      if (props.theme.palette.mode === 'light' && props.theme.palette.primary.main === '#5255BC') {
+        return '#979CEA';
+      }
+      // Light ve Dark tema hover için #9DC888
+      return '#9DC888';
+    }};
+    transform: translateY(-1px);
+  }
+
+  &:active:not(:disabled) {
+    transform: translateY(0);
   }
 
   &:disabled {
@@ -158,12 +193,28 @@ export const CloseButton = styled.button`
   right: 14px;
   background: transparent;
   border: none;
-  padding: 0;
+  padding: 4px;
   line-height: 0;
   cursor: pointer;
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  transition: opacity 0.2s ease, transform 0.1s ease;
+  border-radius: 4px;
+
+  &:hover {
+    opacity: 0.7;
+    transform: scale(1.1);
+  }
+
+  &:active {
+    transform: scale(0.95);
+  }
+
+  &:focus-visible {
+    outline: 2px solid ${props => props.theme.palette.primary.main};
+    outline-offset: 2px;
+  }
 `;
 
 export const SuccessMessage = styled.div`

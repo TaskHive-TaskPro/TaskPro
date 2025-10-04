@@ -15,14 +15,14 @@ ScreensPage.module.css
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 12px;
+  padding: 14px 14px 10px 14px;
   background-color: #000;
 }
 
 .mainDashboard {
   flex: 1;
   overflow-x: auto;
-  padding: 12px;
+  padding: 14px;
 }
 
 .columnsWrapper {
