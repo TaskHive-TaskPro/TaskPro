@@ -59,6 +59,7 @@ const SideBar = ({ active, onClick }) => {
   const [openHelpModal, setOpenHelpModal] = useState(false);
   const [activeBoardTitle, setActiveBoardTitle] = useState('');
   const [activeBoardIcon, setActiveBoardIcon] = useState('');
+  const [activeBoardId, setActiveBoardId] = useState('');
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [newBoard, setNewBoard] = useState(true);
   const { data = [] } = useGetBoardsQuery();
@@ -77,7 +78,8 @@ const SideBar = ({ active, onClick }) => {
   const openModal = () => setIsModalOpen(true);
   const closeModal = () => setIsModalOpen(false);
 
-  const openEditModalHandler = (boardTitle, boardIcon) => {
+  const openEditModalHandler = (boardId, boardTitle, boardIcon) => {
+    setActiveBoardId(boardId);
     setActiveBoardTitle(boardTitle);
     setActiveBoardIcon(boardIcon);
     setOpenEditModal(true);
@@ -95,8 +97,6 @@ const SideBar = ({ active, onClick }) => {
   }, [newBoard, navigate, result.data]);
 
   const handleSubmit = async (formData, formTitle) => {
-    const boardId = boardName;
-
     if (formTitle === 'New board') {
       try {
         await addBoard({ data: formData });
@@ -110,7 +110,7 @@ const SideBar = ({ active, onClick }) => {
 
     if (formTitle === 'Edit board') {
       try {
-        await updateBoard({ boardId, data: formData });
+        await updateBoard({ boardId: activeBoardId, data: formData });
         closeEditModal();
       } catch (e) {
         console.error('updateBoard failed:', e);
@@ -269,7 +269,7 @@ const SideBar = ({ active, onClick }) => {
                     <IconsBox theme={theme}>
                       <IconButton
                         type="button"
-                        onClick={() => openEditModalHandler(board.title, board.icon)}
+                        onClick={() => openEditModalHandler(board._id, board.title, board.icon)}
                         aria-label="Edit board"
                       >
                         <Edit>
