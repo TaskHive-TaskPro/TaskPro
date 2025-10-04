@@ -2,11 +2,12 @@ services:
   # Backend API
   - type: web
     name: taskpro-backend
-    env: node
-    region: frankfurt
+    runtime: node
+    region: oregon
     plan: free
-    buildCommand: cd server && npm install
-    startCommand: cd server && npm start
+    rootDir: server
+    buildCommand: npm install
+    startCommand: npm start
     envVars:
       - key: NODE_ENV
         value: production
@@ -32,13 +33,13 @@ services:
         sync: false
 
   # Frontend (Static Site)
-  - type: web
+  - type: static
     name: taskpro-frontend
-    env: static
-    region: frankfurt
+    region: oregon
     plan: free
-    buildCommand: cd client && npm install && npm run build
-    staticPublishPath: ./client/dist
+    rootDir: client
+    buildCommand: npm install && npm run build
+    staticPublishPath: ./dist
     envVars:
       - key: VITE_API_URL
         sync: false
