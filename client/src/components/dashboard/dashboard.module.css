@@ -103,29 +103,13 @@
   background-color: #7d2d2d;
 }
 
-/* HeaderDashboard */
-.headerDashboard {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 16px;
-  background-color: var(--bg-primary);
-  border-bottom: 1px solid var(--border-color);
-}
-
-.headerRight {
-  display: flex;
-  justify-content: flex-end;
-  align-items: center;
-  gap: 12px;
-}
 
 /* MainDashboard */
 .mainDashboard {
   padding: 30px;
   background-color: var(--bg-primary);
   overflow-x: auto;
-  overflow-y: hidden;
+  overflow-y: auto;
   height: calc(100dvh - 64px);
 }
 
@@ -174,9 +158,11 @@
   border: 1px solid var(--border-color);
   max-height: calc(100dvh - 80px);
   overflow-y: auto;
+  scrollbar-width: thin;
+  
 }
 
-/* Scrollbar görünür olsun istersen */
+/* Scrollbar görünür */
 .columnContainer::-webkit-scrollbar {
   width: 6px;
 }
@@ -309,27 +295,29 @@
 }
 
 .columnAddBtn {
-  width: 288px;
-  min-width: 288px;
-  max-width: 288px;
-  height: fit-content;
-  min-height: 100px;
+  width: 240px; 
+  min-width: 240px;
+  max-width: 240px;
+  min-height: 80px; 
   background-color: var(--bg-secondary);
   color: var(--add-another-color);
   display: flex;
   align-items: center;
   justify-content: center;
   border: 1px dashed var(--border-color);
-  border-radius: 12px;
-  transition: all 0.3s ease;
-  font-size: 16px;
+  border-radius: 10px; 
+  transition: all 0.25s ease;
+  font-size: 14px;
   font-weight: 500;
   flex-shrink: 0;
+  cursor: pointer;
 }
+
 .columnAddBtn:hover {
   background-color: var(--hover-color);
   border-color: var(--text-primary);
-  opacity: 0.9;
+  
+  opacity: 0.95;
 }
 
 /* Filters Button */
@@ -470,49 +458,8 @@
   opacity: 0.8;
 }
 
-/* Filters Modal Color Options */
-.colorOptions {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-}
-.colorOption {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  cursor: pointer;
-  padding: 6px;
-  border-radius: 6px;
-  transition: 0.2s;
-}
-.colorOption:hover {
-  background-color: #333;
-}
-.selectedPriority {
-  background-color: #444;
-}
-.priorityLabel {
-  color: white;
-  font-size: 1rem;
-  min-width: 60px;
-}
 
-/* Kullanıcı info */
-.userInfo {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  margin-left: 16px;
-}
-.userAvatar {
-  width: 32px;
-  height: 32px;
-  border-radius: 50%;
-  object-fit: cover;
-}
-.userName {
-  font-weight: 500;
-}
+
 
 /* Loading styles */
 .loadingContainer {
