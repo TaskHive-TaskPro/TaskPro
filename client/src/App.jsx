@@ -11,6 +11,14 @@ import HomeLayout from "./pages/HomeLayout";
 
 import "./styles/globals.css";
 
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
+// ✅ showToast export edildi, App dışında kullanılabilir
+export const showToast = (type, title, message) => {
+  toast[type](`${title}: ${message}`);
+};
+
 export default function App() {
   return (
     <Router>
@@ -38,6 +46,19 @@ export default function App() {
         {/* 404 fallback */}
         <Route path="*" element={<div>Not Found</div>} />
       </Routes>
+
+      <ToastContainer
+        position="top-right"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        style={{ zIndex: 2147483647 }}
+      />
     </Router>
   );
 }
