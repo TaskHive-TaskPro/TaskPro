@@ -33,8 +33,9 @@ services:
         sync: false
 
   # Frontend (Static Site)
-  - type: static
+  - type: web
     name: taskpro-frontend
+    runtime: static
     region: oregon
     plan: free
     rootDir: client
