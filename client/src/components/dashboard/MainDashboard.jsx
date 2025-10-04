@@ -94,7 +94,8 @@ const MainDashboard = ({ boardId }) => {
         setLoading(true);
         
         // Board'u getir
-        const boardRes = await fetch(`http://localhost:5001/api/boards/${boardId}`);
+        const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5001';
+        const boardRes = await fetch(`${API_URL}/api/boards/${boardId}`);
         const boardData = await boardRes.json();
         setBoard(boardData);
         
