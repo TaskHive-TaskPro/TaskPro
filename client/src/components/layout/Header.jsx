@@ -1,9 +1,12 @@
+
+//Header.jsx
 import React, { useState, useContext } from "react";
 import { Menu } from "lucide-react";
 import UserInfo from "./UserInfo";
 import { ThemeContext } from "../../context/ThemeContext";
 import { useAuth } from "../../hooks/useAuth";
 import logo from "../auth/assets/icon.png";
+import styles from "./Header.module.css"; // 👈 önemli
 
 const Header = ({ onSidebarToggle }) => {
   const themeContext = useContext(ThemeContext);
@@ -27,7 +30,7 @@ const Header = ({ onSidebarToggle }) => {
 
   React.useEffect(() => {
     const handleClickOutside = (event) => {
-      if (themeDropdownOpen && !event.target.closest(".theme-selector")) {
+      if (themeDropdownOpen && !event.target.closest(`.${styles.themeSelector}`)) {
         setThemeDropdownOpen(false);
       }
     };
@@ -39,52 +42,52 @@ const Header = ({ onSidebarToggle }) => {
   }, [themeDropdownOpen]);
 
   return (
-    <header className="header">
-      <div className="header-container">
-        <div className="header-left">
+    <header className={styles.header}>
+      <div className={styles.headerContainer}>
+        <div className={styles.headerLeft}>
           <button
-            className="sidebar-toggle-btn"
+            className={styles.sidebarToggleBtn}
             onClick={onSidebarToggle}
             aria-label="Sidebar'ı aç/kapat"
           >
             <Menu size={20} />
           </button>
 
-          <div className="app-brand">
-            <div className="app-logo">
+          {/* <div className={styles.appBrand}>
+            <div className={styles.appLogo}>
               <img src={logo} alt="TaskPro" />
             </div>
-            <h1 className="app-title">
-              Task<span className="brand-accent">Pro</span>
+            <h1 className={styles.appTitle}>
+              Task<span className={styles.brandAccent}>Pro</span>
             </h1>
-          </div>
+          </div> */}
         </div>
 
-        <div className="header-right">
+        <div className={styles.headerRight}>
           {/* Theme Selector */}
-          <div className="theme-selector">
+          <div className={styles.themeSelector}>
             <button
-              className="theme-button"
+              className={styles.themeButton}
               onClick={() => setThemeDropdownOpen(!themeDropdownOpen)}
               aria-label="Tema seç"
               aria-expanded={themeDropdownOpen}
             >
-              <span className="theme-text">Theme</span>
+              <span className={styles.themeText}>Theme</span>
             </button>
 
             {themeDropdownOpen && (
-              <div className="theme-dropdown">
+              <div className={styles.themeDropdown}>
                 {themes.map((themeOption) => (
                   <button
                     key={themeOption.value}
-                    className={`theme-option ${
-                      theme === themeOption.value ? "active" : ""
+                    className={`${styles.themeOption} ${
+                      theme === themeOption.value ? styles.active : ""
                     }`}
                     onClick={() => handleThemeChange(themeOption.value)}
                   >
                     <span>{themeOption.name}</span>
                     {theme === themeOption.value && (
-                      <div className="active-indicator" />
+                      <div className={styles.activeIndicator} />
                     )}
                   </button>
                 ))}

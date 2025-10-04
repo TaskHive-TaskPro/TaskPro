@@ -7,7 +7,6 @@ import DashboardRoutes from "./routes/DashboardRoutes";
 import AuthWrapper from "./pages/AuthWrapper";
 import VerifyEmailPage from "./pages/VerifyEmailPage";
 import Home from "./pages/HomePage";
-import BoardPage from "./pages/BoardPage";
 import HomeLayout from "./pages/HomeLayout";
 
 import "./styles/globals.css";

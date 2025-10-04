@@ -1,6 +1,6 @@
 // src/components/.../YOUR_PATH_HERE.styled.jsx
 import styled from 'styled-components';
-import { Form, Field, ErrorMessage } from 'formik';
+import { Form } from 'formik';
 
 /* --- Sabit palet --- */
 const PAPER = '#FCFCFC';
@@ -66,7 +66,7 @@ export const Container = styled.div`
   margin-bottom: 0;
 `;
 
-export const ErrorSection = styled(ErrorMessage)`
+export const ErrorSection = styled.div`
   position: absolute;
   bottom: -7px;
   padding-left: 14px;
@@ -78,7 +78,7 @@ export const ErrorSection = styled(ErrorMessage)`
   letter-spacing: -0.36px;
 `;
 
-export const TitleInput = styled(Field)`
+export const TitleInput = styled.input`
   display: inline-block;
   width: 100%;
   height: 49px;
@@ -105,7 +105,7 @@ export const TitleInput = styled(Field)`
   }
 `;
 
-export const Textarea = styled(Field)`
+export const Textarea = styled.textarea`
   display: inline-block;
   resize: none;
   width: 100%;
@@ -179,4 +179,48 @@ export const CloseButton = styled.button`
   display: inline-flex;
   align-items: center;
   justify-content: center;
+`;
+
+export const SuccessMessage = styled.div`
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-start;
+  text-align: left;
+  padding: 16px;
+  gap: 12px;
+  background-color: #e8f5e9;
+  border-radius: 8px;
+  border-left: 4px solid #4caf50;
+  margin-top: 16px;
+  width: 100%;
+  box-sizing: border-box;
+  
+  svg {
+    width: 32px;
+    height: 32px;
+    min-width: 32px;
+    color: #4caf50;
+    flex-shrink: 0;
+  }
+  
+  div {
+    flex: 1;
+  }
+  
+  h3 {
+    font-size: 16px;
+    font-family: 'Poppins';
+    font-weight: 600;
+    color: #2e7d32;
+    margin: 0 0 4px 0;
+  }
+  
+  p {
+    font-size: 13px;
+    font-family: 'Poppins';
+    color: #388e3c;
+    margin: 0;
+    line-height: 1.4;
+  }
 `;

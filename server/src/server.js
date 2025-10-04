@@ -10,6 +10,7 @@ import cardRoutes from './routes/cards.js';
 import authRoutes from './routes/authRoutes.js';
 import boards from "./routes/boards.js";
 import userRoutes from "./routes/userRoutes.js";
+import feedbackRoutes from "./routes/feedback.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -24,6 +25,8 @@ app.use(
     origin: [
       'http://localhost:5173',
       'http://127.0.0.1:5173',
+      'http://localhost:5174',
+      'http://127.0.0.1:5174',
       'http://localhost:3000',
       'http://localhost:3001',
       process.env.CLIENT_URL,
@@ -31,7 +34,7 @@ app.use(
     credentials: true,
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization'],
-  }),
+  })
 );
 
 // Body parser
@@ -49,6 +52,7 @@ app.use('/api/auth', authRoutes);
 app.use('/api/cards', cardRoutes);
 app.use("/api/boards", boards);
 app.use("/api/user", userRoutes);
+app.use("/api/feedback", feedbackRoutes);
 
 // Server başlat
 const start = async () => {
