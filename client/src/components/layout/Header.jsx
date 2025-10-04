@@ -53,14 +53,14 @@ const Header = ({ onSidebarToggle }) => {
             <Menu size={20} />
           </button>
 
-          <div className={styles.appBrand}>
+          {/* <div className={styles.appBrand}>
             <div className={styles.appLogo}>
               <img src={logo} alt="TaskPro" />
             </div>
             <h1 className={styles.appTitle}>
               Task<span className={styles.brandAccent}>Pro</span>
             </h1>
-          </div>
+          </div> */}
         </div>
 
         <div className={styles.headerRight}>
@@ -72,7 +72,7 @@ const Header = ({ onSidebarToggle }) => {
               aria-label="Tema seç"
               aria-expanded={themeDropdownOpen}
             >
-              <span className="theme-text">Theme</span>
+              <span className={styles.themeText}>Theme</span>
             </button>
 
             {themeDropdownOpen && (
