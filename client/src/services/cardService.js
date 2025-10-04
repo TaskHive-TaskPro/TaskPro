@@ -41,8 +41,11 @@ export const deleteCard = async (id, token) => {
   });
   return res.data;
 };
-export const moveCard = async (id, newColumnId) => {
-  // Backend'de taşıma işlemi için bir endpoint oluşturmalısın
-  const res = await axios.put(`${API_URL}/move/${id}`, { newColumnId });
+export const moveCard = async (id, newColumnId, token) => {
+  const res = await axios.put(`${API_URL}/move/${id}`, { newColumnId }, {
+    headers: {
+      Authorization: `Bearer ${token}`
+    }
+  });
   return res.data;
 };

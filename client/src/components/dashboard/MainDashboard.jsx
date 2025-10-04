@@ -3,7 +3,7 @@ import Column from "./Column";
 import Styles from "./dashboard.module.css";
 import AddAnotherColumn from "./AddAnotherColumn";
 import { FaFilter } from "react-icons/fa";
-import { getCards, createCard, updateCard as updateCardAPI, deleteCard as deleteCardAPI } from "../../services/cardService";
+import { getCards, createCard, updateCard as updateCardAPI, deleteCard as deleteCardAPI, moveCard as moveCardAPI } from "../../services/cardService";
 import { useAuth } from "../../context/AuthContext";
 
 // Filters Modal component
@@ -275,46 +275,58 @@ const MainDashboard = ({ boardId }) => {
     }
   };
 
-  const moveCard = (columnId, cardId) => {
+  const moveCard = async (columnId, cardId) => {
     console.log('Moving card:', { columnId, cardId }); // Debug için
     
-    setColumns((prevColumns) => {
-      const sourceColumnIndex = prevColumns.findIndex((col) => col.id === columnId);
-      const targetColumnIndex = sourceColumnIndex + 1;
-      
-      // Son kolondaysa taşıma yapma
-      if (targetColumnIndex >= prevColumns.length) {
-        console.log('Card already in last column');
-        return prevColumns;
-      }
+    const sourceColumnIndex = columns.findIndex((col) => col.id === columnId);
+    const targetColumnIndex = sourceColumnIndex + 1;
+    
+    // Son kolondaysa taşıma yapma
+    if (targetColumnIndex >= columns.length) {
+      console.log('Card already in last column');
+      return;
+    }
 
-      const sourceColumn = prevColumns[sourceColumnIndex];
-      const card = sourceColumn.cards.find((c) => (c._id || c.id) === cardId);
+    const targetColumn = columns[targetColumnIndex];
+    
+    try {
+      // Backend'e card'ın yeni column'unu kaydet
+      await moveCardAPI(cardId, targetColumn.id, token);
       
-      if (!card) {
-        console.log('Card not found:', cardId);
-        return prevColumns;
-      }
+      // State'i güncelle
+      setColumns((prevColumns) => {
+        const sourceColumnIndex = prevColumns.findIndex((col) => col.id === columnId);
+        const sourceColumn = prevColumns[sourceColumnIndex];
+        const card = sourceColumn.cards.find((c) => (c._id || c.id) === cardId);
+        
+        if (!card) {
+          console.log('Card not found:', cardId);
+          return prevColumns;
+        }
 
-      console.log('Moving card from column', sourceColumn.title, 'to', prevColumns[targetColumnIndex].title);
+        console.log('Moving card from column', sourceColumn.title, 'to', prevColumns[targetColumnIndex].title);
 
-      // Yeni kolonları oluştur
-      const newColumns = [...prevColumns];
-      
-      // Kaynak kolondan kartı çıkar
-      newColumns[sourceColumnIndex] = {
-        ...sourceColumn,
-        cards: sourceColumn.cards.filter((c) => (c._id || c.id) !== cardId)
-      };
-      
-      // Hedef kolona kartı ekle
-      newColumns[targetColumnIndex] = {
-        ...newColumns[targetColumnIndex],
-        cards: [...newColumns[targetColumnIndex].cards, card]
-      };
+        // Yeni kolonları oluştur
+        const newColumns = [...prevColumns];
+        
+        // Kaynak kolondan kartı çıkar
+        newColumns[sourceColumnIndex] = {
+          ...sourceColumn,
+          cards: sourceColumn.cards.filter((c) => (c._id || c.id) !== cardId)
+        };
+        
+        // Hedef kolona kartı ekle
+        newColumns[targetColumnIndex] = {
+          ...newColumns[targetColumnIndex],
+          cards: [...newColumns[targetColumnIndex].cards, card]
+        };
 
-      return newColumns;
-    });
+        return newColumns;
+      });
+    } catch (error) {
+      console.error('Error moving card:', error);
+      alert('Failed to move card: ' + error.message);
+    }
   };
 
   // Eğer boardId yoksa hoş geldiniz mesajı göster
