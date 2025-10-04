@@ -6,9 +6,8 @@ const ButtonPlus = styled.div`
   justify-content: center;
   width: 40px;
   height: 36px;
-  background-color: ${props => {
-    return props.theme.palette.secondary.info;
-  }};
+  background-color:   #161616;
+
   border-radius: 6px;
   border: none;
 `;

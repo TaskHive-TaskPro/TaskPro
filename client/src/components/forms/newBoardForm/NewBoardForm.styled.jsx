@@ -1,4 +1,5 @@
-import styled, { keyframes, css } from 'styled-components';
+// src/components/forms/newBoardForm/NewBoardForm.styled.jsx
+import styled, { keyframes } from 'styled-components';
 import { Form, Field, ErrorMessage } from 'formik';
 
 /* ---- Animations ---- */
@@ -13,17 +14,29 @@ const hoverWobble = keyframes`
   50%     { transform: translateY(-1px) rotate(-2deg); }
 `;
 
+/* ---- Colors (sabit) ----
+   paper: #FCFCFC
+   textPrimary: #161616
+   textSecondary: rgba(22,22,22,0.8)
+   infoBorder: rgba(190,219,176,0.5)  (mint yarı saydam)
+   hint: #BEDBB0                      (mint)
+   focusRing: rgba(190,219,176,0.35)
+   hoverBg: rgba(22,22,22,0.06)
+*/
+
 const FormContainer = styled.div`
   position: relative;
   display: flex;
   flex-direction: column;
   gap: 24px;
   padding: 24px;
-  background: ${({ theme }) => theme.palette.background.paper};
-  color: ${({ theme }) => theme.palette.text.secondary};
+  background: #FCFCFC;
+  color: rgba(22,22,22,0.8);
   border-radius: 8px;
-  width: 100vw;
-  max-width: 350px;
+  width: 100%;
+  max-width: 360px;  
+  box-sizing: border-box;
+  margin: 0 auto;
 `;
 
 const Title = styled.h2`
@@ -41,6 +54,7 @@ const FormikContainer = styled(Form)`
   display: flex;
   flex-direction: column;
   gap: 24px;
+  
 `;
 
 const Container = styled.div`
@@ -49,6 +63,7 @@ const Container = styled.div`
   display: block;
   width: 100%;
   margin-bottom: 0;
+  
 `;
 
 const Input = styled(Field)`
@@ -56,20 +71,20 @@ const Input = styled(Field)`
   width: 100%;
   padding: 18px 14px;
 
-  color: ${({ theme }) => theme.palette.text.primary};
+  color: #161616;
   background: inherit;
-  border: 1px solid ${({ theme }) => theme.palette.text.info};
+  border: 1px solid rgba(190,219,176,0.5);
   border-radius: 8px;
   outline: none;
 
   &::placeholder {
-    color: ${({ theme }) => theme.palette.text.secondary};
+    color: rgba(22,22,22,0.8);
     font-size: 14px;
   }
 
   &:focus {
-    border-color: ${({ theme }) => theme.palette.text.hint};
-    box-shadow: 0 0 0 2px ${({ theme }) => theme.palette.action?.focus || 'transparent'};
+    border-color: #BEDBB0;
+    box-shadow: 0 0 0 2px rgba(190,219,176,0.35);
   }
 `;
 
@@ -78,7 +93,7 @@ const Error = styled(ErrorMessage)`
   bottom: -8px;
   padding-left: 14px;
   margin: 0;
-  color: var(--color-pastel);
+  color: #ff6b6b; /* pastel hata rengi */
   font-size: 12px;
   font-family: Poppins;
   font-weight: 500;
@@ -100,8 +115,7 @@ const Icon = styled.svg`
   display: inline-block;
   overflow: visible;
 
-  /* her zaman görünür */
-  color: ${({ theme }) => theme.palette.text.primary};
+  border: 1.5px solid #16161680
   fill: currentColor;
   stroke: currentColor;
 
@@ -116,29 +130,33 @@ const IconList = styled.ul`
   margin: 0;
   align-items: center;
   gap: 8px;
+   width: 18px;
+  height: 18px;
+  top: 696px;
+  left: 904px;
+  transform: rotate(0deg);
+  opacity: 1;
 
-  /* label'ları tıklanabilir ve erişilebilir yap */
   & > li > label {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    padding: 8px;
+    padding: 2px;
     border-radius: 8px;
     cursor: pointer;
     transition: background-color .15s ease, box-shadow .15s ease, transform .15s ease;
   }
 
   & > li > label:hover {
-    background-color: ${({ theme }) => theme.palette.action?.hover || 'transparent'};
+    background-color: rgba(22,22,22,0.06);
   }
 
-  /* Hover'da ikon hafif sallansın */
   & > li > label:hover ${Icon} {
     animation: ${hoverWobble} .35s ease;
   }
 
   & > li > label:focus-within {
-    outline: 2px solid ${({ theme }) => theme.palette.action?.focus || 'transparent'};
+    outline: 2px solid rgba(190,219,176,0.55);
     outline-offset: 2px;
   }
 `;
@@ -158,7 +176,7 @@ const BgList = styled.ul`
   }
 
   & > li > label:focus-within {
-    outline: 2px solid ${({ theme }) => theme.palette.action?.focus || 'transparent'};
+    outline: 2px solid rgba(190,219,176,0.55);
     outline-offset: 2px;
   }
 `;
@@ -167,6 +185,13 @@ const Img = styled.img`
   border-radius: 6px;
   display: block;
   transition: transform .18s ease, outline-color .18s ease;
+   width: 28px;
+  height: 28px;
+  border-radius: 6px;
+  transform: rotate(0deg);
+  opacity: 1;
+  top: 292px;
+  left: 120px;
 `;
 
 const BgColor = styled.li`
@@ -177,6 +202,7 @@ const BgColor = styled.li`
   margin: 2px;
   border-radius: 6px;
   border: none;
+  
 `;
 
 const RadioField = styled(Field)`
@@ -190,7 +216,7 @@ const RadioField = styled(Field)`
 
   /* seçili olunca vurgu + pop */
   &:checked + ${Icon} {
-    color: ${({ theme }) => theme.palette.primary.main};
+    color: #BEDBB0; /* seçili ikon rengi */
     animation: ${selectPop} .22s cubic-bezier(.2,.8,.2,1);
     filter: drop-shadow(0 0 6px rgba(0,0,0,.06));
   }
@@ -207,7 +233,7 @@ const RadioFieldBg = styled.input`
 
   &:checked + ${Img} {
     transform: scale(0.95);
-    outline: 1px solid var(--color-green);
+    outline: 1px solid #BEDBB0;
     outline-offset: 2px;
   }
 `;
