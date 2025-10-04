@@ -27,8 +27,8 @@ const HomePage = () => {
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (window.innerWidth < 768 && sidebarOpen) {
-        const sidebar = document.querySelector('.sidebarPlaceholder');
-        if (sidebar && !sidebar.contains(event.target) && !event.target.closest('.sidebar-toggle-btn')) {
+        const sidebar = document.querySelector('.${styles.sidebarPlaceholder}');
+        if (sidebar && !sidebar.contains(event.target) && !event.target.closest('.${styles.sidebarToggleBtn}')) {
           setSidebarOpen(false);
         }
       }

@@ -3,7 +3,7 @@ import React from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
 // Sayfalar & Bileşenler
-// import DashboardRoutes from "./routes/DashboardRoutes";
+import DashboardRoutes from "./routes/DashboardRoutes";
 import AuthWrapper from "./pages/AuthWrapper";
 import VerifyEmailPage from "./pages/VerifyEmailPage";
 import Home from "./pages/HomePage";
@@ -33,7 +33,7 @@ export default function App() {
         </Route>
 
         {/* Dashboard - deprecated, /home kullanılmalı */}
-        {/* <Route path="/dashboard/*" element={<DashboardRoutes />} /> */}
+        <Route path="/dashboard/*" element={<DashboardRoutes />} />
 
         {/* 404 fallback */}
         <Route path="*" element={<div>Not Found</div>} />

@@ -8,7 +8,7 @@ export default function HomeLayout() {
   return (
     <div >
       {/* SideBar her zaman mount edilir; large ekranlarda 'permanent' drawer zaten görünür */}
-      
+      <SideBar active={open} onClick={() => setOpen(false)} />
 
       <main >
         {/* Basit bir hamburger; küçük ekranlarda sidebar'ı açar */}

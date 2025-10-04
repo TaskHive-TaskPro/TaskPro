@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import Column from "./Column";
-import Styles from "./Maindashboard.module.css";
+import Styles from "./dashboard.module.css";
 import AddAnotherColumn from "./AddAnotherColumn";
 import { FaFilter } from "react-icons/fa";
 import { getCards, createCard, updateCard as updateCardAPI, deleteCard as deleteCardAPI } from "../../services/cardService";

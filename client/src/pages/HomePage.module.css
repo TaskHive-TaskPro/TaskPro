@@ -66,3 +66,11 @@
 .sidebarPlaceholder li:hover {
     background-color: rgba(255, 255, 255, 0.1);
 }
+/* ===== RESPONSIVE ===== */
+
+/* Tablet ve Desktop - sidebar her zaman açık */
+@media (min-width: 769px) {
+    .sidebarToggleBtn {
+        display: none !important; /* Tablet ve desktop'ta gizli */
+    }
+}
