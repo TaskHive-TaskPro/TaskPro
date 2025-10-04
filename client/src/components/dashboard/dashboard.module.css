@@ -541,79 +541,33 @@
 }
 
 
-/* Tablet */
-@media (min-width: 481px) and (max-width: 768px) {
-  .mainDashboard {
-    padding: 12px;
-  }
-
-  .filtersWrapper {
-    padding: 12px 12px 0 12px;
-  }
-
-  .columnHeaders {
-    display: none;
-  }
-
-  .columnsWrapper {
-    gap: 12px;
-    padding: 0 12px 12px 0;
-  }
-
-  .columnContainer {
-    width: 240px;
-    padding: 12px;
-    max-height: calc(100dvh - 80px);
-  }
-
-  .columnTitle {
-    font-size: 16px;
-    margin-bottom: 12px;
-  }
-
-  .columnHeader .columnTitle {
-    font-size: 16px;
-  }
-
-  .columnActionBtn {
-    padding: 5px;
-  }
-
-  .btnAddCard {
-    padding: 10px;
-    font-size: 14px;
-  }
-
-  .columnAddBtn {
-    max-width: 240px;
-  }
-
-  .modalContent {
-    width: 80%;
-    max-width: 380px;
-    padding: 20px;
-  }
-
-  .modalInput,
-  .modalTextarea,
-  .modalSelect {
-    height: 38px;
-    font-size: 13px;
-  }
-}
-
-/* Mobile */
-@media (max-width: 480px) {
+/* Mobile and Tablet - 768px ve altı için snap scroll */
+@media (max-width: 768px) {
   .screensPage {
-    height: 100dvh;
+    width: 100vw;
+     height: 100vh;
+  padding: 0;
+  margin: 0;
   }
 
   .mainDashboard {
     padding: 0;
-    overflow: hidden;
+    overflow-x: scroll;
+    overflow-y: hidden;
     display: flex;
     flex-direction: column;
     height: calc(100dvh - 60px);
+    width: 100vw;
+    max-width: 100vw;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    scroll-behavior: smooth;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+
+  .mainDashboard::-webkit-scrollbar {
+    display: none;
   }
 
   .filtersWrapper {
@@ -642,42 +596,40 @@
 
   /* Snap scroll for columns on mobile - swipe between pages */
   .columnsWrapper {
-    gap: 0;
-    padding: 0;
-    overflow-x: scroll;
+    display: inline-flex;
+    flex-direction: row;
+    overflow-x: visible;
     overflow-y: hidden;
-    scroll-snap-type: x mandatory;
     -webkit-overflow-scrolling: touch;
     scroll-behavior: smooth;
-    display: flex;
-    flex: 1;
+    width: auto;
+    min-width: min-content;
     height: 100%;
-
-    scrollbar-width: none;
-    -ms-overflow-style: none;
-  }
-
-  .columnsWrapper::-webkit-scrollbar {
-    display: none;
+    flex: none;
+    gap: 0;
+    padding: 0;
+    margin: 0;
+    flex-wrap: nowrap;
   }
 
   .columnContainer {
-    width: 100vw;
+    flex: 0 0 100vw;
     min-width: 100vw;
     max-width: 100vw;
+    width: 100vw;
     height: 100%;
-    padding: 16px;
-    margin: 0;
-    flex-shrink: 0;
     scroll-snap-align: start;
     scroll-snap-stop: always;
     overflow-y: auto;
+    box-sizing: border-box;
+    background-color: var(--bg-secondary);
+    border: none;
     border-radius: 0;
-    border-left: none;
-    border-right: none;
-    border-top: none;
+    padding: 16px;
+    margin: 0;
     display: flex;
     flex-direction: column;
+    flex-shrink: 0;
   }
 
   /* Column title styling for mobile */
@@ -711,7 +663,6 @@
     flex: 1;
     overflow-y: auto;
     margin-bottom: 12px;
-
     scrollbar-width: none;
     -ms-overflow-style: none;
   }
@@ -727,8 +678,32 @@
     flex-shrink: 0;
   }
 
+  /* Add Column button - tam sayfa olarak göster */
   .columnAddBtn {
-    display: none;
+    flex: 0 0 100vw;
+    max-width: 100vw;
+    min-width: 100vw;
+    width: 100vw;
+    height: 100%;
+    min-height: 200px;
+    margin: 0;
+    padding: 16px;
+    scroll-snap-align: start;
+    scroll-snap-stop: always;
+    border-radius: 0;
+    border: 1px dashed var(--border-color);
+    border-left: none;
+    border-right: none;
+    border-top: none;
+    background-color: var(--bg-secondary);
+    color: var(--add-another-color);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    font-weight: 500;
+    flex-shrink: 0;
+    box-sizing: border-box;
   }
 
   /* Modal adjustments for mobile */
@@ -801,13 +776,8 @@
   }
 }
 
-/* Extra small mobile devices */
+/* Extra small mobile devices - sadece modal ayarları */
 @media (max-width: 360px) {
-  .columnHeader,
-  .columnContainer {
-    width: 180px;
-  }
-
   .filtersWrapper h2 {
     font-size: 16px;
   }
