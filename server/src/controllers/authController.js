@@ -43,13 +43,20 @@ export const registerUser = asyncHandler(async (req, res) => {
     user.verificationToken = verificationToken;
     await user.save();
 
-    const verificationUrl = `${process.env.CLIENT_URL}/verify/${verificationToken}`;
-    await sendEmail({
-      from: process.env.EMAIL_FROM,
-      to: user.email,
-      subject: "Hesabınızı Doğrulayın",
-      html: `Hesabınızı doğrulamak için <a href="${verificationUrl}">tıklayın</a>. Link 12 saat geçerlidir.`,
-    });
+    // Email gönderimi - hata olursa devam et
+    try {
+      const verificationUrl = `${process.env.CLIENT_URL}/verify/${verificationToken}`;
+      await sendEmail({
+        from: process.env.EMAIL_FROM,
+        to: user.email,
+        subject: "Hesabınızı Doğrulayın",
+        html: `Hesabınızı doğrulamak için <a href="${verificationUrl}">tıklayın</a>. Link 12 saat geçerlidir.`,
+      });
+      console.log('✅ Verification email sent to:', user.email);
+    } catch (emailError) {
+      console.error('⚠️ Email gönderim hatası (kullanıcı kaydedildi):', emailError.message);
+      // Email hatası kullanıcı kaydını engellemesin
+    }
 
     res.status(201).json({
       _id: user._id,
