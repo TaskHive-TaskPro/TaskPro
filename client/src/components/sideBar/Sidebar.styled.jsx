@@ -265,7 +265,7 @@ export const BoardLink = styled(NavLink)`
 `;
 
 
-export const IconsBox = styled.div`
+export const IconBox = styled.div`
   position: absolute;
   top: 50%;
   right: 24px;

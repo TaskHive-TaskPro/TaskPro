@@ -8,7 +8,8 @@ import NewBoardForm from '../forms/newBoardForm/NewBoardForm';
 import MainModal from '../mainModal/MainModal';
 import NeedHelpModal from '../forms/needHelpModal/NeedHelpModal';
 import sprite from '../../images/icons.svg';
-import { Box, Typography, Drawer, Link } from '@mui/material';
+import { Box, Button, Typography, Drawer, Link } from '@mui/material';
+
 import { useDispatch, useSelector } from 'react-redux';
 import { logOut } from '../../redux/auth/authOperations';
 import { useTheme } from '@mui/material';
