@@ -1,4 +1,8 @@
 import axiosInstance from "./axiosInstance";
+const axiosInstance = axios.create({
+  baseURL: import.meta.env.VITE_API_URL, // backend URL
+  withCredentials: true, // cookies/token ile istek için
+});
 
 const register = async (userData) => {
   console.log("Register attempt:", userData);
