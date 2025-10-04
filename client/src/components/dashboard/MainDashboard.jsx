@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import Column from "./Column";
 import Styles from "./dashboard.module.css";
 import AddAnotherColumn from "./AddAnotherColumn";
@@ -60,6 +60,9 @@ const MainDashboard = ({ boardId }) => {
   const [showFilters, setShowFilters] = useState(false);
   const [loading, setLoading] = useState(true);
   const [board, setBoard] = useState(null);
+  
+  // Ref for mainDashboard to handle keyboard navigation
+  const mainDashboardRef = useRef(null);
 
   // Board ve kartları yükle
   useEffect(() => {
@@ -117,6 +120,67 @@ const MainDashboard = ({ boardId }) => {
 
     fetchBoardAndCards();
   }, [token, boardId]);
+
+  // Klavye ok tuşlarıyla kolon geçişi
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (showFilters || showAddColumn) return;
+      
+      const wrapper = mainDashboardRef.current;
+      if (!wrapper) return;
+
+      const isMobile = window.innerWidth <= 768;
+      if (!isMobile) return;
+
+      if (e.key === 'ArrowRight') {
+        e.preventDefault();
+        const viewportWidth = window.innerWidth;
+        const currentScroll = wrapper.scrollLeft;
+        const currentIndex = Math.round(currentScroll / viewportWidth);
+        const nextIndex = currentIndex + 1;
+        const newScrollPosition = nextIndex * viewportWidth;
+        
+        console.log('Arrow Right:', {
+          viewportWidth,
+          currentScroll,
+          currentIndex,
+          nextIndex,
+          newScrollPosition,
+          scrollWidth: wrapper.scrollWidth,
+          clientWidth: wrapper.clientWidth
+        });
+        
+        wrapper.scrollTo({
+          left: newScrollPosition,
+          behavior: 'smooth'
+        });
+        
+      } else if (e.key === 'ArrowLeft') {
+        e.preventDefault();
+        const viewportWidth = window.innerWidth;
+        const currentScroll = wrapper.scrollLeft;
+        const currentIndex = Math.round(currentScroll / viewportWidth);
+        const prevIndex = Math.max(0, currentIndex - 1);
+        const newScrollPosition = prevIndex * viewportWidth;
+        
+        console.log('Arrow Left:', {
+          viewportWidth,
+          currentScroll,
+          currentIndex,
+          prevIndex,
+          newScrollPosition
+        });
+        
+        wrapper.scrollTo({
+          left: newScrollPosition,
+          behavior: 'smooth'
+        });
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [showFilters, showAddColumn]);
 
   const addColumn = (newCol) => setColumns([...columns, newCol]);
 
@@ -288,7 +352,7 @@ const MainDashboard = ({ boardId }) => {
         />
       )}
 
-      <main className={Styles.mainDashboard}>
+      <main className={Styles.mainDashboard} ref={mainDashboardRef}>
         {loading ? (
           <div className={Styles.loadingContainer}>
             <div className={Styles.loader}></div>
