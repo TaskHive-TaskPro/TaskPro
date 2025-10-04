@@ -103,29 +103,13 @@
   background-color: #7d2d2d;
 }
 
-/* HeaderDashboard */
-.headerDashboard {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 16px;
-  background-color: var(--bg-primary);
-  border-bottom: 1px solid var(--border-color);
-}
-
-.headerRight {
-  display: flex;
-  justify-content: flex-end;
-  align-items: center;
-  gap: 12px;
-}
 
 /* MainDashboard */
 .mainDashboard {
   padding: 14px;
   background-color: var(--bg-primary);
   overflow-x: auto;
-  overflow-y: hidden;
+  overflow-y: auto;
   height: calc(100dvh - 64px);
 }
 
@@ -176,9 +160,11 @@
   border: 1px solid var(--border-color);
   max-height: calc(100dvh - 80px);
   overflow-y: auto;
+  scrollbar-width: thin;
+  
 }
 
-/* Scrollbar görünür olsun istersen */
+/* Scrollbar görünür */
 .columnContainer::-webkit-scrollbar {
   width: 6px;
 }
@@ -313,27 +299,29 @@
 }
 
 .columnAddBtn {
-  width: 288px;
-  min-width: 288px;
-  max-width: 288px;
-  height: fit-content;
-  min-height: 100px;
+  width: 240px; 
+  min-width: 240px;
+  max-width: 240px;
+  min-height: 80px; 
   background-color: var(--bg-secondary);
   color: var(--add-another-color);
   display: flex;
   align-items: center;
   justify-content: center;
   border: 1px dashed var(--border-color);
-  border-radius: 12px;
-  transition: all 0.3s ease;
-  font-size: 16px;
+  border-radius: 10px; 
+  transition: all 0.25s ease;
+  font-size: 14px;
   font-weight: 500;
   flex-shrink: 0;
+  cursor: pointer;
 }
+
 .columnAddBtn:hover {
   background-color: var(--hover-color);
   border-color: var(--text-primary);
-  opacity: 0.9;
+  
+  opacity: 0.95;
 }
 
 /* Filters Button */
@@ -370,7 +358,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  z-index: 1000;
+  z-index: 9999;
   padding: 1rem;
   backdrop-filter: blur(6px);
   overflow: auto;
@@ -395,6 +383,7 @@
 .modalTitle {
   font-weight: 600;
   margin-bottom: 12px;
+ 
   color: var(--text-primary);
 }
 
@@ -402,6 +391,7 @@
   color: var(--text-primary);
   font-size: 14px;
   line-height: 1.6;
+ 
   margin-bottom: 20px;
 }
 
@@ -474,67 +464,67 @@
   opacity: 0.8;
 }
 
-/* Filters Modal Color Options */
+/* Filters modal adjustments */
 .colorOptions {
   display: flex;
-  flex-direction: column;
-  gap: 12px;
+  flex-direction: column; /* Dikey liste için */
+  gap: 12px; /* Aralar eşit olsun */
+  margin-bottom: 16px;
 }
+
 .colorOption {
   display: flex;
-  align-items: center;
-  gap: 12px;
+  align-items: center; /* Dot ve yazı dikey ortalanır */
+  gap: 12px; /* Dot ile yazı arası boşluk */
+  padding: 6px 8px;
   cursor: pointer;
-  padding: 6px;
   border-radius: 6px;
-  transition: 0.2s;
+  transition: background-color 0.2s ease;
 }
+
 .colorOption:hover {
-  background-color: #333;
-}
-.selectedPriority {
-  background-color: #444;
-}
-.priorityLabel {
-  color: white;
-  font-size: 1rem;
-  min-width: 60px;
+  background-color: rgba(0, 0, 0, 0.05); /* Hover efekti */
 }
 
-/* Kullanıcı info */
-.userInfo {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  margin-left: 16px;
-}
-.userAvatar {
-  width: 32px;
-  height: 32px;
+.priorityDot {
+  width: 16px;
+  height: 16px;
   border-radius: 50%;
-  object-fit: cover;
-}
-.userName {
-  font-weight: 500;
+  flex-shrink: 0;
 }
 
-/* Loading styles */
+.priorityLabel {
+  font-size: 14px;
+  line-height: 1.2;
+  color: var(--text-primary);
+}
+
+/* Seçili öncelik vurgusu */
+.selectedPriority {
+  background-color: rgba(100, 149, 237, 0.2); /* Hafif mavi arka plan */
+}
+
+/* Loading adjustments */
 .loadingContainer {
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  height: 300px;
-  gap: 20px;
+  height: 300px; /* daha yüksek alan */
+  gap: 20px;    /* aralar eşit ve geniş */
 }
+
 .loader {
   width: 40px;
   height: 40px;
-  border: 4px solid #f3f3f3;
-  border-top: 4px solid #3498db;
+  border: 4px solid #f3f3f3;             /* ana renk */
+  border-top: 4px solid var(--accent-primary); /* dönen kısım */
   border-radius: 50%;
   animation: spin 1s linear infinite;
 }
+
+
+
 @keyframes spin {
   0% {
     transform: rotate(0deg);
@@ -755,19 +745,23 @@
   /* Filters modal adjustments */
   .colorOptions {
     gap: 8px;
+    display: flex;
   }
 
   .colorOption {
     padding: 8px;
+    
   }
 
   .priorityDot {
     width: 16px;
     height: 16px;
+    
   }
 
   .priorityLabel {
     font-size: 14px;
+    
   }
 
   /* Loading adjustments */

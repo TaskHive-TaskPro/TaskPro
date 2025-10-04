@@ -1,3 +1,4 @@
+// src/components/layout/SideBar.jsx
 import CssBaseline from '@mui/material/CssBaseline';
 import cactus from '../../images/cactus.png';
 import cactus2x from '../../images/cactus@2x.png';
@@ -14,8 +15,11 @@ import { useTheme } from '@mui/material';
 import { selectUser } from '../../redux/auth/authSelectors';
 import { useGetBoardsQuery } from '../../redux/boards/boardsApi';
 import { useAuth } from '../../context/AuthContext';
+import { Dialog, DialogTitle, DialogContent, DialogActions } from '@mui/material';
 import { useLocation, useParams, useNavigate } from 'react-router-dom';
 import { useState, useEffect } from 'react';
+import "./logoutDialog.css";
+
 import {
   SideBarStyled,
   LogoIcon,
@@ -46,6 +50,7 @@ import {
    useUpdateBoardMutation,
    useDeleteBoardMutation
  } from "../../redux/boards/boardsApi";
+import { showToast } from '../../App'; // path ihtiyaca göre değişebilir
 
 const SideBar = ({ active, onClick }) => {
   const [openAddModal, setOpenAddModal] = useState(false);
@@ -121,13 +126,29 @@ const SideBar = ({ active, onClick }) => {
       console.error('deleteBoard failed:', e);
     }
   };
+
   // logout: redux + context + navigate
   const handleLogout = () => {
     dispatch(logOut());
     if (typeof logout === 'function') logout();
     navigate('/');
   };
-  // tema bazlı ikon id'leri (senin sprite id'lerinle aynı bırakıldı)
+
+  // Logout onay modal state & handlers
+  const [openLogoutModal, setOpenLogoutModal] = useState(false);
+  const openLogoutModalHandler = () => setOpenLogoutModal(true);
+  const closeLogoutModalHandler = () => setOpenLogoutModal(false);
+  const confirmLogout = () => {
+    // 1️⃣ Toast göster
+    showToast('info', 'Logging out...');
+
+    // 2️⃣ Logout işlemleri
+    handleLogout();
+
+    // 3️⃣ Modal kapatma
+    closeLogoutModalHandler();
+  };
+  // tema bazlı ikon id'leri
   const logoSvg = user.theme === 'violet' ? '#icon-logo-violet' : '#icon-icon-1';
   const needHelpSvg =
     user.theme === 'light' ? '#icon-help' : '#icon-help-white';
@@ -235,7 +256,6 @@ const SideBar = ({ active, onClick }) => {
                     >
                       <TitleBox>
                         <IconTitle theme={theme}>
-                          {/* board.icon sprite id değilse crash olmasın diye fallback */}
                           <use
                             href={(sprite + (board.icon || '#icon-Project'))}
                             xlinkHref={(sprite + (board.icon || '#icon-Project'))}
@@ -330,12 +350,13 @@ const SideBar = ({ active, onClick }) => {
             </Typography>
           </HelpButton>
 
-          {/* Help Modal #1 (NeedHelpModal) */}
+          {/* Help Modal */}
           <MainModal modalIsOpen={isModalOpen} closeModal={closeModal}>
             <NeedHelpModal closeModal={closeModal} />
           </MainModal>
         </NeedHelpBox>
 
+        {/* Log out bölümü (tek, burada) */}
         <Box
           sx={{
             marginTop: '24px',
@@ -345,7 +366,21 @@ const SideBar = ({ active, onClick }) => {
             letterSpacing: 0.7,
           }}
         >
-          <LogoutButton onClick={handleLogout}>
+
+          <Button
+            type="button"
+            onClick={openLogoutModalHandler}
+            sx={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: '14px',
+              p: 0,
+              minWidth: 0,
+              border: 0,
+              '&:hover': { backgroundColor: 'inherit', border: 0 },
+            }}
+          >
+
             <LogoutIcon>
               <use href={icon + `${logOutSvg}`} xlinkHref={icon + `${logOutSvg}`} />
             </LogoutIcon>
@@ -362,7 +397,26 @@ const SideBar = ({ active, onClick }) => {
             >
               Log out
             </Typography>
-          </LogoutButton>
+
+          </Button>
+
+          {/* Logout onay dialogu */}
+          <Dialog open={openLogoutModal} onClose={closeLogoutModalHandler}>
+            <DialogTitle>Log Out</DialogTitle>
+            <DialogContent>
+              <Typography>Are you sure you want to log out?</Typography>
+            </DialogContent>
+            <DialogActions>
+              <Button onClick={closeLogoutModalHandler} color="secondary">
+                      Cancel
+
+              </Button>
+              <Button onClick={confirmLogout} color="primary" variant="contained">
+                 Yes, log out
+              </Button>
+            </DialogActions>
+          </Dialog>
+
         </Box>
       </Thumb>
     </SideBarStyled>
@@ -427,8 +481,8 @@ const SideBar = ({ active, onClick }) => {
 
         {/* Help Modal #2 (ModalHelp) */}
         <MainModal modalIsOpen={openHelpModal} closeModal={closeHelpModal}>
-  <NeedHelpModal closeModal={closeHelpModal} />
-</MainModal>
+          <NeedHelpModal closeModal={closeHelpModal} />
+        </MainModal>
       </Box>
     </>
   );

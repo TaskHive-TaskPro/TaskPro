@@ -1,5 +1,16 @@
+// src/components/.../YOUR_PATH_HERE.styled.jsx
 import styled from 'styled-components';
 import { Form } from 'formik';
+
+/* --- Sabit palet --- */
+const PAPER = '#FCFCFC';
+const TEXT_PRIMARY = '#161616';
+const TEXT_SECONDARY = 'rgba(22,22,22,0.8)';
+const INFO_BORDER = 'rgba(190,219,176,0.5)'; // mint yarı saydam
+const HINT = '#BEDBB0';                      // mint
+const FOCUS_RING = 'rgba(190,219,176,0.35)';
+const ERROR_COLOR = '#ff6b6b';
+const BTN_HOVER = '#A7C696';                 // mint koyusu
 
 export const Section = styled.div`
   position: relative;
@@ -7,8 +18,10 @@ export const Section = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: start;
-  background-color: ${props => props.theme.palette.background.paper};
-  color: ${props => props.theme.palette.text.primary};
+
+  background-color: ${PAPER};
+  color: ${TEXT_PRIMARY};
+
   width: 100%;
   max-width: 400px;
   border-radius: 8px;
@@ -58,7 +71,7 @@ export const ErrorSection = styled.div`
   bottom: -7px;
   padding-left: 14px;
   margin: 0;
-  color: var(--color-pastel);
+  color: ${ERROR_COLOR};
   font-size: 12px;
   font-family: Poppins;
   font-weight: 500;
@@ -75,7 +88,7 @@ export const TitleInput = styled.input`
   font-family: 'Poppins';
   letter-spacing: -0.28px;
 
-  color: ${props => props.theme.palette.text.primary};
+  color: ${TEXT_PRIMARY};
   background: inherit;
   border: 1px solid ${props => props.theme.palette.text.disabled};
   border-radius: 8px;
@@ -83,7 +96,7 @@ export const TitleInput = styled.input`
   transition: border-color 0.2s ease;
 
   &::placeholder {
-    color: ${props => props.theme.palette.text.secondary};
+    color: ${TEXT_SECONDARY};
     font-size: 14px;
   }
 
@@ -110,7 +123,7 @@ export const Textarea = styled.textarea`
   line-height: normal;
   letter-spacing: -0.28px;
 
-  color: ${props => props.theme.palette.text.primary};
+  color: ${TEXT_PRIMARY};
   background: inherit;
   border: 1px solid ${props => props.theme.palette.text.disabled};
   outline: none;
@@ -118,7 +131,7 @@ export const Textarea = styled.textarea`
   transition: border-color 0.2s ease;
 
   &::placeholder {
-    color: ${props => props.theme.palette.text.secondary};
+    color: ${TEXT_SECONDARY};
     font-size: 14px;
   }
 

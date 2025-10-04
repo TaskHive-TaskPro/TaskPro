@@ -8,6 +8,7 @@ import { useAuth } from '../../hooks/useAuth';
 
 import { toast } from 'react-toastify';
 import styles from './UserInfo.module.css';
+import { createPortal } from 'react-dom';
 
 // Kullanıcı profili düzenleme şeması - TÜM ALANLAR OPSİYONEL
 const profileSchema = yup.object({
@@ -289,7 +290,7 @@ const UserInfo = () => {
       </button>
 
       {/* Profile Edit Modal */}
-      {isModalOpen && (
+      {isModalOpen && createPortal(
         <div className={styles.modalOverlay} onClick={() => setIsModalOpen(false)}>
           <div className={styles.modalContent} onClick={(e) => e.stopPropagation()}>
             <div className={styles.modalHeader}>
@@ -494,7 +495,8 @@ const UserInfo = () => {
               </div>
             </form>
           </div>
-        </div>
+        </div>,
+        document.body
       )}
     </>
   );

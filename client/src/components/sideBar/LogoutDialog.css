@@ -1,0 +1,103 @@
+/* ===== DIALOG (Modal) ===== */
+.MuiDialog-paper {
+  background-color: var(--bg-modal) !important;
+  color: var(--text-primary) !important;
+  border-radius: var(--radius-lg) !important;
+  box-shadow: var(--shadow-lg) !important;
+  padding: 24px !important;
+  border: 1px solid var(--border-light) !important;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Violet theme: alt kısmı violet gradient */
+body.theme-violet .MuiDialog-paper {
+  background: linear-gradient(to bottom, var(--bg-modal) 0%, #5255bc 100%) !important;
+  color: var(--text-primary) !important;
+  border: 1px solid var(--border-light) !important;
+}
+
+/* Dark theme: gradient veya koyu renk */
+body.theme-dark .MuiDialog-paper {
+  background: linear-gradient(135deg, #3a3a3a 0%, #1f1f1f 100%) !important; 
+  color: #fff !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+}
+
+/* Light theme: düz modal */
+body.theme-light .MuiDialog-paper {
+  background-color: var(--bg-modal) !important;
+  color: var(--text-primary) !important;
+  border: 1px solid var(--border-light) !important;
+}
+
+.MuiDialogTitle-root {
+  font-size: 1.25rem !important;
+  font-weight: 600 !important;
+  text-align: center !important;
+  color: var(--text-primary) !important;
+  margin-bottom: 8px !important;
+}
+
+.MuiDialogContent-root {
+  text-align: center !important;
+  font-size: 0.95rem !important;
+  color: var(--text-secondary) !important;
+}
+
+.MuiDialogActions-root {
+  justify-content: center !important;
+  margin-top: 12px !important;
+  gap: 10px !important;
+}
+
+/* ===== BUTTONS ===== */
+.MuiButton-root {
+  font-family: 'Poppins', sans-serif !important;
+  border-radius: var(--radius-md) !important;
+  padding: 8px 18px !important;
+  text-transform: none !important;
+  font-weight: 500 !important;
+  transition: all 0.25s ease !important;
+}
+/* Cancel Button - Default (light & dark) */
+.MuiButton-textSecondary {
+  color: var(--text-secondary) !important;
+  background-color: var(--btn-secondary-bg) !important;
+  border: 1px solid var(--border-light) !important;
+}
+
+.MuiButton-textSecondary:hover {
+  background-color: var(--border-light) !important;
+}
+
+/* Violet theme: Cancel button açık renk */
+body.theme-violet .MuiButton-textSecondary {
+  color: #ffffff !important; /* beyaz / okunaklı */
+  background-color: rgba(255, 255, 255, 0.15) !important;
+  border: 1px solid rgba(255, 255, 255, 0.3) !important;
+}
+
+body.theme-violet .MuiButton-textSecondary:hover {
+  background-color: rgba(255, 255, 255, 0.25) !important;
+}
+
+
+/* Confirm (Logout) */
+.MuiButton-containedPrimary {
+  background-color: var(--btn-primary-bg) !important;
+  color: var(--btn-primary-text) !important;
+  box-shadow: var(--shadow-sm) !important;
+}
+
+.MuiButton-containedPrimary:hover {
+  background-color: var(--accent-hover) !important;
+  transform: translateY(-1px);
+}
+
+/* Overlay Blur */
+.MuiBackdrop-root {
+  background-color: rgba(0, 0, 0, 0.45) !important;
+  backdrop-filter: blur(6px) !important;
+}
