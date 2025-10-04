@@ -60,3 +60,29 @@ export const deleteCard = async (req, res) => {
     res.status(500).json({ message: "Kart silinemedi", error: error.message });
   }
 };
+
+// Kartı başka kolona taşı
+export const moveCard = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { newColumnId } = req.body;
+    
+    if (!newColumnId) {
+      return res.status(400).json({ message: "newColumnId gerekli" });
+    }
+    
+    const movedCard = await Card.findByIdAndUpdate(
+      id, 
+      { columnId: newColumnId }, 
+      { new: true }
+    );
+    
+    if (!movedCard) {
+      return res.status(404).json({ message: "Kart bulunamadı" });
+    }
+    
+    res.json(movedCard);
+  } catch (error) {
+    res.status(500).json({ message: "Kart taşınamadı", error: error.message });
+  }
+};

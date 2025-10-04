@@ -30,8 +30,8 @@ const FormContainer = styled.div`
   flex-direction: column;
   gap: 24px;
   padding: 24px;
-  background: #FCFCFC;
-  color: rgba(22,22,22,0.8);
+  background: ${p => p.theme.palette.background.paper};
+  color: ${p => p.theme.palette.text.primary};
   border-radius: 8px;
   width: 100%;
   max-width: 360px;  
@@ -71,20 +71,28 @@ const Input = styled(Field)`
   width: 100%;
   padding: 18px 14px;
 
-  color: #161616;
-  background: inherit;
-  border: 1px solid rgba(190,219,176,0.5);
+  color: ${p => p.theme.palette.text.primary};
+  background: ${p => p.theme.palette.background.default};
+  border: 1px solid ${p => p.theme.palette.mode === 'dark' ? 'rgba(255,255,255,0.2)' : 'rgba(190,219,176,0.5)'};
   border-radius: 8px;
   outline: none;
 
   &::placeholder {
-    color: rgba(22,22,22,0.8);
+    color: ${p => p.theme.palette.text.secondary};
     font-size: 14px;
   }
 
   &:focus {
-    border-color: #BEDBB0;
-    box-shadow: 0 0 0 2px rgba(190,219,176,0.35);
+    border-color: ${p => p.theme.palette.mode === 'light' && p.theme.palette.primary.main === '#5255BC' 
+      ? '#B8BCFD' 
+      : p.theme.palette.mode === 'dark' 
+      ? 'rgba(255,255,255,0.4)' 
+      : '#BEDBB0'};
+    box-shadow: 0 0 0 2px ${p => p.theme.palette.mode === 'light' && p.theme.palette.primary.main === '#5255BC' 
+      ? 'rgba(184,188,253,0.35)' 
+      : p.theme.palette.mode === 'dark' 
+      ? 'rgba(255,255,255,0.15)' 
+      : 'rgba(190,219,176,0.35)'};
   }
 `;
 
@@ -148,7 +156,7 @@ const IconList = styled.ul`
   }
 
   & > li > label:hover {
-    background-color: rgba(22,22,22,0.06);
+    background-color: ${p => p.theme.palette.mode === 'dark' ? 'rgba(255,255,255,0.1)' : 'rgba(22,22,22,0.06)'};
   }
 
   & > li > label:hover ${Icon} {
@@ -216,7 +224,11 @@ const RadioField = styled(Field)`
 
   /* seçili olunca vurgu + pop */
   &:checked + ${Icon} {
-    color: #BEDBB0; /* seçili ikon rengi */
+    color: ${p => p.theme.palette.mode === 'light' && p.theme.palette.primary.main === '#5255BC' 
+      ? '#B8BCFD' 
+      : p.theme.palette.mode === 'dark' 
+      ? 'rgba(255,255,255,0.9)' 
+      : '#BEDBB0'}; /* seçili ikon rengi */
     animation: ${selectPop} .22s cubic-bezier(.2,.8,.2,1);
     filter: drop-shadow(0 0 6px rgba(0,0,0,.06));
   }
@@ -233,7 +245,11 @@ const RadioFieldBg = styled.input`
 
   &:checked + ${Img} {
     transform: scale(0.95);
-    outline: 1px solid #BEDBB0;
+    outline: 1px solid ${p => p.theme.palette.mode === 'light' && p.theme.palette.primary.main === '#5255BC' 
+      ? '#B8BCFD' 
+      : p.theme.palette.mode === 'dark' 
+      ? 'rgba(255,255,255,0.6)' 
+      : '#BEDBB0'};
     outline-offset: 2px;
   }
 `;
