@@ -10,13 +10,14 @@
   display: flex;
   flex: 1;
   overflow: hidden;
-  margin-left: 260px;
+  
 }
 
 .mainContent {
   flex: 1;
   background-color: var(--bg-secondary);
   overflow-y: auto;
+  margin-left: 260px;
 }
 
 .mainContentSidebarCollapsed {
@@ -80,4 +81,134 @@
   }
 } */
 /* ===== RESPONSIVE HOME PAGE LAYOUT ===== */
+/* Tablet (768px - 1023px) */
+@media (min-width: 769px) and (max-width: 1023px) {
+  .homePage {
+    display: flex;
+    min-height: 100vh;
+  }
+
+  .homeContent {
+    margin-left: 0;
+    flex: 1;
+    width: 100%;
+    transition: all 0.3s ease;
+  }
+
+  .mainContent {
+    flex: 1;
+    overflow: auto;
+    padding: 0;
+  }
+}
+
+@media (max-width: 768px) {
+  .sidebarPlaceholder.open {
+    transform: translateX(0);
+  }
+
+  /* Overlay/backdrop when sidebar is open */
+  .sidebarPlaceholder.open::before {
+    content: "";
+    position: fixed;
+    top: 64px;
+    left: 280px;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: -1;
+    backdrop-filter: blur(2px);
+  }
+
+  .welcomeStats {
+    flex-direction: column;
+  }
+
+  .statCard {
+    width: 100%;
+  }
+
+  .welcomeContent h2 {
+    font-size: 24px;
+  }
+}
+/* Mobile (< 768px) */
+@media (width < 769px) {
+  .homePage {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    min-height: -webkit-fill-available;
+  }
+
+  .homeContent {
+    margin-left: 0;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+
+  .mainContent {
+    flex: 1;
+    overflow: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  /* Sidebar overlay on mobile */
+  .sidebarOverlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 998;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+  }
+
+  .sidebarOverlay.active {
+    opacity: 1;
+    pointer-events: all;
+  }
+}
+
+/* Mobile landscape */
+@media (max-width: 767px) and (orientation: landscape) {
+  .homePage {
+    height: 100vh;
+  }
+
+  .mainContent {
+    height: calc(100vh - 60px);
+  }
+}
+
+
+
+/* Safe area insets for mobile devices with notch */
+@supports (padding-top: env(safe-area-inset-top)) {
+  .homePage {
+    padding-top: env(safe-area-inset-top);
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+}
+
+/* Touch device optimizations */
+@media (hover: none) and (pointer: coarse) {
+  button,
+  .clickable {
+    min-height: 44px;
+    min-width: 44px;
+  }
+
+  input,
+  textarea,
+  select {
+    font-size: 16px;
+    /* Prevent iOS zoom */
+  }
+}
 

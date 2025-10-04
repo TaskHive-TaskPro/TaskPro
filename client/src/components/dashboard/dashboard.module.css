@@ -6,6 +6,7 @@
   height: 100vh;
   background-color: var(--bg-primary);
   color: var(--text-primary);
+  padding-top: 40px;
 }
 
 /* Welcome Screen */
@@ -14,7 +15,7 @@
   align-items: center;
   justify-content: center;
   height: 100%;
-  padding: 40px;
+  padding: 5vh;
 }
 
 .welcomeContent {
@@ -121,8 +122,7 @@
 
 /* MainDashboard */
 .mainDashboard {
-  flex: 1;
-  padding: 16px;
+  padding: 30px;
   background-color: var(--bg-primary);
   overflow-x: auto;
   overflow-y: hidden;
@@ -540,8 +540,9 @@
   }
 }
 
+
 /* Tablet */
-@media (min-width: 481px) and (max-width: 1024px) {
+@media (min-width: 481px) and (max-width: 768px) {
   .mainDashboard {
     padding: 12px;
   }

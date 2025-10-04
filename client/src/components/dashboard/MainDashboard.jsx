@@ -275,7 +275,7 @@ const MainDashboard = ({ boardId }) => {
           className={Styles.btnFilters}
           onClick={() => setShowFilters(true)}
         >
-          <FaFilter style={{ marginRight: "8px" }} />
+          <FaFilter style={{marginRight: "8px" }} />
           Filters
         </button>
       </div>
