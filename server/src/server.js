@@ -21,13 +21,9 @@ const PORT = process.env.PORT || 5000;
 
 // ✅ CORS AYARI (tam düzenlenmiş hali)
 const allowedOrigins = [
-  'http://localhost:5173',
+'http://localhost:5173',
   'http://127.0.0.1:5173',
-  'http://localhost:5174',
-  'http://127.0.0.1:5174',
-  'http://localhost:3000',
-  'http://localhost:3001',
-  'https://taskpro-1.onrender.com', // senin frontend URL’in
+  'https://taskpro-1.onrender.com',
   process.env.CLIENT_URL,
 ].filter(Boolean);
 
@@ -51,6 +47,23 @@ app.use(
 // Body parser
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use((req, res, next) => {
+  const origin = req.headers.origin;
+  if (allowedOrigins.includes(origin)) {
+    res.setHeader('Access-Control-Allow-Origin', origin); // * yerine gerçek origin
+    res.setHeader('Access-Control-Allow-Credentials', 'true'); // cookies/token için
+  }
+ res.setHeader(
+    'Access-Control-Allow-Methods',
+    'GET,POST,PUT,DELETE,PATCH,OPTIONS'
+  );
+  res.setHeader(
+    'Access-Control-Allow-Headers',
+    'Content-Type, Authorization'
+  );
+  if (req.method === 'OPTIONS') return res.sendStatus(200); // Preflight cevabı
+  next();
+});
 
 // Static files - uploads klasörünü serve et
 app.use('/uploads', express.static(path.join(__dirname, '../uploads')));
