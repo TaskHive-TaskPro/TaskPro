@@ -22,6 +22,29 @@ export const SideBarStyled = styled(Box)`
   justify-content: space-between;
   gap: 10px;
   padding: 14px;
+  
+  /* Mobilde scroll */
+  overflow-y: auto;
+  overflow-x: hidden;
+
+  /* Scrollbar stilleri - daha ince ve şeffaf */
+  &::-webkit-scrollbar {
+    background-color: transparent;
+    width: 4px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background-color: rgba(190, 219, 176, 0.3); /* Daha şeffaf yeşil */
+    border-radius: 2px;
+  }
+
+  &::-webkit-scrollbar-thumb:hover {
+    background-color: rgba(190, 219, 176, 0.6); /* Hover'da biraz daha belirgin */
+  }
+
+  /* Firefox scrollbar */
+  scrollbar-width: thin;
+  scrollbar-color: rgba(190, 219, 176, 0.3) transparent;
 
   @media screen and (min-width: 768px) {
     width: 100%;
@@ -100,22 +123,44 @@ export const BoardsList = styled.ul`
   margin: 0;
   padding: 0;
 
-  max-height: 122px;
+  /* Mobilde daha fazla scroll alanı */
+  max-height: 200px;
   overflow-y: auto;
+  overflow-x: hidden;
 
   direction: rtl;
 
+  /* Scrollbar stilleri - daha ince ve şeffaf */
   &::-webkit-scrollbar {
-    background-color: ${SCROLL_TRACK};
-    width: 8px;
+    background-color: transparent;
+    width: 6px;
   }
 
   &::-webkit-scrollbar-thumb {
-    background-color: ${SCROLL_THUMB};
+    background-color: rgba(190, 219, 176, 0.4); /* Daha şeffaf yeşil */
+    border-radius: 3px;
   }
+
+  &::-webkit-scrollbar-thumb:hover {
+    background-color: rgba(190, 219, 176, 0.7); /* Hover'da daha belirgin */
+  }
+
+  &::-webkit-scrollbar-track {
+    background-color: transparent;
+    border-radius: 3px;
+  }
+
+  /* Firefox scrollbar */
+  scrollbar-width: thin;
+  scrollbar-color: rgba(190, 219, 176, 0.4) transparent;
 
   @media screen and (min-width: 768px) {
     width: 123%;
+    max-height: 300px; /* Tablet'te daha fazla alan */
+  }
+
+  @media screen and (min-width: 1024px) {
+    max-height: 400px; /* Desktop'ta daha da fazla */
   }
 `;
 
