@@ -78,9 +78,11 @@ const MainDashboard = ({ boardId }) => {
   const [showFilters, setShowFilters] = useState(false);
   const [loading, setLoading] = useState(true);
   const [board, setBoard] = useState(null);
+  const [backgroundImage, setBackgroundImage] = useState('');
   
-  // Ref for mainDashboard to handle keyboard navigation
+  // Refs
   const mainDashboardRef = useRef(null);
+  const screensPageRef = useRef(null);
 
   // Board ve kartları yükle
   useEffect(() => {
@@ -98,6 +100,26 @@ const MainDashboard = ({ boardId }) => {
         const boardRes = await fetch(`${API_URL}/api/boards/${boardId}`);
         const boardData = await boardRes.json();
         setBoard(boardData);
+        
+        // Background'ı set et (responsive)
+        if (boardData.background) {
+          const bg = boardData.background;
+          const width = window.innerWidth;
+          let bgUrl = '';
+          
+          if (width <= 768 && bg.mobile) {
+            bgUrl = bg.mobile;
+          } else if (width <= 1024 && bg.tablet) {
+            bgUrl = bg.tablet;
+          } else if (bg.desktop) {
+            bgUrl = bg.desktop;
+          }
+          
+          console.log('📸 Setting background:', { width, bgUrl, background: bg });
+          setBackgroundImage(bgUrl);
+        } else {
+          setBackgroundImage('');
+        }
         
         // Kartları boardId ile getir
         const cards = await getCards(token, boardId);
@@ -139,6 +161,48 @@ const MainDashboard = ({ boardId }) => {
 
     fetchBoardAndCards();
   }, [token, boardId]);
+
+  // Ekran boyutu değiştiğinde background'ı güncelle
+  useEffect(() => {
+    const updateBackground = () => {
+      if (board?.background) {
+        const bg = board.background;
+        const width = window.innerWidth;
+        let bgUrl = '';
+        
+        if (width <= 768 && bg.mobile) {
+          bgUrl = bg.mobile;
+        } else if (width <= 1024 && bg.tablet) {
+          bgUrl = bg.tablet;
+        } else if (bg.desktop) {
+          bgUrl = bg.desktop;
+        }
+        
+        setBackgroundImage(bgUrl);
+      }
+    };
+
+    window.addEventListener('resize', updateBackground);
+    return () => window.removeEventListener('resize', updateBackground);
+  }, [board]);
+
+  // Background image'ı direkt DOM'a uygula
+  useEffect(() => {
+    if (screensPageRef.current && backgroundImage) {
+      const elem = screensPageRef.current;
+      elem.style.backgroundImage = `url("${backgroundImage}")`;
+      elem.style.backgroundSize = 'cover';
+      elem.style.backgroundPosition = 'center';
+      elem.style.backgroundRepeat = 'no-repeat';
+      elem.style.backgroundAttachment = 'fixed';
+      elem.style.backgroundColor = 'transparent';
+      console.log('🎨 Applied background to DOM:', backgroundImage);
+    } else if (screensPageRef.current && !backgroundImage) {
+      const elem = screensPageRef.current;
+      elem.style.backgroundImage = '';
+      elem.style.backgroundColor = '';
+    }
+  }, [backgroundImage]);
 
   // Klavye ok tuşlarıyla kolon geçişi
   useEffect(() => {
@@ -363,7 +427,10 @@ const MainDashboard = ({ boardId }) => {
   }
 
   return (
-    <div className={Styles.screensPage}>
+    <div 
+      ref={screensPageRef}
+      className={Styles.screensPage}
+    >
       <div className={Styles.filtersWrapper}>
         <h2>{board?.title || 'Project Office'}</h2>
         <button

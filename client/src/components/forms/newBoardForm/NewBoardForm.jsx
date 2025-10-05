@@ -52,6 +52,8 @@ const NewBoardForm = ({
       return;
     }
     const data = { ...values, background };
+    console.log('🎨 Form submitting with data:', data);
+    console.log('🎨 Background state:', background);
     handleSubmit(data, formTitle);
   };
 
@@ -68,6 +70,7 @@ const NewBoardForm = ({
   };
 
   const BgImageChangeHandler = (data) => {
+    console.log('🎨 Background selected:', data);
     setbackground(data);
   };
 

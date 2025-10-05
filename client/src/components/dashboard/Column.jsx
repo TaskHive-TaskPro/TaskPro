@@ -189,23 +189,26 @@ const Column = ({
           </button>
         </div>
       </div>
-    <div className={Styles.columnContainer}>
       
-      
-      <div className={Styles.cardList}>
-        {column.cards.map((card) => (
-          <Card
-            key={card._id || card.id}
-            card={card}
-            onEdit={() => setEditCard(card)}
-            onDelete={() => onDeleteCard && onDeleteCard(column.id, card._id || card.id)}
-            onMove={() => onMoveCard && onMoveCard(column.id, card._id || card.id)}
-          />
-        ))}
+      <div className={Styles.columnContainer}>
+        <div className={Styles.cardList}>
+          {column.cards.map((card) => (
+            <Card
+              key={card._id || card.id}
+              card={card}
+              onEdit={() => setEditCard(card)}
+              onDelete={() => onDeleteCard && onDeleteCard(column.id, card._id || card.id)}
+              onMove={() => onMoveCard && onMoveCard(column.id, card._id || card.id)}
+            />
+          ))}
+        </div>
+
+        <button className={Styles.btnAddCard} onClick={() => setShowModal(true)}>
+          + Add another card
+        </button>
       </div>
 
-      
-
+      {/* Modals outside of columnContainer for proper z-index */}
       {showModal && (
         <AddCardModal
           onAdd={(card) => onAddCard(column.id, card)}
@@ -246,10 +249,6 @@ const Column = ({
           onClose={() => setShowDeleteColumnModal(false)}
         />
       )}
-    </div>
-    <button className={Styles.btnAddCard} onClick={() => setShowModal(true)}>
-        + Add another card
-      </button>
     </div>
   );
 };

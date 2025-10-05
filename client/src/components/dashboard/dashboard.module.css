@@ -107,7 +107,7 @@
 /* MainDashboard */
 .mainDashboard {
   padding: 14px;
-  background-color: var(--bg-primary);
+ background-color: transparent;
   overflow-x: auto;
   overflow-y: auto;
   height: calc(100dvh - 64px);
@@ -158,6 +158,7 @@
   display: flex;
   flex-direction: column;
   border: 1px solid var(--border-color);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   max-height: calc(100dvh - 80px);
   overflow-y: auto;
   scrollbar-width: thin;
@@ -190,6 +191,7 @@
   padding-bottom: 8px;
   border-bottom: 2px solid var(--border-color);
   text-align: center;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
 }
 
 /* Column Header Container */
@@ -201,7 +203,7 @@
   padding: 8px 12px;
   border-bottom: 2px solid var(--border-color);
   gap: 8px;
-  background-color: rgba(0, 0, 0, 0.15);
+ background-color: var(--bg-secondary);
   border-radius: 8px;
 }
 
@@ -329,10 +331,18 @@
   display: flex !important;
   display: flex;
   justify-content: space-between;
-
-  padding: 20px 20px 16px 20px;
+  padding: 14px 20px 12px 20px;
   border-bottom: none;
-  background-color: var(--bg-primary);
+  background: rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(22px);
+  -webkit-backdrop-filter: blur(22px);
+  border-radius: 10px;
+  margin-bottom: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.filtersWrapper h2 {
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
 }
 
 .btnFilters {
@@ -358,7 +368,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  z-index: 9999;
+  z-index: 10000;
   padding: 1rem;
   backdrop-filter: blur(6px);
   overflow: auto;
@@ -570,12 +580,18 @@
     justify-content: space-between;
     align-items: center;
     flex-shrink: 0;
-    background-color: var(--bg-primary);
+    background: rgba(255, 255, 255, 0.08);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border-radius: 12px;
+    margin-bottom: 12px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     border-bottom: none;
   }
 
   .filtersWrapper h2 {
     font-size: 18px;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
   }
 
   .btnFilters {
@@ -789,6 +805,23 @@
   }
 }
 
+/* Tablet - 768px ile 1024px arası */
+@media (min-width: 768px) and (max-width: 1024px) {
+  .filtersWrapper {
+    padding: 16px 16px 10px 16px;
+    margin-bottom: 8px;
+  }
+
+  .filtersWrapper h2 {
+    font-size: 20px;
+  }
+
+  .btnFilters {
+    padding: 6px 12px;
+    font-size: 14px;
+  }
+}
+
 /* Desktop */
 @media (min-width: 1025px) {
   .columnContainer {
@@ -804,10 +837,13 @@
 /* Violet tema için özel kolon arka planı */
 body.theme-violet .columnContainer {
   background-color: #e8e9fd;
+  border-color: #b8bcfd;
 }
 
 body.theme-violet .columnHeader {
-  background-color: #e8e9fd;
+  background: rgba(232, 233, 253, 0.5);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
   border-color: #b8bcfd;
 }
 
@@ -830,4 +866,52 @@ body.theme-violet .columnAddBtn {
 body.theme-violet .columnAddBtn:hover {
   background-color: #e8e9fd;
   border-color: #5255bc;
+}
+
+/* Tema-spesifik glassmorphism stiller */
+body.theme-violet .columnContainer {
+  background-color: #e8e9fd;
+  border-color: rgba(184, 188, 253, 0.5);
+}
+
+body.theme-violet .filtersWrapper {
+  background: rgba(232, 233, 253, 0.3);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+body.theme-dark .columnContainer {
+  background-color: #1f1f23;
+  border-color: rgba(255, 255, 255, 0.1);
+}
+
+body.theme-dark .filtersWrapper {
+  background: rgba(30, 30, 35, 0.5);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+body.theme-dark .columnHeader {
+  background: rgba(30, 30, 35, 0.4);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border-color: rgba(255, 255, 255, 0.1);
+}
+
+body.theme-light .columnContainer {
+  background-color: #ffffff;
+  border-color: rgba(0, 0, 0, 0.1);
+}
+
+body.theme-light .filtersWrapper {
+  background: rgba(255, 255, 255, 0.25);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(18px);
+}
+
+body.theme-light .columnHeader {
+  background: rgba(255, 255, 255, 0.4);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border-color: rgba(0, 0, 0, 0.15);
 }
