@@ -1,4 +1,4 @@
-import axiosInstance from '../api/axiosInstance';
+import axiosInstance from '../api/axiosInstance.js';
 
 export async function getBoard(boardId) {
   const { data } = await axiosInstance.get(`/api/boards/${boardId}`);
