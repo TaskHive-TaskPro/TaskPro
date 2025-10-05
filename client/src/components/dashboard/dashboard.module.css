@@ -340,10 +340,11 @@
   margin-bottom: 8px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
-
 .filtersWrapper h2 {
-  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+  color: #fff;
+  text-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
 }
+
 
 .btnFilters {
   padding: 8px 16px;
