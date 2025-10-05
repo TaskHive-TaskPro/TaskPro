@@ -19,7 +19,7 @@ import { useAuth } from '../../context/AuthContext';
 import { Dialog, DialogTitle, DialogContent, DialogActions } from '@mui/material';
 import { useLocation, useParams, useNavigate } from 'react-router-dom';
 import { useState, useEffect } from 'react';
-import "./logoutDialog.css";
+import "./LogoutDialog.css";
 
 import {
   SideBarStyled,

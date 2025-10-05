@@ -1,4 +1,4 @@
-import axiosInstance from "./axiosInstance";
+import axiosInstance from "./axiosInstance.js";
 
 const register = async (userData) => {
   console.log("Register attempt:", userData);
